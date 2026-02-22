@@ -1,0 +1,2 @@
+-- This file has been removed and consolidated into supabase-schema.sql
+-- Please use the main schema file instead

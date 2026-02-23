@@ -18,6 +18,7 @@ import { AuthCallback } from './AuthCallback';
 import { VerificationCallback } from './VerificationCallback';
 import { StoriesPage } from './StoriesPage';
 import { StoryDetailPage } from './StoryDetailPage';
+import { ResetPasswordPage } from './ResetPasswordPage';
 
 import { AppState, ViewMode, EventName } from '../types/app';
 
@@ -143,6 +144,16 @@ export function AppRouter({
         return (
           <PrivacyPolicyPage
             onNavigateBack={() => onViewModeChange('home')}
+          />
+        );
+
+      case 'reset-password':
+        return (
+          <ResetPasswordPage
+            onNavigateToHome={() => {
+              onNavigate('/');
+              onViewModeChange('home');
+            }}
           />
         );
 

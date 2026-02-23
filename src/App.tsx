@@ -61,6 +61,8 @@ function AppContent() {
     try {
       if (path.includes('/upgrade')) {
         setViewMode('upgrade');
+      } else if (path.includes('/reset-password')) {
+        setViewMode('reset-password');
       } else if (path.includes('/leaderboard')) {
         setViewMode('leaderboard');
       } else if (path.includes('/terms')) {

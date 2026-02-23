@@ -12,23 +12,23 @@ import { useAuth } from '../hooks/useAuth';
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
-  defaultTab?: 'signin' | 'signup';
+  defaultTab?: 'signin' | 'signup' | 'forgot_password';
   invitationToken?: string;
   initialEmail?: string;
   onNavigateToTerms?: () => void;
   onNavigateToPrivacy?: () => void;
 }
 
-export function AuthModal({ 
-  open, 
-  onClose, 
+export function AuthModal({
+  open,
+  onClose,
   defaultTab = 'signup',
   invitationToken,
   initialEmail = '',
   onNavigateToTerms,
   onNavigateToPrivacy
 }: AuthModalProps) {
-  const { signIn, signUp, loading, error, clearError } = useAuth();
+  const { signIn, signUp, loading, error, clearError, resetPassword } = useAuth();
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [formData, setFormData] = useState({
     email: initialEmail,
@@ -51,7 +51,7 @@ export function AuthModal({
     }
   }, [initialEmail]);
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof typeof formData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear field-specific error when user starts typing
     if (formErrors[field]) {
@@ -77,6 +77,11 @@ export function AuthModal({
       errors.email = 'Please enter a valid email address';
     }
 
+    if (activeTab === 'forgot_password') {
+      setFormErrors(errors);
+      return Object.keys(errors).length === 0;
+    }
+
     // Password validation
     if (!formData.password) {
       errors.password = 'Password is required';
@@ -91,7 +96,7 @@ export function AuthModal({
       } else if (formData.password !== formData.confirmPassword) {
         errors.confirmPassword = 'Passwords do not match';
       }
-      
+
       if (!formData.agreeToTerms) {
         errors.agreeToTerms = 'You must agree to the Terms of Service and Privacy Policy';
       }
@@ -103,20 +108,27 @@ export function AuthModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     try {
       let result;
-      
-      if (activeTab === 'signin') {
+
+      if (activeTab === 'forgot_password') {
+        result = await resetPassword(formData.email);
+        if (result.success) {
+          // Keep them on the same tab but maybe show a success message
+          setFormErrors({ email: 'Password reset link sent! Check your inbox.' });
+          return;
+        }
+      } else if (activeTab === 'signin') {
         result = await signIn(formData.email, formData.password);
       } else {
         result = await signUp(
-          formData.email, 
-          formData.password, 
+          formData.email,
+          formData.password,
           '', // displayName will be set from About You step
           invitationToken
         );
@@ -127,7 +139,8 @@ export function AuthModal({
         setFormData({
           email: '',
           password: '',
-          confirmPassword: ''
+          confirmPassword: '',
+          agreeToTerms: false
         });
         setFormErrors({});
         onClose();
@@ -151,7 +164,7 @@ export function AuthModal({
   };
 
   const handleTabChange = (value: string) => {
-    setActiveTab(value as 'signin' | 'signup');
+    setActiveTab(value as 'signin' | 'signup' | 'forgot_password');
     resetForm();
   };
 
@@ -165,25 +178,30 @@ export function AuthModal({
       <DialogContent className="w-full max-w-md mx-auto bg-background border border-border">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">
-            {invitationToken ? 'Join Gravalist' : 'Welcome to Gravalist'}
+            {activeTab === 'forgot_password'
+              ? 'Reset Password'
+              : invitationToken
+                ? 'Join Gravalist'
+                : 'Welcome to Gravalist'}
           </DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">
-            {invitationToken 
-              ? 'Complete your account setup to join the community' 
-              : 'Sign in to your account or create a new one to get started'
-            }
+            {activeTab === 'forgot_password'
+              ? 'Enter your email and we will send you a reset link'
+              : invitationToken
+                ? 'Complete your account setup to join the community'
+                : 'Sign in to your account or create a new one to get started'}
           </DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-muted/30 p-1">
-            <TabsTrigger 
+            <TabsTrigger
               value="signin"
               className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
             >
               Sign In
             </TabsTrigger>
-            <TabsTrigger 
+            <TabsTrigger
               value="signup"
               className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
             >
@@ -205,7 +223,7 @@ export function AuthModal({
               <AlertCircle className="h-4 w-4 text-primary" />
               <AlertDescription className="space-y-3">
                 <p>This email is already registered.</p>
-                <Button 
+                <Button
                   onClick={() => {
                     setActiveTab('signin');
                     setEmailExistsWarning(false);
@@ -225,7 +243,7 @@ export function AuthModal({
             <Alert className="mt-4">
               <Mail className="h-4 w-4" />
               <AlertDescription>
-                You've been invited to join the Gravalist community! 
+                You've been invited to join the Gravalist community!
                 Create your account to get started.
               </AlertDescription>
             </Alert>
@@ -253,7 +271,16 @@ export function AuthModal({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="signin-password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="signin-password">Password</Label>
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange('forgot_password')}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    Forgot password?
+                  </button>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
@@ -271,9 +298,9 @@ export function AuthModal({
                 )}
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={loading}
               >
                 {loading ? (
@@ -358,7 +385,7 @@ export function AuthModal({
                   <Checkbox
                     id="agree-terms"
                     checked={formData.agreeToTerms}
-                    onCheckedChange={(checked) => handleInputChange('agreeToTerms', !!checked)}
+                    onCheckedChange={(checked: boolean) => handleInputChange('agreeToTerms', checked)}
                     className={`mt-0.5 ${!formData.agreeToTerms ? 'border-primary/60 hover:border-primary' : ''}`}
                   />
                   <div className="grid gap-1.5 leading-none">
@@ -396,9 +423,9 @@ export function AuthModal({
                 )}
               </div>
 
-              <Button 
-                type="submit" 
-                className="w-full" 
+              <Button
+                type="submit"
+                className="w-full"
                 disabled={loading}
               >
                 {loading ? (
@@ -410,6 +437,56 @@ export function AuthModal({
                   'Create Account'
                 )}
               </Button>
+            </form>
+          </TabsContent>
+
+          <TabsContent value="forgot_password" className="space-y-4 mt-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reset-email">Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className={`pl-10 ${formErrors.email && !formErrors.email.includes('sent') ? 'border-destructive' : ''}`}
+                    disabled={loading}
+                  />
+                </div>
+                {formErrors.email && (
+                  <p className={`text-sm ${formErrors.email.includes('sent') ? 'text-green-500' : 'text-destructive'}`}>
+                    {formErrors.email}
+                  </p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading || formErrors.email?.includes('sent')}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending link...
+                  </>
+                ) : (
+                  formErrors.email?.includes('sent') ? 'Link Sent' : 'Send Reset Link'
+                )}
+              </Button>
+
+              <div className="text-center mt-4">
+                <button
+                  type="button"
+                  onClick={() => handleTabChange('signin')}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Back to Sign In
+                </button>
+              </div>
             </form>
           </TabsContent>
         </Tabs>

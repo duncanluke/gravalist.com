@@ -6,6 +6,7 @@ import { Flag, Clock, Zap, Heart, Star } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
 import { GoAnimation } from './components/GoAnimation';
 import { getStartTime, formatCountdown, formatTime, formatTimeWithSeconds } from './utils/raceTimeUtils';
+import { useAppState } from '../../hooks/useAppState';
 
 interface RaceStartStepProps {
   onContinue: () => void;
@@ -13,6 +14,7 @@ interface RaceStartStepProps {
 }
 
 export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
+  const { state } = useAppState();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showGoAnimation, setShowGoAnimation] = useState(false);
 
@@ -22,7 +24,7 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
     const timer = setInterval(() => {
       const now = new Date();
       setCurrentTime(now);
-      
+
       if (now >= startTime && !showGoAnimation) {
         setShowGoAnimation(true);
       }
@@ -44,7 +46,7 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
         <div className="text-4xl mb-4">🏁</div>
         <h2 className="text-xl font-bold">Official Race Start</h2>
         <p className="text-muted-foreground">
-          {raceHasStarted 
+          {raceHasStarted
             ? "The race has officially started! Your adventure begins now."
             : "Final countdown to race start. Get ready for the official signal!"
           }
@@ -69,15 +71,14 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
             )}
           </CardTitle>
           <CardDescription>
-            Utrecht 500 - Official Start Time
+            {state.currentEvent || 'Race'} - Official Start Time
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className={`text-center p-8 rounded-lg ${
-            raceHasStarted 
-              ? "bg-success/20 border border-success/30" 
+          <div className={`text-center p-8 rounded-lg ${raceHasStarted
+              ? "bg-success/20 border border-success/30"
               : "bg-primary/10 border border-primary/20"
-          }`}>
+            }`}>
             {raceHasStarted ? (
               <>
                 <div className="text-4xl font-mono font-bold text-success mb-2 animate-pulse">
@@ -95,7 +96,7 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
                 <div className="text-sm text-muted-foreground mb-4">
                   Until Official Start
                 </div>
-                <Button 
+                <Button
                   onClick={() => setShowGoAnimation(true)}
                   variant="outline"
                   size="sm"
@@ -149,7 +150,7 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
       </Card>
 
       <div className="pt-4 space-y-3">
-        <Button 
+        <Button
           onClick={onContinue}
           className={`w-full ${raceHasStarted ? 'bg-success hover:bg-success/90' : 'bg-primary hover:bg-primary/90'}`}
           size="lg"
@@ -157,9 +158,9 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
           <Flag className="w-5 h-5 mr-2" />
           {raceHasStarted ? 'Start My Adventure!' : 'Start Ride'}
         </Button>
-        
+
         {onFinish && raceHasStarted && (
-          <Button 
+          <Button
             onClick={onFinish}
             variant="outline"
             className="w-full"
@@ -176,7 +177,7 @@ export function RaceStartStep({ onContinue, onFinish }: RaceStartStepProps) {
             <p>The page will automatically update when the race starts</p>
             <p className="mt-1">Current time: {formatTimeWithSeconds(currentTime)}</p>
           </div>
-          
+
 
         </div>
       )}

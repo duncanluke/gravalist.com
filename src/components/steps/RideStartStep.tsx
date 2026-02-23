@@ -6,6 +6,7 @@ import { Flag, Clock, Zap, Heart, Star } from 'lucide-react';
 import { Alert, AlertDescription } from '../ui/alert';
 import { GoAnimation } from './components/GoAnimation';
 import { getStartTime, formatCountdown, formatTime, formatTimeWithSeconds } from './utils/rideTimeUtils';
+import { useAppState } from '../../hooks/useAppState';
 
 interface RideStartStepProps {
   onContinue: () => void;
@@ -13,6 +14,7 @@ interface RideStartStepProps {
 }
 
 export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
+  const { state } = useAppState();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showGoAnimation, setShowGoAnimation] = useState(false);
 
@@ -22,7 +24,7 @@ export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
     const timer = setInterval(() => {
       const now = new Date();
       setCurrentTime(now);
-      
+
       if (now >= startTime && !showGoAnimation) {
         setShowGoAnimation(true);
       }
@@ -58,15 +60,14 @@ export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
             )}
           </CardTitle>
           <CardDescription>
-            Utrecht 500 - Official Start Time
+            {state.currentEvent || 'Ride'} - Official Start Time
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className={`text-center p-8 rounded-lg relative ${
-            rideHasStarted 
-              ? "bg-success/20 border border-success/30" 
+          <div className={`text-center p-8 rounded-lg relative ${rideHasStarted
+              ? "bg-success/20 border border-success/30"
               : "bg-primary/10 border border-primary/20"
-          }`}>
+            }`}>
             {rideHasStarted ? (
               <>
                 <div className="text-4xl font-mono font-bold text-success mb-2 animate-pulse">
@@ -128,9 +129,9 @@ export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
                   <p>
                     <strong>Almost time!</strong> You've prepared well for this moment. When that countdown hits zero, trust your training and enjoy every moment of your adventure.
                   </p>
-                  <Button 
+                  <Button
                     onClick={onContinue}
-                    variant="outline" 
+                    variant="outline"
                     size="sm"
                     className="w-full"
                   >
@@ -145,7 +146,7 @@ export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
 
       {rideHasStarted && (
         <div className="pt-4 space-y-3">
-          <Button 
+          <Button
             onClick={onContinue}
             className="w-full bg-success hover:bg-success/90"
             size="lg"
@@ -153,7 +154,7 @@ export function RideStartStep({ onContinue, onFinish }: RideStartStepProps) {
             <Flag className="w-5 h-5 mr-2" />
             Start My Adventure!
           </Button>
-          
+
 
         </div>
       )}

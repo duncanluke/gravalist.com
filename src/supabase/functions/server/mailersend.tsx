@@ -34,7 +34,7 @@ interface EmailParams {
  */
 export async function sendEmail(params: EmailParams): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const apiKey = Deno.env.get('MAILERSEND_API_KEY');
-  
+
   if (!apiKey) {
     console.error('❌ MAILERSEND - API key not configured');
     console.error('❌ MAILERSEND - Please ensure MAILERSEND_API_KEY environment variable is set');
@@ -52,7 +52,7 @@ export async function sendEmail(params: EmailParams): Promise<{ success: boolean
     if (params.bcc) {
       console.log('   → BCC:', params.bcc.map(r => r.email).join(', '));
     }
-    
+
     const payload = {
       from: params.from,
       to: params.to,
@@ -61,9 +61,9 @@ export async function sendEmail(params: EmailParams): Promise<{ success: boolean
       text: params.text,
       ...(params.bcc && { bcc: params.bcc })
     };
-    
+
     console.log('📧 MAILERSEND - Calling API at:', `${MAILERSEND_API_URL}/email`);
-    
+
     const response = await fetch(`${MAILERSEND_API_URL}/email`, {
       method: 'POST',
       headers: {
@@ -80,9 +80,9 @@ export async function sendEmail(params: EmailParams): Promise<{ success: boolean
         statusText: response.statusText,
         error: errorText
       });
-      return { 
-        success: false, 
-        error: `Failed to send email: ${response.status} ${response.statusText} - ${errorText}` 
+      return {
+        success: false,
+        error: `Failed to send email: ${response.status} ${response.statusText} - ${errorText}`
       };
     }
 
@@ -90,15 +90,15 @@ export async function sendEmail(params: EmailParams): Promise<{ success: boolean
     const messageId = response.headers.get('X-Message-Id');
     console.log('✅ MAILERSEND - Email sent successfully!');
     console.log('   → Message ID:', messageId);
-    
+
     return { success: true, messageId: messageId || undefined };
   } catch (error) {
     console.error('❌ MAILERSEND - Exception sending email:', error);
     console.error('   → Error type:', error instanceof Error ? error.constructor.name : typeof error);
     console.error('   → Error message:', error instanceof Error ? error.message : String(error));
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
   }
 }
@@ -196,7 +196,7 @@ export async function sendInvitationEmail(
               <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 24px 0;">
                 <tr>
                   <td align="center">
-                    <a href="https://hub.gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                    <a href="https://gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
                       Join Gravalist
                     </a>
                   </td>
@@ -245,7 +245,7 @@ HOW IT WORKS
 3️⃣ End: Submit your time and tracking data when finished
 🏆 Compete: Earn points and climb the global leaderboard
 
-Join Gravalist: https://hub.gravalist.com
+Join Gravalist: https://gravalist.com
 
 Join a community of riders who take full responsibility for their own adventures.
 
@@ -273,7 +273,7 @@ export async function sendWelcomeEmail(
   userName?: string
 ): Promise<{ success: boolean; error?: string }> {
   const displayName = userName || 'Rider';
-  
+
   const html = `
 <!DOCTYPE html>
 <html>
@@ -438,7 +438,7 @@ export async function sendWelcomeEmail(
               <table role="presentation" style="width: 100%; border-collapse: collapse;">
                 <tr>
                   <td align="center">
-                    <a href="https://hub.gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                    <a href="https://gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
                       Select a Ride & Register
                     </a>
                   </td>
@@ -508,7 +508,7 @@ Your first step is to select a ride that challenges you and complete the registr
 
 Each ride has its own registration flow, start line check-in, and finish submission. The adventure is yours to own.
 
-Select a Ride & Register: https://hub.gravalist.com
+Select a Ride & Register: https://gravalist.com
 
 My tracking, my responsibility.
   `;
@@ -538,7 +538,7 @@ export async function sendRideRegistrationEmail(
   isSubscriber: boolean = false
 ): Promise<{ success: boolean; error?: string }> {
   const displayName = userName || 'Rider';
-  
+
   const html = `
 <!DOCTYPE html>
 <html>
@@ -782,7 +782,7 @@ export async function sendRideRegistrationEmail(
                 <p style="margin: 0 0 16px 0; font-size: 14px; color: #999999;">
                   Subscription includes unlimited GPX downloads for all current and future rides.
                 </p>
-                <a href="https://hub.gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                <a href="https://gravalist.com" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; font-size: 14px;">
                   Upgrade to Download Routes
                 </a>
               </div>
@@ -828,7 +828,7 @@ export async function sendRideRegistrationEmail(
               <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 0 0 24px 0;">
                 <tr>
                   <td align="center">
-                    <a href="https://hub.gravalist.com/ride/${rideId}" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
+                    <a href="https://gravalist.com/ride/${rideId}" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">
                       Complete Your Registration
                     </a>
                   </td>
@@ -928,7 +928,7 @@ You're not currently a subscriber. To download the GPX route file for ${rideName
 
 Subscription includes unlimited GPX downloads for all current and future rides.
 
-Upgrade to Download Routes: https://hub.gravalist.com
+Upgrade to Download Routes: https://gravalist.com
 ` : `
 🗺️ ROUTE FILE ACCESS
 As a subscriber, you can download the GPX route file for ${rideName} directly from your dashboard. Navigate with confidence using the official mapped route.
@@ -944,7 +944,7 @@ IMPORTANT REMINDERS:
 
 ═══════════════════════════════════════════════════
 
-Complete Your Registration: https://hub.gravalist.com/ride/${rideId}
+Complete Your Registration: https://gravalist.com/ride/${rideId}
 
 Click above to return to the app and finish your registration for ${rideName}
 

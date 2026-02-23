@@ -14,9 +14,9 @@ interface RegistrationAlmostCompleteStepProps {
   onContinue: () => void;
 }
 
-export function RegistrationAlmostCompleteStep({ 
-  eventName, 
-  onContinue 
+export function RegistrationAlmostCompleteStep({
+  eventName,
+  onContinue
 }: RegistrationAlmostCompleteStepProps) {
   const { profile, refreshProfile } = useAuth();
   const { events, registerForEvent, loading: eventsLoading } = useEvents();
@@ -28,8 +28,8 @@ export function RegistrationAlmostCompleteStep({
   const [otherRidersLoading, setOtherRidersLoading] = useState(false);
 
   // Find the current event object - try multiple matching strategies
-  const currentEvent = events.find(event => 
-    event.name === eventName || 
+  const currentEvent = events.find(event =>
+    event.name === eventName ||
     event.name.toLowerCase() === eventName.toLowerCase() ||
     event.slug === eventName.toLowerCase().replace(/\s+/g, '-')
   ) || events[0]; // Fallback to first event if no match found
@@ -89,7 +89,7 @@ export function RegistrationAlmostCompleteStep({
 
       try {
         console.log('Starting registration for event:', currentEvent.name);
-        
+
         // Register for the event with realistic placeholder data
         // In a real scenario, this data would come from previous form steps
         const registrationData = {
@@ -103,27 +103,27 @@ export function RegistrationAlmostCompleteStep({
             hasLights: true
           }
         };
-        
+
         console.log('Calling registerForEvent with:', {
           eventId: currentEvent.id,
           registrationData
         });
-        
+
         // Add timeout protection
         const registrationPromise = registerForEvent(currentEvent.id, registrationData);
-        const timeoutPromise = new Promise((_, reject) => 
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Registration timeout - please try again')), 30000)
         );
-        
+
         const result = await Promise.race([registrationPromise, timeoutPromise]);
-        
+
         console.log('Registration result:', result);
-        
+
         if (result.success) {
           // Use actual points from server response or fallback to 50
           const newPoints = result.pointsAwarded || 50;
           setPointsAwarded(newPoints);
-          
+
           if (result.alreadyRegistered) {
             console.log('User already registered - showing as success');
             toast.success(`Welcome back! You're already registered for ${currentEvent.name}.`);
@@ -131,13 +131,13 @@ export function RegistrationAlmostCompleteStep({
             console.log('Registration successful, points awarded:', newPoints);
             toast.success(`Welcome to ${currentEvent.name}! You earned ${newPoints} points.`);
           }
-          
+
           setRegistrationState('success');
         } else {
           console.error('Registration failed with result:', result);
           throw new Error(result.error || 'Registration failed');
         }
-        
+
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Registration failed';
         console.error('Registration error:', {
@@ -148,7 +148,7 @@ export function RegistrationAlmostCompleteStep({
           userEmail: profile?.email,
           registrationData
         });
-        
+
         // Provide more specific error messages
         let userFriendlyMessage = errorMessage;
         if (errorMessage.toLowerCase().includes('already registered')) {
@@ -167,7 +167,7 @@ export function RegistrationAlmostCompleteStep({
         } else if (errorMessage.includes('timeout')) {
           userFriendlyMessage = 'Registration is taking longer than expected. Please try again.';
         }
-        
+
         setError(userFriendlyMessage);
         setRegistrationState('error');
         toast.error(`Registration error: ${userFriendlyMessage}`);
@@ -192,7 +192,7 @@ export function RegistrationAlmostCompleteStep({
   // Fetch other registered riders
   const fetchOtherRiders = async () => {
     if (!currentEvent) return;
-    
+
     setOtherRidersLoading(true);
     try {
       const session = await supabase.auth.getSession();
@@ -239,7 +239,7 @@ export function RegistrationAlmostCompleteStep({
               <Loader2 className="h-8 w-8 text-primary animate-spin" />
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <h2>Finalizing Your Registration...</h2>
             <p className="text-muted-foreground">
@@ -270,7 +270,7 @@ export function RegistrationAlmostCompleteStep({
               <AlertCircle className="h-8 w-8 text-destructive" />
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <h2>Registration Issue</h2>
             <p className="text-muted-foreground">
@@ -285,7 +285,7 @@ export function RegistrationAlmostCompleteStep({
         </div>
 
         <div className="space-y-3">
-          <Button 
+          <Button
             onClick={handleRetry}
             className="w-full"
             disabled={eventsLoading}
@@ -299,8 +299,8 @@ export function RegistrationAlmostCompleteStep({
               'Try Again'
             )}
           </Button>
-          
-          <Button 
+
+          <Button
             variant="outline"
             onClick={onContinue}
             className="w-full"
@@ -321,7 +321,7 @@ export function RegistrationAlmostCompleteStep({
               <CheckCircle className="h-8 w-8 text-primary" />
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <h2>Registration Complete!</h2>
             <p className="text-muted-foreground">
@@ -354,13 +354,41 @@ export function RegistrationAlmostCompleteStep({
 
 
         {/* Continue Button */}
-
-
-
+        <Button
+          onClick={onContinue}
+          className="w-full bg-primary hover:bg-primary/90"
+          size="lg"
+        >
+          <Trophy className="w-5 h-5 mr-2" />
+          Continue to Event
+        </Button>
 
         {/* Helpful Info */}
         <Card className="p-4 bg-muted/30 border-muted">
-
+          <div className="flex items-center gap-2 mb-2">
+            <Users className="h-4 w-4 text-muted-foreground" />
+            <h4 className="font-semibold text-sm">Community</h4>
+          </div>
+          {otherRidersLoading ? (
+            <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <Loader2 className="w-3 h-3 animate-spin" /> Fetching other riders...
+            </p>
+          ) : otherRiders.length > 0 ? (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">Join these riders who have already signed up:</p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                {otherRiders.map((rider, index) => (
+                  <Badge key={index} variant="secondary" className="font-normal text-xs bg-background">
+                    {rider.display_name || rider.first_name || 'Anonymous Rider'}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              You're the first to sign up! Be the trailblazer for this event.
+            </p>
+          )}
         </Card>
       </div>
     );
@@ -375,7 +403,7 @@ export function RegistrationAlmostCompleteStep({
             <Loader2 className="h-8 w-8 text-primary animate-spin" />
           </div>
         </div>
-        
+
         <div className="space-y-3">
           <h2>Preparing Your Registration...</h2>
           <p className="text-muted-foreground">
@@ -423,9 +451,9 @@ export function RegistrationAlmostCompleteStep({
           </div>
           {registrationState === 'pending' && events.length > 0 && currentEvent && (
             <div className="space-y-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => {
                   console.log('Manual retry triggered');
                   setRegistrationState('idle');
@@ -435,9 +463,9 @@ export function RegistrationAlmostCompleteStep({
               >
                 Force Retry Registration Now
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   console.log('Direct test registration triggered');
                   try {
@@ -463,9 +491,9 @@ export function RegistrationAlmostCompleteStep({
               >
                 Direct Test Registration
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   console.log('Database health check triggered');
                   try {
@@ -486,14 +514,14 @@ export function RegistrationAlmostCompleteStep({
               >
                 Check Database Health
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   console.log('Debug registration test triggered');
                   try {
                     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                    
+
                     if (sessionError || !session?.access_token) {
                       console.error('No valid session for debug test');
                       toast.error('Authentication required for debug test');
@@ -510,7 +538,7 @@ export function RegistrationAlmostCompleteStep({
                     });
                     const result = await response.json();
                     console.log('Debug registration test result:', result);
-                    
+
                     if (result.success) {
                       toast.success('Debug test passed! Registration should work.');
                     } else {
@@ -525,9 +553,9 @@ export function RegistrationAlmostCompleteStep({
               >
                 Run Debug Registration Test
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   console.log('Schema check triggered');
                   try {
@@ -538,7 +566,7 @@ export function RegistrationAlmostCompleteStep({
                     });
                     const result = await response.json();
                     console.log('Schema check result:', result);
-                    
+
                     if (result.user_events_columns || result.available_columns) {
                       toast.success('Schema check completed - check console for details');
                     } else {
@@ -553,9 +581,9 @@ export function RegistrationAlmostCompleteStep({
               >
                 Check Database Schema
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={async () => {
                   console.log('Clear registration triggered');
                   try {
@@ -565,7 +593,7 @@ export function RegistrationAlmostCompleteStep({
                     }
 
                     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                    
+
                     if (sessionError || !session?.access_token) {
                       console.error('No valid session for clear registration');
                       toast.error('Authentication required');
@@ -580,7 +608,7 @@ export function RegistrationAlmostCompleteStep({
                     });
                     const result = await response.json();
                     console.log('Clear registration result:', result);
-                    
+
                     if (result.success) {
                       toast.success(`Registration cleared! Deleted ${result.deletedRecords} records.`);
                       // Reset registration state to try again

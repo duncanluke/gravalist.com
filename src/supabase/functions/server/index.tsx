@@ -30,13 +30,13 @@ app.use('*', logger(console.log))
 async function requireAuth(c: any) {
   const authHeader = c.req.header('Authorization')
   const token = authHeader?.replace('Bearer ', '')
-  
+
   console.log('🔐 requireAuth - Validating token:', {
     hasToken: !!token,
     tokenLength: token?.length,
     tokenPrefix: token?.substring(0, 30) + '...'
   })
-  
+
   if (!token) {
     console.log('❌ requireAuth - No token provided')
     return c.json({ error: 'Authentication required' }, 401)
@@ -44,7 +44,7 @@ async function requireAuth(c: any) {
 
   try {
     const { data: { user }, error } = await supabaseAuth.auth.getUser(token)
-    
+
     if (error) {
       console.log('❌ requireAuth - Token validation error:', {
         message: error.message,
@@ -52,11 +52,11 @@ async function requireAuth(c: any) {
         name: error.name
       })
     }
-    
+
     if (error || !user) {
       return c.json({ error: 'Invalid or expired token', details: error?.message }, 401)
     }
-    
+
     console.log('✅ requireAuth - Token valid for user:', user.email)
     return user
   } catch (error) {
@@ -155,8 +155,8 @@ app.post('/make-server-91bdaa9f/auth/signup', async (c) => {
 
 // Health check
 app.get('/make-server-91bdaa9f/health', (c) => {
-  return c.json({ 
-    status: 'healthy', 
+  return c.json({
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     server: 'Gravalist Make Server'
   })
@@ -166,7 +166,7 @@ app.get('/make-server-91bdaa9f/health', (c) => {
 app.get('/make-server-91bdaa9f/leaderboard', async (c) => {
   try {
     console.log('LEADERBOARD - Fetching from database')
-    
+
     // Get leaderboard data from users table
     const { data: leaderboard, error } = await supabase
       .from('users')
@@ -189,7 +189,7 @@ app.get('/make-server-91bdaa9f/leaderboard', async (c) => {
 
     // Get event counts for users
     const userIds = leaderboard?.map(user => user.id) || []
-    
+
     let eventCounts: Record<string, number> = {}
     if (userIds.length > 0) {
       const { data: events } = await supabase
@@ -197,7 +197,7 @@ app.get('/make-server-91bdaa9f/leaderboard', async (c) => {
         .select('user_id')
         .in('user_id', userIds)
         .eq('registration_status', 'finished')
-      
+
       if (events) {
         eventCounts = events.reduce((acc, event) => {
           acc[event.user_id] = (acc[event.user_id] || 0) + 1
@@ -233,7 +233,7 @@ app.get('/make-server-91bdaa9f/leaderboard', async (c) => {
 app.get('/make-server-91bdaa9f/events', async (c) => {
   try {
     console.log('EVENTS - Fetching all events from database')
-    
+
     // Fetch events with highlights
     const { data: events, error: eventsError } = await supabase
       .from('events')
@@ -257,13 +257,13 @@ app.get('/make-server-91bdaa9f/events', async (c) => {
     // Get registration counts for each event
     const eventIds = events?.map(event => event.id) || []
     let registrationCounts: Record<string, number> = {}
-    
+
     if (eventIds.length > 0) {
       const { data: registrations } = await supabase
         .from('user_events')
         .select('event_id')
         .in('event_id', eventIds)
-      
+
       if (registrations) {
         registrationCounts = registrations.reduce((acc, reg) => {
           acc[reg.event_id] = (acc[reg.event_id] || 0) + 1
@@ -293,7 +293,7 @@ app.get('/make-server-91bdaa9f/user/profile', async (c) => {
     // Get token from Authorization header
     const authHeader = c.req.header('Authorization')
     const token = authHeader?.replace('Bearer ', '')
-    
+
     if (!token) {
       return c.json({ error: 'Authorization token is required' }, 401)
     }
@@ -302,7 +302,7 @@ app.get('/make-server-91bdaa9f/user/profile', async (c) => {
 
     // Get user from token
     const { data: { user: authUser }, error: authError } = await supabaseAuth.auth.getUser(token)
-    
+
     if (authError || !authUser?.email) {
       console.log('USER PROFILE - Auth error:', authError)
       return c.json({ error: 'Invalid or expired token' }, 401)
@@ -350,7 +350,7 @@ app.get('/make-server-91bdaa9f/user/registrations', async (c) => {
     // Get token from Authorization header
     const authHeader = c.req.header('Authorization')
     const token = authHeader?.replace('Bearer ', '')
-    
+
     if (!token) {
       console.log('USER REGISTRATIONS - No token provided')
       return c.json({ error: 'Authorization token is required' }, 401)
@@ -361,7 +361,7 @@ app.get('/make-server-91bdaa9f/user/registrations', async (c) => {
 
     // Get user from token
     const { data: { user: authUser }, error: authError } = await supabaseAuth.auth.getUser(token)
-    
+
     if (authError) {
       console.log('USER REGISTRATIONS - Auth error details:', {
         message: authError.message,
@@ -370,7 +370,7 @@ app.get('/make-server-91bdaa9f/user/registrations', async (c) => {
       })
       return c.json({ error: 'Invalid or expired token', details: authError.message }, 401)
     }
-    
+
     if (!authUser?.email) {
       console.log('USER REGISTRATIONS - No email in auth user:', authUser)
       return c.json({ error: 'Invalid or expired token' }, 401)
@@ -393,7 +393,7 @@ app.get('/make-server-91bdaa9f/user/registrations', async (c) => {
         details: userError.details,
         hint: userError.hint
       })
-      
+
       if (userError.code === 'PGRST116') {
         console.log('USER REGISTRATIONS - User not found in database, returning empty registrations')
         // Return empty registrations instead of error - user might be newly signed up
@@ -413,14 +413,14 @@ app.get('/make-server-91bdaa9f/user/registrations', async (c) => {
 
     console.log('USER REGISTRATIONS - DEBUG: Raw user_events records:', JSON.stringify(userEventsDebug, null, 2))
     console.log('USER REGISTRATIONS - DEBUG: Found', userEventsDebug?.length || 0, 'user_events records for this user')
-    
+
     // If no records found for this user, let's check if ANY records exist with a similar user_id pattern
     if (!userEventsDebug || userEventsDebug.length === 0) {
       const { data: sampleEvents } = await supabase
         .from('user_events')
         .select('user_id, event_id')
         .limit(5)
-      
+
       console.log('USER REGISTRATIONS - DEBUG: Sample user_events (any user):', JSON.stringify(sampleEvents, null, 2))
       console.log('USER REGISTRATIONS - DEBUG: Looking for user_id:', user.id)
     }
@@ -530,13 +530,13 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
 
     // Get price ID from environment or use default
     const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1QTVJlANT1yLdvVBaApU0yc4'
-    
+
     console.log('STRIPE - Creating checkout session for user:', userData.email)
     console.log('STRIPE - Display name:', userData.display_name)
     console.log('STRIPE - Using price ID:', priceId)
 
     const origin = c.req.header('origin') || 'https://gravalist.com'
-    
+
     const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'POST',
       headers: {
@@ -566,7 +566,7 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
         priceId: priceId,
         userEmail: userData.email
       })
-      
+
       let userFriendlyError = 'Failed to create checkout session'
       try {
         const errorData = JSON.parse(errorText)
@@ -576,8 +576,8 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       } catch (parseError) {
         // Keep default error message
       }
-      
-      return c.json({ 
+
+      return c.json({
         error: userFriendlyError,
         details: `Stripe API error: ${response.status} ${response.statusText}`
       }, 500)
@@ -586,9 +586,9 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
     const session = await response.json()
     console.log('STRIPE - Checkout session created:', session.id)
 
-    return c.json({ 
+    return c.json({
       checkoutUrl: session.url,
-      sessionId: session.id 
+      sessionId: session.id
     })
 
   } catch (error) {
@@ -635,7 +635,7 @@ app.post('/make-server-91bdaa9f/stripe/webhook', async (c) => {
 async function handleCheckoutSessionCompleted(session: any) {
   try {
     console.log('STRIPE - Processing checkout session completed:', session.id)
-    
+
     const userId = session.metadata?.user_id
     if (!userId) {
       console.log('STRIPE - No user_id in session metadata')
@@ -668,7 +668,7 @@ async function handleCheckoutSessionCompleted(session: any) {
 async function handleSubscriptionCreated(subscription: any) {
   try {
     console.log('STRIPE - Processing subscription created:', subscription.id)
-    
+
     const { data: userData, error } = await supabase
       .from('users')
       .select('id, email')
@@ -706,7 +706,7 @@ async function handleSubscriptionCreated(subscription: any) {
 async function handleSubscriptionUpdated(subscription: any) {
   try {
     console.log('STRIPE - Processing subscription updated:', subscription.id)
-    
+
     const { data: userData, error } = await supabase
       .from('users')
       .select('id, email')
@@ -719,7 +719,7 @@ async function handleSubscriptionUpdated(subscription: any) {
     }
 
     const isActive = subscription.status === 'active'
-    
+
     const { error: updateError } = await supabase
       .from('users')
       .update({
@@ -743,7 +743,7 @@ async function handleSubscriptionUpdated(subscription: any) {
 async function handleSubscriptionDeleted(subscription: any) {
   try {
     console.log('STRIPE - Processing subscription deleted:', subscription.id)
-    
+
     const { data: userData, error } = await supabase
       .from('users')
       .select('id, email')
@@ -849,6 +849,100 @@ app.put('/make-server-91bdaa9f/user/profile', async (c) => {
   }
 })
 
+// Register for event (create or update user_events record with registered status)
+app.post('/make-server-91bdaa9f/events/:eventId/register', async (c) => {
+  try {
+    const user = await requireAuth(c)
+    if (user instanceof Response) return user
+
+    const eventId = c.req.param('eventId')
+    const registrationData = await c.req.json()
+
+    console.log('REGISTER - User:', user.email, 'Event ID:', eventId)
+
+    // Get user ID from database
+    const { data: dbUser, error: userError } = await supabase
+      .from('users')
+      .select('id, display_name, is_premium_subscriber')
+      .eq('email', user.email)
+      .single()
+
+    if (userError || !dbUser) {
+      console.log('REGISTER - User not found:', userError)
+      return c.json({ error: 'User not found' }, 404)
+    }
+
+    // Check if user is already registered
+    const { data: existingReg } = await supabase
+      .from('user_events')
+      .select('*')
+      .eq('user_id', dbUser.id)
+      .eq('event_id', eventId)
+      .single()
+
+    let registration;
+
+    if (existingReg) {
+      if (existingReg.registration_status === 'registered') {
+        console.log('REGISTER - Already registered')
+        return c.json({
+          success: true,
+          registration: existingReg,
+          pointsAwarded: 0,
+          alreadyRegistered: true
+        })
+      }
+
+      // Update existing registration
+      const { data: updatedReg, error: updateError } = await supabase
+        .from('user_events')
+        .update({
+          registration_status: 'registered',
+          registered_at: new Date().toISOString()
+        })
+        .eq('id', existingReg.id)
+        .select()
+        .single()
+
+      if (updateError) {
+        console.log('REGISTER - Failed to update registration:', updateError)
+        return c.json({ error: 'Failed to update registration' }, 500)
+      }
+      registration = updatedReg;
+    } else {
+      // Create new registration
+      const { data: newReg, error: insertError } = await supabase
+        .from('user_events')
+        .insert({
+          user_id: dbUser.id,
+          event_id: eventId,
+          registration_status: 'registered',
+          registered_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (insertError) {
+        console.log('REGISTER - Failed to create registration:', insertError)
+        return c.json({ error: 'Failed to register' }, 500)
+      }
+      registration = newReg;
+    }
+
+    console.log('REGISTER - Success:', registration)
+
+    return c.json({
+      success: true,
+      registration: registration,
+      pointsAwarded: 50 // Standard points for registration
+    })
+
+  } catch (error) {
+    console.log('REGISTER - Error:', error)
+    return c.json({ error: 'Internal server error' }, 500)
+  }
+})
+
 // Soft register for event (create user_events record with in_progress status)
 app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
   try {
@@ -856,7 +950,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
     if (user instanceof Response) return user
 
     const eventId = c.req.param('eventId')
-    
+
     console.log('SOFT REGISTER - User:', user.email, 'Event ID:', eventId)
 
     // Get user ID from database
@@ -893,8 +987,8 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
 
     if (existingReg) {
       console.log('SOFT REGISTER - Already registered')
-      return c.json({ 
-        success: true, 
+      return c.json({
+        success: true,
         registration: existingReg,
         eventName: event.name,
         message: 'Already registered'
@@ -923,7 +1017,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
     // Send registration email
     if (user.email) {
       console.log('SOFT REGISTER - Sending registration email to:', user.email)
-      
+
       const formattedDate = new Date(event.event_date).toLocaleDateString('en-US', {
         weekday: 'long',
         year: 'numeric',
@@ -933,10 +1027,10 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
 
       // Run in background
       sendRideRegistrationEmail(
-        user.email, 
-        dbUser.display_name, 
-        event.name, 
-        formattedDate, 
+        user.email,
+        dbUser.display_name,
+        event.name,
+        formattedDate,
         eventId,
         dbUser.is_premium_subscriber || false
       ).then(result => {
@@ -950,8 +1044,8 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
       })
     }
 
-    return c.json({ 
-      success: true, 
+    return c.json({
+      success: true,
       registration,
       eventName: event.name
     })
@@ -969,7 +1063,7 @@ app.get('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
     if (user instanceof Response) return user
 
     const eventId = c.req.param('eventId')
-    
+
     console.log('GET PROGRESS - User:', user.email, 'Event ID:', eventId)
 
     // Get user ID from database
@@ -994,7 +1088,7 @@ app.get('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
 
     if (!registration) {
       console.log('GET PROGRESS - User not registered for this event')
-      return c.json({ 
+      return c.json({
         progress: [],
         currentStep: 0,
         currentPhase: 'before'
@@ -1016,8 +1110,8 @@ app.get('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
 
     // Calculate current step (highest completed step + 1)
     const completedSteps = progress?.filter(p => p.is_completed) || []
-    const currentStep = completedSteps.length > 0 
-      ? Math.max(...completedSteps.map(p => p.step_id)) + 1 
+    const currentStep = completedSteps.length > 0
+      ? Math.max(...completedSteps.map(p => p.step_id)) + 1
       : 0
 
     // Determine current phase based on current step
@@ -1031,7 +1125,7 @@ app.get('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
       currentPhase
     })
 
-    return c.json({ 
+    return c.json({
       progress: progress || [],
       currentStep,
       currentPhase
@@ -1051,7 +1145,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
 
     const eventId = c.req.param('eventId')
     const { stepId, phase, stepData, isCompleted } = await c.req.json()
-    
+
     console.log('UPDATE PROGRESS - User:', user.email, 'Event ID:', eventId, 'Step:', stepId)
 
     // Get user ID from database
@@ -1126,6 +1220,160 @@ app.post('/make-server-91bdaa9f/events/:eventId/progress', async (c) => {
   }
 })
 
+// Download GPX file for event
+app.get('/make-server-91bdaa9f/events/:eventId/gpx-download', async (c) => {
+  try {
+    const user = await requireAuth(c)
+    if (user instanceof Response) return user
+
+    const eventId = c.req.param('eventId')
+    console.log('GPX DOWNLOAD - User:', user.email, 'Event ID:', eventId)
+
+    // Get event to find GPX path
+    const { data: event, error } = await supabase
+      .from('events')
+      .select('gpx_file_path, gpx_file_name, name')
+      .eq('id', eventId)
+      .single()
+
+    if (error || !event || !event.gpx_file_path) {
+      console.log('GPX DOWNLOAD - Event or GPX path not found:', error)
+      return c.json({ error: 'GPX file not found for this event' }, 404)
+    }
+
+    console.log('GPX DOWNLOAD - Found path:', event.gpx_file_path)
+
+    // Fallback buckets to try
+    const bucketsToTry = ['events', 'gpx', 'gpx-files', 'public', 'make-91bdaa9f-public-assets']
+    let signedUrl = null
+
+    // Try to get a signed URL from one of the likely buckets
+    for (const bucket of bucketsToTry) {
+      const { data, error: signError } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(event.gpx_file_path, 60 * 60) // 1 hour expiry
+
+      if (!signError && data?.signedUrl) {
+        signedUrl = data.signedUrl
+        console.log(`GPX DOWNLOAD - Generated signed URL from bucket: ${bucket}`)
+        break
+      }
+    }
+
+    // Default to the most likely public URL if all signed URL attempts fail
+    if (!signedUrl) {
+      console.log('GPX DOWNLOAD - Failed to create signed URL, falling back to public URL')
+      signedUrl = supabase.storage.from('gpx').getPublicUrl(event.gpx_file_path).data.publicUrl
+    }
+
+    const fileName = event.gpx_file_name || `${event.name.replace(/\s+/g, '-')}-route.gpx`
+
+    return c.json({
+      downloadUrl: signedUrl,
+      fileName: fileName
+    })
+
+  } catch (error) {
+    console.log('GPX DOWNLOAD - Error:', error)
+    return c.json({ error: 'Internal server error' }, 500)
+  }
+})
+
+// Upload document endpoint
+app.post('/make-server-91bdaa9f/documents/upload', async (c) => {
+  try {
+    const user = await requireAuth(c)
+    if (user instanceof Response) return user
+
+    const formData = await c.req.formData()
+    const file = formData.get('file') as File
+
+    if (!file) {
+      return c.json({ error: 'No file provided' }, 400)
+    }
+
+    const fileExt = file.name.split('.').pop()
+    const filePath = `user_uploads/${user.id}/${Date.now()}.${fileExt}`
+
+    let uploadSuccess = false;
+    let finalPath = '';
+
+    // Try primary bucket 'documents'
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('documents')
+      .upload(filePath, file)
+
+    if (!uploadError) {
+      uploadSuccess = true;
+      finalPath = uploadData.path;
+    } else {
+      console.log('DOC UPLOAD - Failed primary bucket, trying fallback:', uploadError);
+      // Try fallback bucket
+      const { data: fallbackData, error: fallbackError } = await supabase.storage
+        .from('make-91bdaa9f-public-assets')
+        .upload(filePath, file)
+
+      if (!fallbackError) {
+        uploadSuccess = true;
+        finalPath = fallbackData.path;
+      } else {
+        console.log('DOC UPLOAD - Failed fallback bucket:', fallbackError);
+      }
+    }
+
+    if (!uploadSuccess) {
+      return c.json({ error: 'Failed to upload document to storage' }, 500)
+    }
+
+    return c.json({
+      success: true,
+      path: finalPath,
+      message: 'Document uploaded successfully'
+    })
+
+  } catch (error) {
+    console.log('DOC UPLOAD - Error:', error)
+    return c.json({ error: 'Internal server error' }, 500)
+  }
+})
+
+// Get other riders for an event
+app.get('/make-server-91bdaa9f/events/:eventId/other-riders', async (c) => {
+  try {
+    const user = await requireAuth(c)
+    if (user instanceof Response) return user
+
+    const eventId = c.req.param('eventId')
+
+    // Find other users registered for this event
+    const { data: participants, error } = await supabase
+      .from('user_events')
+      .select('users(display_name, first_name)')
+      .eq('event_id', eventId)
+      .eq('registration_status', 'registered')
+      .neq('user_id', user.id)
+      .limit(10)
+
+    if (error) {
+      console.log('OTHER RIDERS - Failed to fetch riders:', error)
+      return c.json({ error: 'Failed to fetch riders' }, 500)
+    }
+
+    const riders = participants
+      ?.map(p => p.users)
+      ?.filter(Boolean) || []
+
+    return c.json({
+      success: true,
+      riders: riders
+    })
+
+  } catch (error) {
+    console.log('OTHER RIDERS - Error:', error)
+    return c.json({ error: 'Internal server error' }, 500)
+  }
+})
+
 // Withdraw from event
 app.post('/make-server-91bdaa9f/events/:eventId/withdraw', async (c) => {
   try {
@@ -1191,7 +1439,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/withdraw', async (c) => {
         details: updateError.details,
         hint: updateError.hint
       })
-      return c.json({ 
+      return c.json({
         error: 'Failed to withdraw from event',
         details: updateError.message,
         code: updateError.code
@@ -1212,7 +1460,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/withdraw', async (c) => {
     await kvStore.set(withdrawalKey, JSON.stringify(withdrawalData))
 
     console.log('WITHDRAW - Successfully withdrawn and stored metadata')
-    return c.json({ 
+    return c.json({
       success: true,
       message: 'Successfully withdrawn from event'
     })

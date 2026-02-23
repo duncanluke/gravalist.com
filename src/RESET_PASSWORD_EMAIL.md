@@ -110,7 +110,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <img src="https://xnyyftvszqchqozlljow.supabase.co/storage/v1/object/public/public-assets/email-header-logo.png" alt="Gravalist" width="180" style="display: block; margin: 0 auto; height: auto;">
+        <img src="https://gravalist.com/logo.png" alt="Gravalist" width="180" style="display: block; margin: 0 auto; height: auto;">
       </div>
       <div class="content">
         <h2>Password Reset Request</h2>

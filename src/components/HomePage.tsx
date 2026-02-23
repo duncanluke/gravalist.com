@@ -13,6 +13,7 @@ import heroBackground3 from '@/assets/home-bg-3.png';
 import heroBackgroundRides from '@/assets/rides-hero.png';
 import newHeroBackgroundRides from '@/assets/new-rides-hero.png';
 import { HeroSection } from './home/HeroSection';
+import { IntroGridSection } from './home/IntroGridSection';
 import { GlobalMapSection } from './home/GlobalMapSection';
 
 interface HomePageProps {
@@ -99,6 +100,9 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
 
   return (
     <div className="min-h-screen bg-black text-foreground">
+      {/* Intro Grid Section (New Content) */}
+      <IntroGridSection />
+
       {/* Hero Section & CTA */}
       <HeroSection
         userEmail={userEmail}

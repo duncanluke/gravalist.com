@@ -233,15 +233,44 @@ function AppContent() {
     }
   }, [setState]);
 
-  const handleNavigateToHome = useCallback(() => setViewMode('home'), [setViewMode]);
-  const handleNavigateToLeaderboard = useCallback(() => setViewMode('leaderboard'), [setViewMode]);
-  const handleNavigateToSubscribe = useCallback(() => setViewMode('upgrade'), [setViewMode]);
-  const handleNavigateToAddRoute = useCallback(() => setViewMode('add-route'), [setViewMode]);
+  const handleNavigateToHome = useCallback(() => {
+    handleNavigate('/');
+    setViewMode('home');
+  }, [handleNavigate, setViewMode]);
 
-  const handleNavigateToTerms = useCallback(() => setViewMode('terms'), [setViewMode]);
-  const handleNavigateToPrivacy = useCallback(() => setViewMode('privacy'), [setViewMode]);
-  const handleNavigateToRides = useCallback(() => setViewMode('home'), [setViewMode]);
-  const handleNavigateToStories = useCallback(() => handleNavigate('/stories'), [handleNavigate]);
+  const handleNavigateToLeaderboard = useCallback(() => {
+    handleNavigate('/leaderboard');
+    setViewMode('leaderboard');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToSubscribe = useCallback(() => {
+    handleNavigate('/upgrade');
+    setViewMode('upgrade');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToAddRoute = useCallback(() => {
+    handleNavigate('/add-route');
+    setViewMode('add-route');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToTerms = useCallback(() => {
+    handleNavigate('/terms');
+    setViewMode('terms');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToPrivacy = useCallback(() => {
+    handleNavigate('/privacy');
+    setViewMode('privacy');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToRides = useCallback(() => {
+    handleNavigate('/');
+    setViewMode('home');
+  }, [handleNavigate, setViewMode]);
+
+  const handleNavigateToStories = useCallback(() => {
+    handleNavigate('/stories');
+  }, [handleNavigate]);
   const handleCloseHelp = useCallback(() => setState({ showHelp: false }), [setState]);
   const handleCloseSessionWelcome = useCallback(() => setState({ showSessionWelcome: false }), [setState]);
 

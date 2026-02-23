@@ -26,7 +26,7 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                 <div className="absolute inset-0 bg-black/70" />
 
                 <div className="max-w-4xl mx-auto space-y-8 relative z-10">
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight text-white drop-shadow-md">
+                    <h1 className="sr-only">
                         UNSUPPORTED ULTRACYCLING GRAVEL BIKEPACKING
                     </h1>
                     <h2 className="text-xl md:text-3xl lg:text-4xl text-white/90 drop-shadow">

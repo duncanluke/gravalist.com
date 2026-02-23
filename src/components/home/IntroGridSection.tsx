@@ -13,7 +13,7 @@ export function IntroGridSection() {
                         BIKEPACKING
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                        500km. This means no aid stations, no route markings. You get a route gpx file and you ride it your way. Two classifications. Solo, Groups/Touring. Try beat the solo record, or tour it before the cut-off.
+                        This means no aid stations, no route markings. You get a route gpx file and you ride it your way. Two classifications. Solo, Groups/Touring. Try beat the solo record, or tour it before the cut-off.
                     </p>
                 </div>
 

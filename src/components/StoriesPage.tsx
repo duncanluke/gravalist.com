@@ -31,7 +31,7 @@ export function StoriesPage({ onNavigateBack, onSelectStory }: StoriesPageProps)
         const loadStories = async () => {
             try {
                 // Dynamically import all markdown files in the stories directory
-                const modules = import.meta.glob('../content/stories/*.md', { as: 'raw', eager: false });
+                const modules = import.meta.glob('../content/stories/*.md', { query: '?raw', import: 'default', eager: false });
 
                 const loadedStories: StoryMeta[] = [];
 

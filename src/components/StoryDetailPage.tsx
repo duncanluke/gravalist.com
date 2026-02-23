@@ -29,7 +29,7 @@ export function StoryDetailPage({ slug, onNavigateBack }: StoryDetailProps) {
                 setLoading(true);
 
                 // Dynamically import all markdown files
-                const modules = import.meta.glob('../content/stories/*.md', { as: 'raw', eager: false });
+                const modules = import.meta.glob('../content/stories/*.md', { query: '?raw', import: 'default', eager: false });
 
                 // Find the specific file that matches the slug
                 const targetPath = Object.keys(modules).find(path => path.endsWith(`/${slug}.md`));

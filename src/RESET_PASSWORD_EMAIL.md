@@ -81,7 +81,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
     .button {
       display: inline-block;
       background-color: #ff6a00;
-      color: #ffffff;
+      color: #ffffff !important;
       font-weight: 600;
       font-size: 15px;
       text-decoration: none;
@@ -110,7 +110,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <img src="https://gravalist.com/gravalist_orange-white.png" alt="Gravalist" width="180" style="display: block; margin: 0 auto; height: auto;">
+        <img src="https://xnyyftvszqchqozlljow.supabase.co/storage/v1/object/public/public-assets/email-header-logo.png" alt="Gravalist" width="180" style="display: block; margin: 0 auto; height: auto;">
       </div>
       <div class="content">
         <h2>Password Reset Request</h2>
@@ -118,7 +118,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
         
         <div class="button-container">
           <!-- Supabase dynamically replaces {{ .ConfirmationURL }} -->
-          <a href="{{ .ConfirmationURL }}" class="button">Reset Password</a>
+          <a href="{{ .ConfirmationURL }}" class="button" style="color: #ffffff;">Reset Password</a>
         </div>
         
         <p>If you did not request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>

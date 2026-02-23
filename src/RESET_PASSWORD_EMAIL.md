@@ -81,7 +81,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
     .button {
       display: inline-block;
       background-color: #ff6a00;
-      color: #000000;
+      color: #ffffff;
       font-weight: 600;
       font-size: 15px;
       text-decoration: none;
@@ -110,7 +110,7 @@ To ensure your password reset emails perfectly match the dark, premium aesthetic
   <div class="wrapper">
     <div class="container">
       <div class="header">
-        <h1>GRAVALIST</h1>
+        <img src="https://gravalist.com/gravalist_orange-white.png" alt="Gravalist" width="180" style="display: block; margin: 0 auto; height: auto;">
       </div>
       <div class="content">
         <h2>Password Reset Request</h2>

@@ -195,7 +195,7 @@ export class ApiClient {
       '/user/registrations',
       '/invitations/send'
     ]
-    
+
     // Event registration and progress endpoints also require auth
     const authRequiredPatterns = [
       /^\/events\/[^\/]+\/register$/,
@@ -204,42 +204,42 @@ export class ApiClient {
       /^\/events\/[^\/]+\/gpx-download$/,
       /^\/events\/[^\/]+\/withdraw$/
     ]
-    
+
     // Check exact matches
     if (authRequiredEndpoints.includes(endpoint)) {
       return true
     }
-    
+
     // Check pattern matches
     for (const pattern of authRequiredPatterns) {
       if (pattern.test(endpoint)) {
         return true
       }
     }
-    
+
     // All requests to user endpoints require auth (including GET)
     if (endpoint.startsWith('/user/')) {
       return true
     }
-    
+
     // Creating events requires authentication
     if (method === 'POST' && endpoint === '/events') {
       return true
     }
-    
+
     // Other specific endpoints that require auth regardless of method
     return endpoint.includes('/register') || (endpoint.includes('/progress') && method !== 'GET')
   }
 
   private async request<T>(
-    endpoint: string, 
+    endpoint: string,
     options: RequestInit = {},
     providedToken?: string
   ): Promise<T> {
     let token = publicAnonKey
     let method = options.method || 'GET'
     let isAuthRequired = this.isAuthRequiredEndpoint(endpoint, method)
-    
+
     console.log('API CLIENT - Request details:', {
       endpoint,
       method,
@@ -248,7 +248,7 @@ export class ApiClient {
       providedTokenLength: providedToken?.length,
       anonKeyLength: publicAnonKey?.length
     })
-    
+
     // Use provided token if available (from current auth state)
     if (providedToken) {
       token = providedToken
@@ -258,12 +258,12 @@ export class ApiClient {
       // Only try to get session if no token provided and auth is required
       try {
         const sessionPromise = supabase.auth.getSession()
-        const timeoutPromise = new Promise<never>((_, reject) => 
+        const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Session timeout')), 1500)
         )
-        
+
         const { data, error } = await Promise.race([sessionPromise, timeoutPromise])
-        
+
         if (error) {
           console.log('API CLIENT - Session error:', error)
           throw new Error('Authentication required. Please sign in to access this resource.')
@@ -281,7 +281,7 @@ export class ApiClient {
     } else {
       console.log('API CLIENT - Using anon key for non-auth endpoint')
     }
-    
+
     console.log('API CLIENT - Final token details:', {
       finalTokenLength: token?.length,
       isAnonKey: token === publicAnonKey,
@@ -289,10 +289,10 @@ export class ApiClient {
     })
 
     let response: Response
-    
+
     try {
       console.log(`API CLIENT - Making request to: ${this.baseUrl}${endpoint}`)
-      
+
       // Add timeout to all API requests
       const controller = new AbortController()
       // Use reasonable timeout for different endpoints
@@ -305,7 +305,7 @@ export class ApiClient {
       const timeoutId = setTimeout(() => {
         controller.abort()
       }, timeout)
-      
+
       response = await fetch(`${this.baseUrl}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -315,7 +315,7 @@ export class ApiClient {
         signal: controller.signal,
         ...options,
       })
-      
+
       clearTimeout(timeoutId)
       console.log(`API CLIENT - Response status: ${response.status} ${response.statusText}`)
     } catch (fetchError) {
@@ -324,17 +324,17 @@ export class ApiClient {
         endpoint: `${this.baseUrl}${endpoint}`,
         fetchErrorType: typeof fetchError
       })
-      
+
       // Handle abort errors (timeouts)
       if (fetchError instanceof Error && fetchError.name === 'AbortError') {
         throw new Error(`Request timeout. The server is taking too long to respond.`)
       }
-      
+
       // Handle network errors specifically
       if (fetchError instanceof TypeError && fetchError.message.includes('fetch')) {
         throw new Error(`Network connection failed. Please check your internet connection and try again. (${fetchError.message})`)
       }
-      
+
       throw new Error(`Network request failed: ${fetchError instanceof Error ? fetchError.message : 'Unknown error'}`)
     }
 
@@ -345,37 +345,37 @@ export class ApiClient {
       } catch (parseError) {
         console.log('API CLIENT - Failed to parse error response:', parseError)
       }
-      
+
       console.log('API CLIENT - HTTP error response:', {
         status: response.status,
         statusText: response.statusText,
         errorData
       })
-      
+
       // Handle specific auth errors
       if (response.status === 401) {
         throw new Error(errorData.error || 'Authentication required. Please sign in to access this resource.')
       }
-      
+
       // Handle server errors with more context
       if (response.status >= 500) {
-        const errorMessage = errorData.details 
-          ? `${errorData.error}: ${errorData.details}` 
+        const errorMessage = errorData.details
+          ? `${errorData.error}: ${errorData.details}`
           : (errorData.error || `Server error (${response.status}): ${response.statusText}`);
         throw new Error(errorMessage)
       }
-      
+
       // Handle 404 errors with details
       if (response.status === 404) {
-        const errorMessage = errorData.details 
-          ? `${errorData.error}: ${errorData.details}` 
+        const errorMessage = errorData.details
+          ? `${errorData.error}: ${errorData.details}`
           : (errorData.error || `Not found (${response.status})`);
         throw new Error(errorMessage)
       }
-      
+
       // Generic error with details if available
-      const errorMessage = errorData.details 
-        ? `${errorData.error}: ${errorData.details}` 
+      const errorMessage = errorData.details
+        ? `${errorData.error}: ${errorData.details}`
         : (errorData.error || `HTTP error! status: ${response.status} ${response.statusText}`);
       throw new Error(errorMessage)
     }
@@ -429,7 +429,7 @@ export class ApiClient {
     return this.request('/user/points')
   }
 
-  async getUserSubscription(): Promise<{ 
+  async getUserSubscription(): Promise<{
     subscription: {
       isPremium: boolean;
       status: string;
@@ -492,12 +492,12 @@ export class ApiClient {
     })
   }
 
-  async uploadGpxFile(file: File, eventSlug: string): Promise<{ 
-    success: boolean; 
-    filePath: string; 
-    fileName: string; 
-    fileSize: number; 
-    message: string 
+  async uploadGpxFile(file: File, eventSlug: string): Promise<{
+    success: boolean;
+    filePath: string;
+    fileName: string;
+    fileSize: number;
+    message: string
   }> {
     const formData = new FormData()
     formData.append('gpxFile', file)
@@ -520,7 +520,23 @@ export class ApiClient {
   }
 
   async getGpxDownloadUrl(eventId: string): Promise<{ downloadUrl: string; fileName: string }> {
-    return this.request(`/events/${eventId}/gpx-download`)
+    try {
+      const response = await this.request(`/events/${eventId}/gpx-download`) as any;
+
+      // Log successful GPX download URL generation
+      (window as any).sessionRewind?.logEvent('GPX Downloaded', {
+        eventId: eventId,
+        fileName: response.fileName
+      })
+
+      return response as { downloadUrl: string; fileName: string };
+    } catch (error) {
+      (window as any).sessionRewind?.logError(error instanceof Error ? error : new Error('GPX Download Failed'), {
+        action: 'getGpxDownloadUrl',
+        eventId: eventId
+      })
+      throw error;
+    }
   }
 
   async getAuthToken(): Promise<string> {
@@ -538,7 +554,7 @@ export class ApiClient {
   }
 
   async registerForEvent(
-    eventId: string, 
+    eventId: string,
     registrationData: {
       emergencyContactName: string
       emergencyContactPhone: string
@@ -549,24 +565,24 @@ export class ApiClient {
       method: 'POST',
       body: JSON.stringify(registrationData),
     })
-    
+
     // Log the full response for debugging
     console.log('Registration API response:', response)
-    
+
     // Check if the response indicates success
     if (response.success === false) {
       throw new Error(response.error || 'Registration failed')
     }
-    
+
     return {
       registration: response.registration,
       pointsAwarded: response.pointsAwarded
     }
   }
 
-  async softRegisterForEvent(eventId: string): Promise<{ 
-    success: boolean; 
-    registration?: UserEvent; 
+  async softRegisterForEvent(eventId: string): Promise<{
+    success: boolean;
+    registration?: UserEvent;
     eventName?: string;
     message?: string;
   }> {
@@ -594,8 +610,8 @@ export class ApiClient {
     return response.registrations || []
   }
 
-  async getEventRegistrationStatus(eventId: string): Promise<{ 
-    isRegistered: boolean; 
+  async getEventRegistrationStatus(eventId: string): Promise<{
+    isRegistered: boolean;
     status?: 'registered' | 'in_progress' | 'withdrawn';
     registration?: UserEvent;
   }> {
@@ -617,7 +633,7 @@ export class ApiClient {
   // Users no longer receive automated registration emails during onboarding
 
   // Step progress methods
-  async getStepProgress(eventId: string): Promise<{ 
+  async getStepProgress(eventId: string): Promise<{
     progress: UserStepProgress[];
     currentStep: number;
     currentPhase: string;

@@ -824,9 +824,23 @@ export function useAuth() {
       // Refresh profile to show updated points
       await refreshProfile()
 
+      // Log successful points awarded to Session Rewind
+      window.sessionRewind?.logEvent('Points Awarded', {
+        activity: activity,
+        eventId: eventId || '',
+        pointsAdded: String(result.pointsAwarded),
+        newTotal: String(result.newTotalPoints)
+      })
+
       return { success: true, pointsAwarded: result.pointsAwarded, newTotal: result.newTotalPoints }
     } catch (error) {
       console.error('Error awarding points:', error)
+
+      window.sessionRewind?.logError(error instanceof Error ? error : new Error('Unknown error awarding points'), {
+        action: 'awardPoints',
+        activity: activity
+      })
+
       return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
     }
   }, [authState.session, refreshProfile])
@@ -866,6 +880,17 @@ export function useAuth() {
       return { success: false, error: errorMessage }
     }
   }, [])
+
+  // Session Rewind Tracking
+  useEffect(() => {
+    if (authState.user && authState.profile && window.sessionRewind) {
+      window.sessionRewind.identifyUser({
+        userId: authState.user.id,
+        userName: authState.profile.display_name || `${authState.profile.first_name || ''} ${authState.profile.last_name || ''}`.trim(),
+        userEmail: authState.user.email || ''
+      });
+    }
+  }, [authState.user, authState.profile]);
 
   // Check if user is authenticated
   const isAuthenticated = authState.user !== null && authState.session !== null

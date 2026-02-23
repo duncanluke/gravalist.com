@@ -40,20 +40,20 @@ export function useEvents() {
           events: cachedEvents,
           loading: false
         }))
-        
+
         // Skip aggressive progress fetching if using cached events
         // Progress will be fetched on-demand when needed
-        
+
         return { success: true, events: cachedEvents }
       }
 
       setEventsState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const { events } = await apiClient.getEvents()
-      
+
       // Cache the events
       CacheManager.setEvents(events)
-      
+
       setEventsState(prev => ({
         ...prev,
         events,
@@ -79,9 +79,9 @@ export function useEvents() {
   const fetchEvent = useCallback(async (slug: string) => {
     try {
       setEventsState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const { event } = await apiClient.getEvent(slug)
-      
+
       setEventsState(prev => ({
         ...prev,
         currentEvent: event,
@@ -115,14 +115,21 @@ export function useEvents() {
 
     try {
       setEventsState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const { registration, pointsAwarded } = await apiClient.registerForEvent(eventId, registrationData)
-      
+
       setEventsState(prev => ({
         ...prev,
         userEventRegistration: registration,
         loading: false
       }))
+
+      // Log successful registration to Session Rewind
+      window.sessionRewind?.logEvent('Event Registration', {
+        eventId: eventId,
+        hasEquipmentList: String(!!registrationData.equipmentChecklist),
+        pointsAwarded: String(pointsAwarded || 0)
+      })
 
       // Refresh profile to update points if points were awarded
       if (pointsAwarded && refreshProfile) {
@@ -137,6 +144,12 @@ export function useEvents() {
       return { success: true, registration, pointsAwarded }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to register for event'
+
+      window.sessionRewind?.logError(error instanceof Error ? error : new Error(errorMessage), {
+        action: 'registerForEvent',
+        eventId: eventId
+      })
+
       setEventsState(prev => ({
         ...prev,
         loading: false,
@@ -165,9 +178,9 @@ export function useEvents() {
       }
 
       setEventsState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const { progress, currentStep, currentPhase } = await apiClient.getStepProgress(eventId)
-      
+
       // Only log if there's actual progress
       if (progress && progress.length > 0) {
         console.log('📊 fetchStepProgress - Found progress:', {
@@ -177,10 +190,10 @@ export function useEvents() {
           currentPhase
         });
       }
-      
+
       // Cache the progress
       CacheManager.setStepProgress(eventId, progress)
-      
+
       setEventsState(prev => ({
         ...prev,
         stepProgress: progress,
@@ -200,7 +213,7 @@ export function useEvents() {
       return { success: true, progress, currentStep, currentPhase }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch step progress'
-      
+
       // Handle "User not registered" error gracefully
       if (errorMessage.includes('not registered')) {
         // User hasn't registered for this event yet, return empty progress
@@ -212,7 +225,7 @@ export function useEvents() {
         }))
         return { success: true, progress: [] }
       }
-      
+
       setEventsState(prev => ({
         ...prev,
         loading: false,
@@ -238,20 +251,28 @@ export function useEvents() {
 
     try {
       const { progress } = await apiClient.updateStepProgress(eventId, stepData)
-      
+
       // Update local state
       setEventsState(prev => ({
         ...prev,
-        stepProgress: prev.stepProgress.map(p => 
-          p.step_id === stepData.stepId && p.phase === stepData.phase 
-            ? progress 
+        stepProgress: prev.stepProgress.map(p =>
+          p.step_id === stepData.stepId && p.phase === stepData.phase
+            ? progress
             : p
         ).concat(
-          prev.stepProgress.find(p => 
+          prev.stepProgress.find(p =>
             p.step_id === stepData.stepId && p.phase === stepData.phase
           ) ? [] : [progress]
         )
       }))
+
+      // Log successful step progress to Session Rewind
+      window.sessionRewind?.logEvent('Step Progress Updated', {
+        eventId: eventId,
+        stepId: String(stepData.stepId),
+        phase: stepData.phase,
+        isCompleted: String(stepData.isCompleted)
+      })
 
       return { success: true, progress }
     } catch (error) {
@@ -281,9 +302,9 @@ export function useEvents() {
   const fetchEventParticipants = useCallback(async (eventId: string) => {
     try {
       setEventsState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const { participants } = await apiClient.getEventParticipants(eventId)
-      
+
       setEventsState(prev => ({
         ...prev,
         eventParticipants: participants,
@@ -322,7 +343,7 @@ export function useEvents() {
       }
 
       const progressMap: Record<string, UserStepProgress[]> = {}
-      
+
       // Fetch progress sequentially with delays to avoid overwhelming the server
       for (const event of events) {
         try {
@@ -330,7 +351,7 @@ export function useEvents() {
           const { progress } = await apiClient.getStepProgress(event.id)
           progressMap[event.id] = progress || []
           console.log(`EVENTS HOOK - Progress fetched for ${event.name}: ${progress?.length || 0} steps`)
-          
+
           // Small delay between requests to avoid overwhelming the server
           await new Promise(resolve => setTimeout(resolve, 100))
         } catch (error) {
@@ -338,18 +359,18 @@ export function useEvents() {
             error: error instanceof Error ? error.message : 'Unknown error',
             eventId: event.id
           })
-          
+
           // Handle different types of errors silently (don't spam console)
           const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-          
-          if (errorMessage.includes('not registered') || 
-              errorMessage.includes('Unauthorized') ||
-              errorMessage.includes('User not found')) {
+
+          if (errorMessage.includes('not registered') ||
+            errorMessage.includes('Unauthorized') ||
+            errorMessage.includes('User not found')) {
             // Expected errors for events user hasn't registered for
             progressMap[event.id] = []
-          } else if (errorMessage.includes('Failed to fetch') || 
-                     errorMessage.includes('fetch') ||
-                     errorMessage.includes('Network connection failed')) {
+          } else if (errorMessage.includes('Failed to fetch') ||
+            errorMessage.includes('fetch') ||
+            errorMessage.includes('Network connection failed')) {
             // Network/connection errors - don't log as warnings since they're expected
             progressMap[event.id] = []
           } else if (errorMessage.includes('Server error')) {
@@ -389,14 +410,14 @@ export function useEvents() {
   // Get the current step for an event (from user_events table)
   const getCurrentStepForEvent = useCallback((eventId: string) => {
     const currentStepInfo = eventsState.currentStepByEvent[eventId]
-    
+
     if (currentStepInfo) {
       return currentStepInfo.step
     }
 
     // Fallback to calculating from progress if current step info not available
     const progress = getEventProgress(eventId)
-    
+
     if (progress.length === 0) {
       // No progress is expected before registration - return 0 silently
       return 0
@@ -409,7 +430,7 @@ export function useEvents() {
       .sort((a, b) => b - a)
 
     const result = completedSteps.length > 0 ? completedSteps[0] + 1 : 1;
-    
+
     return result;
   }, [eventsState.currentStepByEvent, getEventProgress])
 

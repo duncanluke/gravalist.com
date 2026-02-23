@@ -6,7 +6,7 @@ import { Calendar, Clock, MapPin, Route, Mountain, TreePine, Award } from 'lucid
 import { useEvents } from '../hooks/useEvents';
 import { Event } from '../utils/supabase/client';
 // Using the same event image as placeholder - can be updated with event-specific image later
-import logoImage from '@/assets/logo.png';
+import logoImage from '../assets/logo.png';
 
 interface DynamicEventPageProps {
   eventSlug: string;
@@ -22,23 +22,23 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
     if (events && events.length > 0) {
       console.log('🔍 DynamicEventPage - Searching for event:', {
         eventSlug,
-        availableEvents: events.map(e => ({ 
-          name: e.name, 
-          slug: e.slug, 
+        availableEvents: events.map(e => ({
+          name: e.name,
+          slug: e.slug,
           generatedSlug: e.name.toLowerCase().replace(/\s+/g, '-'),
           nameWithDashes: e.name.toLowerCase().replace(/\s+/g, '-')
         }))
       });
-      
+
       const foundEvent = events.find(e => {
         // Try multiple matching strategies
         const eventSlugFromName = e.name.toLowerCase().replace(/\s+/g, '-');
         const eventSlugFromSlug = e.slug?.toLowerCase();
         const inputSlugNormalized = eventSlug.toLowerCase();
-        
+
         // Also try matching the name directly (in case eventSlug is the full name)
         const eventNameNormalized = e.name.toLowerCase();
-        
+
         const matches = (
           // Direct slug match
           eventSlugFromSlug === inputSlugNormalized ||
@@ -53,7 +53,7 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
           // Exact name match (case sensitive)
           e.name === eventSlug
         );
-        
+
         if (matches) {
           console.log('✅ DynamicEventPage - Found matching event:', {
             eventName: e.name,
@@ -61,15 +61,15 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
             inputSlug: eventSlug
           });
         }
-        
+
         return matches;
       });
-      
+
       console.log('DynamicEventPage - Event search result:', {
         eventSlug,
         foundEvent: foundEvent ? { id: foundEvent.id, name: foundEvent.name, slug: foundEvent.slug } : null
       });
-      
+
       setEvent(foundEvent || null);
     }
   }, [events, eventSlug]);
@@ -77,9 +77,9 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
   // Format date for display
   const formatEventDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', { 
+    return date.toLocaleDateString('en-GB', {
       day: 'numeric',
-      month: 'long', 
+      month: 'long',
       year: 'numeric'
     });
   };
@@ -91,8 +91,8 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
   };
 
   // Get event tags as badges
-  const getEventTags = (tags: string[]) => {
-    return tags.length > 0 ? tags : ['Unsupported', 'Ultracycling', 'Gravel', 'Bikepacking'];
+  const getEventTags = (tags?: string[] | null) => {
+    return tags && tags.length > 0 ? tags : ['Unsupported', 'Ultracycling', 'Gravel', 'Bikepacking'];
   };
 
   // Get icon for tag
@@ -197,15 +197,15 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
         <div className="py-12">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-6">
-              <img 
-                src={logoImage} 
-                alt={`${event.name} Symbol`} 
+              <img
+                src={logoImage}
+                alt={`${event.name} Symbol`}
                 className="h-24 w-auto"
               />
             </div>
-            
+
             <h1 className="mb-4">{event.name}</h1>
-            
+
             <div className="flex flex-wrap justify-center gap-4 mb-6">
               <Badge variant="outline" className="text-foreground border-border">
                 <Calendar className="w-4 h-4 mr-2" />
@@ -229,11 +229,11 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
               {eventTags.map((tag, index) => {
                 const isFirstTag = index === 0;
                 const IconComponent = getTagIcon(tag);
-                
+
                 return (
-                  <Badge 
-                    key={tag} 
-                    variant="outline" 
+                  <Badge
+                    key={tag}
+                    variant="outline"
                     className={isFirstTag ? "text-primary border-primary bg-primary/10" : "text-foreground border-border"}
                   >
                     <IconComponent className="w-4 h-4 mr-2" />
@@ -251,8 +251,8 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
           </div>
 
           <div className="text-center mb-12">
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={() => onEnterEvent(event.name)}
               className="px-8 py-3 bg-primary hover:bg-primary/90 text-primary-foreground"
             >
@@ -270,15 +270,15 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
             <p className="mb-6">
               Journey through landscapes that challenge and inspire, where every pedal stroke takes you closer to an unforgettable ultra-distance cycling achievement.
             </p>
-            
+
             <p className="mb-4">
               This self-supported adventure invites you to explore at your own pace while pushing your limits on carefully selected routes that showcase the natural beauty and unique challenges of the region.
             </p>
-            
+
             <p className="mb-6">
               Whether you're chasing personal records or simply seeking an epic adventure, this route offers the perfect combination of scenic beauty and physical challenge that defines ultra-distance cycling at its finest.
             </p>
-            
+
             <p>
               Ready to embark on this incredible journey? Prepare for an experience that will test your endurance and reward you with memories that last a lifetime.
             </p>
@@ -288,7 +288,7 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
         {/* Route Highlights */}
         <div className="mb-12">
           <h2 className="mb-8 text-center">Route Highlights</h2>
-          
+
           <div className="grid gap-8 md:grid-cols-3">
             {event.event_highlights && event.event_highlights.length > 0 ? (
               // Use database highlights if available
@@ -329,7 +329,7 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
                 {event.difficulty_level ? `${event.difficulty_level} adventure` : 'Unsupported adventure'}
               </p>
             </div>
-            
+
             <div className="prose prose-invert max-w-none">
               <p className="text-center">
                 No aid stations, no route markings—just you and your bike. Follow the GPX route or make it your own. Choose your challenge: ride solo and chase the record or tour with friends before the cut-off.
@@ -340,8 +340,8 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
 
         {/* Final CTA */}
         <div className="text-center">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             onClick={() => onEnterEvent(event.name)}
             className="px-8 py-3 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground"
           >

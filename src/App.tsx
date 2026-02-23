@@ -23,11 +23,6 @@ function AppContent() {
   const { state, setState, setViewMode, setUserEmail, setCurrentStep, setCurrentPhase } = useAppState();
   const { user, profile, isAuthenticated, loading: authLoading, isOfflineMode } = useAuth();
   const { events, currentEvent, stepProgress, fetchStepProgress, loading: eventsLoading } = useEvents();
-  const { handleEventSelect, handleEnterEvent } = useEventNavigation({
-    userEmail: user?.email || state.userEmail,
-    setState,
-    isAuthenticated
-  });
 
   // Simplified memoization
   const memoizedUserEmail = useMemo(() => user?.email || state.userEmail, [user?.email, state.userEmail]);
@@ -48,6 +43,13 @@ function AppContent() {
     window.history.pushState({}, '', path);
     setCurrentPath(path);
   }, []);
+
+  const { handleEventSelect, handleEnterEvent } = useEventNavigation({
+    userEmail: memoizedUserEmail,
+    setState,
+    isAuthenticated,
+    onNavigate: handleNavigate
+  });
 
   // Simplified loading check
   const shouldShowLoading = useMemo(() => {

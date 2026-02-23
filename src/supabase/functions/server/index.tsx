@@ -1243,8 +1243,8 @@ app.get('/make-server-91bdaa9f/events/:eventId/gpx-download', async (c) => {
 
     console.log('GPX DOWNLOAD - Found path:', event.gpx_file_path)
 
-    // Fallback buckets to try
-    const bucketsToTry = ['events', 'gpx', 'gpx-files', 'public', 'make-91bdaa9f-public-assets']
+    // Fallback buckets to try, prioritizing the exact bucket name from user's environment
+    const bucketsToTry = ['make-91bdaa9f-gpx-files', 'events', 'gpx', 'gpx-files', 'public', 'make-91bdaa9f-public-assets']
     let signedUrl = null
 
     // Try to get a signed URL from one of the likely buckets
@@ -1263,7 +1263,7 @@ app.get('/make-server-91bdaa9f/events/:eventId/gpx-download', async (c) => {
     // Default to the most likely public URL if all signed URL attempts fail
     if (!signedUrl) {
       console.log('GPX DOWNLOAD - Failed to create signed URL, falling back to public URL')
-      signedUrl = supabase.storage.from('gpx').getPublicUrl(event.gpx_file_path).data.publicUrl
+      signedUrl = supabase.storage.from('make-91bdaa9f-gpx-files').getPublicUrl(event.gpx_file_path).data.publicUrl
     }
 
     const fileName = event.gpx_file_name || `${event.name.replace(/\s+/g, '-')}-route.gpx`

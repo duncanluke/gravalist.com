@@ -12,7 +12,7 @@ export type ViewMode =
   | 'upgrade'
   | 'add-route'
   | 'terms'
-  | 'privacy'
+  | 'privacy-policy'
   | 'reset-password';
 
 export type Phase = 'before' | 'start' | 'end';

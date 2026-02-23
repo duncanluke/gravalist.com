@@ -140,7 +140,7 @@ export function AppRouter({
           />
         );
 
-      case 'privacy':
+      case 'privacy-policy':
         return (
           <PrivacyPolicyPage
             onNavigateBack={() => onViewModeChange('home')}
@@ -202,7 +202,7 @@ export function AppRouter({
         return 'w-full max-w-sm md:max-w-2xl lg:max-w-6xl';
       case 'leaderboard':
       case 'terms':
-      case 'privacy':
+      case 'privacy-policy':
         return 'w-full max-w-sm md:max-w-2xl lg:max-w-4xl';
       case 'onboarding':
         return 'w-full max-w-sm md:max-w-lg';

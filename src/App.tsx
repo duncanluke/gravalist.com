@@ -69,8 +69,8 @@ function AppContent() {
         setViewMode('leaderboard');
       } else if (path.includes('/terms')) {
         setViewMode('terms');
-      } else if (path.includes('/privacy')) {
-        setViewMode('privacy');
+      } else if (path.includes('/privacy-policy')) {
+        setViewMode('privacy-policy');
       } else if (path.includes('/add-route')) {
         setViewMode('add-route');
       } else if (path !== '/' && path !== '/home' && path.length > 1) {
@@ -261,8 +261,8 @@ function AppContent() {
   }, [handleNavigate, setViewMode]);
 
   const handleNavigateToPrivacy = useCallback(() => {
-    handleNavigate('/privacy');
-    setViewMode('privacy');
+    handleNavigate('/privacy-policy');
+    setViewMode('privacy-policy');
   }, [handleNavigate, setViewMode]);
 
   const handleNavigateToRides = useCallback(() => {

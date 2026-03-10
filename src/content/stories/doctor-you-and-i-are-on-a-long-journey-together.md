@@ -2,7 +2,7 @@
 title: "Doctor: \"You and I are on a long journey together...\""
 author: "Gravalist"
 date: "Jan 8, 2024 1:58:13 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_1739-1.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_1739-1.jpg"
 slug: "doctor-you-and-i-are-on-a-long-journey-together"
 ---
 

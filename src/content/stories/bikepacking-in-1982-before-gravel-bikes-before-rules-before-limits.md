@@ -2,11 +2,11 @@
 title: "Bikepacking in 1982: Before Gravel Bikes, Before Rules, Before Limits"
 author: "D Luke"
 date: "Feb 8, 2025 10:41:12 AM"
-coverImage: "https://gravalist.com/hubfs/IMG_6789.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_6789.jpg"
 slug: "bikepacking-in-1982-before-gravel-bikes-before-rules-before-limits"
 ---
 
-![IMG_6789](https://gravalist.com/hs-fs/hubfs/IMG_6789.jpg?width=6240&height=4160&name=IMG_6789.jpg)
+![IMG_6789](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_6789.jpg?width=6240&height=4160&name=IMG_6789.jpg)
 
 _“Then I had to cut my own toe off,”_ Steve said casually, as if recalling an ordinary moment from an uneventful day. I blinked. **Excuse me?** _“Yeah, I had to take my Leatherman out and chop it off. The pain was too unbearable.”_ He paused, letting the weight of his words settle before adding, almost as an afterthought, _“That was after racing in minus 40 degrees in Lesotho… I mean, Alaska.”_
 
@@ -20,7 +20,7 @@ Steve called back. _“Have you heard about this new Le Turbo bicycle?”_ A few
 
 But they needed funding.
 
-![IMG_6787](https://gravalist.com/hs-fs/hubfs/IMG_6787.jpg?width=6240&height=4160&name=IMG_6787.jpg)
+![IMG_6787](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_6787.jpg?width=6240&height=4160&name=IMG_6787.jpg)
 
 ## **The Art of Getting Sponsored**
 
@@ -46,8 +46,8 @@ A sad truth for those of us who crave the rawness of the unknown. Modern life, w
 
 ### 📸 **The images below from Scope Magazine’s 1988 edition highlight Steve and Alistair’s legendary journey.**
 
-![IMG_4336](https://gravalist.com/hs-fs/hubfs/IMG_4336.jpg?width=3791&height=2573&name=IMG_4336.jpg)
+![IMG_4336](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_4336.jpg?width=3791&height=2573&name=IMG_4336.jpg)
 
-![IMG_4337](https://gravalist.com/hs-fs/hubfs/IMG_4337.jpg?width=3711&height=1221&name=IMG_4337.jpg)
+![IMG_4337](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_4337.jpg?width=3711&height=1221&name=IMG_4337.jpg)
 
 After all, nobody tells stories about the **easy** rides.

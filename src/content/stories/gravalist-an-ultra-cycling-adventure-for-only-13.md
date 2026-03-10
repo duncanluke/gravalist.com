@@ -2,7 +2,7 @@
 title: "Gravalist: An Ultra Cycling Adventure For Only 13!"
 author: "Gravalist"
 date: "Mar 25, 2024 11:18:50 AM"
-coverImage: "https://gravalist.com/hubfs/Ceres%20500/IMG_5141.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5141.jpg"
 slug: "gravalist-an-ultra-cycling-adventure-for-only-13"
 ---
 
@@ -14,7 +14,7 @@ Our current rule is that we will only take 13 participants in each event. We oft
 -   **Why Only 13 Participate In Our Ultra Cycling Events?**
 -   **Are Gravalist Events For You?**
 
-**![A mountain landscape](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5193.jpg?width=6240&height=4160&name=IMG_5193.jpg)**
+**![A mountain landscape](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5193.jpg?width=6240&height=4160&name=IMG_5193.jpg)**
 
 ## The Gravalist Ultra Cycling Events
 
@@ -24,7 +24,7 @@ The events we currently run are in some incredible places, and we are adding mor
 
 They are events where you sign in remotely, all meet at the same time in the same location, and then go on your adventure. We don’t like to think of the events as a race but a journey into the unknown, to the edge of your limits, where you can discover more about yourself. 
 
-![A gravel A gravel road with a bridge](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5141.jpg?width=6240&height=4160&name=IMG_5141.jpg)
+![A gravel A gravel road with a bridge](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5141.jpg?width=6240&height=4160&name=IMG_5141.jpg)
 
 ## Why Only 13 Participate In Our Ultra Cycling Events?
 
@@ -38,7 +38,7 @@ Suppose you have been lucky enough to enter more than one ultra-cycling event. I
 
 For the Gravalist, we wanted that small community to be at the start line. It's calm. You could come along, have a nice chat with other participants, and then all be on your way, sharing the same route but a completely different adventure. 
 
-![A field with rocks on](https://gravalist.com/hs-fs/hubfs/IMG_4931.jpg?width=2048&height=1365&name=IMG_4931.jpg)
+![A field with rocks on](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_4931.jpg?width=2048&height=1365&name=IMG_4931.jpg)
 
 ### **Cost**
 
@@ -54,7 +54,7 @@ With the Gravalist, you are not constantly looking behind you to see who is chas
 
 The routes are there to be enjoyed on these epic trips. The last thing you need is to chase others and be distracted, which will take you away from the place you may have traveled far to enjoy.
 
-![A rocky field off the road.](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5274.jpg?width=6240&height=4160&name=IMG_5274.jpg)
+![A rocky field off the road.](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5274.jpg?width=6240&height=4160&name=IMG_5274.jpg)
 
 ### **It Less Competitive**
 
@@ -68,7 +68,7 @@ Ultra-cycling events can be quite intimidating. Turning up to a hall with hundre
 
 You check in and see a small group at the start line, and you are off. The events the Gravalist offers not only challenges an experienced ultra cyclist but are a great stepping stone to riding longer distances in more competitive environments if that’s a route you wish to go down. 
 
-![A brown gravel road.](https://gravalist.com/hs-fs/hubfs/Rhodes%20500%20Photos/IMG_4740.jpg?width=6240&height=4160&name=IMG_4740.jpg)
+![A brown gravel road.](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Rhodes%20500%20Photos/IMG_4740.jpg?width=6240&height=4160&name=IMG_4740.jpg)
 
 ## Are Gravalist Events For You?
 

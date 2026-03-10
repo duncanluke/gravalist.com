@@ -2,7 +2,7 @@
 title: "What Can You Expect On A Gravalist Event?"
 author: "Gravalist"
 date: "Mar 30, 2024 7:20:49 PM"
-coverImage: "https://gravalist.com/hubfs/Franschhoek%20500%20Photos/IMG_3494.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3494.jpg"
 slug: "what-can-you-expect-on-a-gravalist-event"
 ---
 
@@ -14,7 +14,7 @@ In this article, we will explain Gravalist events and what you can expect from e
 -   **What Can You Expect From A Gravalist Event?**
 -   **Top Tips For Gravalist Events!**
 
-![An open road A road in South Africa](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5157.jpg?width=6236&height=4157&name=IMG_5157.jpg)
+![An open road A road in South Africa](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5157.jpg?width=6236&height=4157&name=IMG_5157.jpg)
 
 ## What Are Gravalist Ultra Cycling Events?
 
@@ -22,7 +22,7 @@ Let’s get back to the basics and discuss Gravalist events. A Gravalist event i
 
 Gravalist events are not just for beginners getting into ultra cycling. They are also excellent for experts who like to push themselves at shorter distances. They can be done over a weekend and are self-sufficient. 
 
-![A dusty Gravel Road](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5129.jpg?width=6240&height=4160&name=IMG_5129.jpg)
+![A dusty Gravel Road](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5129.jpg?width=6240&height=4160&name=IMG_5129.jpg)
 
 ## What Can You Expect From A Gravalist Event?
 
@@ -66,7 +66,7 @@ Ultra cycling isn’t just about how quickly you can ride around a course. It’
 
 Tough times make tough people, and when you reach the end of an event, you will know you have endured an epic challenge. The feeling you will get after you cross the finish line will be incredibly empowering.
 
-![A Bike On A Dusty Road](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5261.jpg?width=6240&height=4160&name=IMG_5261.jpg)
+![A Bike On A Dusty Road](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5261.jpg?width=6240&height=4160&name=IMG_5261.jpg)
 
 ## Top Tips For Gravalist Events!
 
@@ -92,7 +92,7 @@ When it comes to bikepacking, I believe that having the correct kit is vital for
 
 One of the biggest challenges you will face when ultra cycling is eating and drinking enough to power yourself to the finish. Test different nutrition strategies and also get into the habit of eating and drinking often. 
 
-![A Dusty Gravel Road](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5205.jpg?width=6240&height=4160&name=IMG_5205.jpg)
+![A Dusty Gravel Road](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5205.jpg?width=6240&height=4160&name=IMG_5205.jpg)
 
 ## A Final Note
 

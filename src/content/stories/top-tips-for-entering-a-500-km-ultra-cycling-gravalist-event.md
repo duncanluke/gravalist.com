@@ -2,7 +2,7 @@
 title: "Top Tips For Entering A 500 KM Ultra Cycling Gravalist Event"
 author: "Gravalist"
 date: "Apr 14, 2024 2:42:57 PM"
-coverImage: "https://gravalist.com/hubfs/Ceres%20500/IMG_5140.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5140.jpg"
 slug: "top-tips-for-entering-a-500-km-ultra-cycling-gravalist-event"
 ---
 
@@ -11,7 +11,7 @@ When it comes to ultra-cycling and long-distance cycling events, it can be chall
 In this article, we want to share some top tips for helping you on that first 500 km Gravalist event. These will give you the best possible experience on our amazing courses which take [**meticulous planning**](../../../com/gravalist/stories/the-gravalist-what-it-takes-to-plan-an-event.html).
 
   
-![IMG_3829](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3829.jpg?width=2048&height=1365&name=IMG_3829.jpg)
+![IMG_3829](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3829.jpg?width=2048&height=1365&name=IMG_3829.jpg)
 
 ## Our Top Tips
 
@@ -31,7 +31,7 @@ When it comes to our Gravalist events, we often get people turn up who have neve
 
 Before an event, getting used to riding at night is really good. Not only is it going to make you feel more confident when the event comes around, but you will also learn about feeling tired, letting your eyes adjust, and being in remote locations when there’s just darkness. 
 
-![3](https://gravalist.com/hs-fs/hubfs/3.png?width=1280&height=720&name=3.png)
+![3](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/3.png?width=1280&height=720&name=3.png)
 
 ### **Train For Distance**
 
@@ -45,7 +45,7 @@ When it comes to eating and drinking, it’s really easy to go wrong and end up 
 
 It’s good to go in with a strategy and when you know the right foods to get, how often to get them, and also ensure you're getting enough water and electrolytes to ensure that the muscles have everything they need. You can even set timers on modern Garmins. 
 
-![IMG_4726](https://gravalist.com/hs-fs/hubfs/Rhodes%20500%20Photos/IMG_4726.jpg?width=6240&height=4160&name=IMG_4726.jpg)
+![IMG_4726](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Rhodes%20500%20Photos/IMG_4726.jpg?width=6240&height=4160&name=IMG_4726.jpg)
 
 ### **Understand There’s Highs And Lows**
 
@@ -59,7 +59,7 @@ We love riding gravel and are not shy of long rides off-road with loads of ups a
 
 The reason we say this is because after a day's riding, you are going to get fatigued, and those lower gears are going to be so important. We have never had a participant get to the end of an event and say, “I needed more higher gears.” They always say the opposite. For more information check out [**What To Expect On A Gravalist Event**](../../../com/gravalist/stories/what-can-you-expect-on-a-gravalist-event.html)**.**
 
-![IMG_5140](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5140.jpg?width=6240&height=4160&name=IMG_5140.jpg)
+![IMG_5140](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5140.jpg?width=6240&height=4160&name=IMG_5140.jpg)
 
 ### **Race Or Tour**
 
@@ -73,7 +73,7 @@ Many participants reach the end of an event and realize that it’s over and fee
 
 Try not to wish the end of an event would come too quickly. Enjoy each moment, good or bad, and embrace the journey as you go through it. It’s not meant to be easy, and a positive attitude goes a long way. 
 
-![B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a](https://gravalist.com/hs-fs/hubfs/B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a.jpeg?width=2365&height=1330&name=B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a.jpeg)
+![B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a.jpeg?width=2365&height=1330&name=B9F73F42-35C1-424E-9916-406DA5579C29_1_102_a.jpeg)
 
 ## A Final Note
 

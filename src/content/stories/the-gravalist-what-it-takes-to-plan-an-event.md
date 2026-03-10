@@ -2,7 +2,7 @@
 title: "The Gravalist: What It Takes To Plan An Event"
 author: "Gravalist"
 date: "Apr 11, 2024 4:23:31 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_2035.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_2035.jpg"
 slug: "the-gravalist-what-it-takes-to-plan-an-event"
 ---
 
@@ -16,7 +16,7 @@ The short answer is a lot, and in this article, we want to discuss all the thing
 -   **Step Four: Test And Fine Tune**
 -   **Applying To Be A Gravalist Parcours Founder**
 
-![IMG_3684](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3684.jpg?width=2048&height=1365&name=IMG_3684.jpg)
+![IMG_3684](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3684.jpg?width=2048&height=1365&name=IMG_3684.jpg)
 
 ## Step One: The Right Destination And Local Expert
 
@@ -30,7 +30,7 @@ We also use route pickers who are part of the ultra-cycling community. Knowing h
 
 **A lot of the routes are designed by our ultra-cycling staff here at the Gravalist! With us being in many different parts of the world and all incredibly passionate about making epic routes, we love getting out and creating something special.**
 
-**![IMG_3494](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3494.jpg?width=2048&height=1365&name=IMG_3494.jpg)**
+**![IMG_3494](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3494.jpg?width=2048&height=1365&name=IMG_3494.jpg)**
 
 ## Step Two: Tell And Create A Story
 
@@ -40,7 +40,7 @@ We also want to create your story. Although 12 other cyclists are riding the rou
 
 When it comes to ultra cycling and adventure riding, the value isn’t in where you finish the race, but in the journey, you have along the way. The story is never forgotten when distance and elevation can be easily achieved. 
 
-![IMG_3387](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3387.jpg?width=2048&height=1365&name=IMG_3387.jpg)
+![IMG_3387](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3387.jpg?width=2048&height=1365&name=IMG_3387.jpg)
 
 ## Step Three: Fundamentals
 
@@ -58,7 +58,7 @@ For some riders, 500 km is enough to do in a single hit, but for others who want
 
 Next, we have terrain, and here at the Gravalist, we aim for 60% off-road and 40% off-road. Although in some countries this is an easy task, in others, it can be much more difficult. Finding the right routes on public land is challenging.
 
-![IMG_3836](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3836.jpg?width=2048&height=1365&name=IMG_3836.jpg)
+![IMG_3836](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3836.jpg?width=2048&height=1365&name=IMG_3836.jpg)
 
 ## Step Four: Testing And Fine Tune
 
@@ -68,7 +68,7 @@ Then, after they have ridden the route, we need to fine-tune it. Where can it be
 
 Once the fine-tuning has been done, we finalise the route and get it up on the site ready for you, the amazing riders who come to our events. It’s an exciting process but needs a lot of attention.
 
-![IMG_3366](https://gravalist.com/hs-fs/hubfs/Franschhoek%20500%20Photos/IMG_3366.jpg?width=2048&height=1365&name=IMG_3366.jpg)
+![IMG_3366](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Franschhoek%20500%20Photos/IMG_3366.jpg?width=2048&height=1365&name=IMG_3366.jpg)
 
 ## Applying To Be A Gravalist Parcours Founder
 

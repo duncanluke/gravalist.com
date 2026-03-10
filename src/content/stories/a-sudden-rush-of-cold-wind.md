@@ -2,7 +2,7 @@
 title: "A sudden rush of cold wind"
 author: "Gravalist"
 date: "Oct 31, 2023 8:00:51 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_1973.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_1973.jpg"
 slug: "a-sudden-rush-of-cold-wind"
 ---
 

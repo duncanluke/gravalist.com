@@ -2,7 +2,7 @@
 title: "Why I’m NOT Racing Gravel in 2025"
 author: "D Luke"
 date: "Feb 4, 2025 12:28:59 PM"
-coverImage: "https://gravalist.com/hubfs/Clarens%20500/Clarens%20500,%202025/IMG_6488_1-2.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Clarens%20500/Clarens%20500,%202025/IMG_6488_1-2.jpg"
 slug: "why-im-not-racing-gravel-in-2025"
 ---
 

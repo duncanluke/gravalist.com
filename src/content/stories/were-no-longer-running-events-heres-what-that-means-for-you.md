@@ -2,13 +2,13 @@
 title: "We’re No Longer Running Events — Here’s What That Means for You"
 author: "Gravalist"
 date: "Sep 2, 2025 8:30:57 AM"
-coverImage: "https://gravalist.com/hubfs/Routes.png"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Routes.png"
 slug: "were-no-longer-running-events-heres-what-that-means-for-you"
 ---
 
 After careful consideration, we’ve made a clear and intentional decision: **Gravalist will no longer host officially organized events**. Instead, we’re doubling down on what really matters to us — building a platform for **community-driven, self-guided gravel rides**. Need a [refund](https://form.jotform.com/252441025854049)? Simply share your email and we'll process it.
 
-![Routes](https://gravalist.com/hs-fs/hubfs/Routes.png?width=500&height=500&name=Routes.png)
+![Routes](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Routes.png?width=500&height=500&name=Routes.png)
 
 You’re not being downgraded — you’re being migrated immediately into a model that puts freedom, challenge, and connection front and center. No frills. No false promises. Just great riding.
 

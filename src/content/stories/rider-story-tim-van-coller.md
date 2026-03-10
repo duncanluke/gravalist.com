@@ -2,7 +2,7 @@
 title: "Rider Story: Tim van Coller"
 author: "Gravalist"
 date: "Nov 2, 2023 8:53:08 PM"
-coverImage: "https://gravalist.com/hubfs/BC5BD052-EBB5-4A6A-97B0-36AA0CA3C521%20%281%29.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/BC5BD052-EBB5-4A6A-97B0-36AA0CA3C521%20%281%29.jpg"
 slug: "rider-story-tim-van-coller"
 ---
 

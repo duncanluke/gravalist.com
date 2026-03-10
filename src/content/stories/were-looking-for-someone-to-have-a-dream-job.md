@@ -2,7 +2,7 @@
 title: "We're looking for someone to have a dream job"
 author: "Gravalist"
 date: "Feb 14, 2024 7:09:00 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_3940.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_3940.jpg"
 slug: "were-looking-for-someone-to-have-a-dream-job"
 ---
 

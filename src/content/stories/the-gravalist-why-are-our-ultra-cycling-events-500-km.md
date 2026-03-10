@@ -2,7 +2,7 @@
 title: "The Gravalist: Why Are Our Ultra Cycling Events 500 Km?"
 author: "Gravalist"
 date: "Mar 29, 2024 3:04:46 PM"
-coverImage: "https://gravalist.com/hubfs/Ceres%20500/IMG_5322.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5322.jpg"
 slug: "the-gravalist-why-are-our-ultra-cycling-events-500-km"
 ---
 
@@ -10,7 +10,7 @@ When it comes to ultra cycling, there are a lot of choices of events that cover 
 
 500 km is one of the best distances for ultra cycling. In this article, we'll tell you why. It was not all just luck that they ended up at 500 km. There's a reason why we do this. Here’s what's behind it!
 
-![Maloti Route Sign With A Road Next To It](https://gravalist.com/hs-fs/hubfs/Rhodes%20500%20Photos/IMG_4703.jpg?width=6240&height=4160&name=IMG_4703.jpg)
+![Maloti Route Sign With A Road Next To It](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Rhodes%20500%20Photos/IMG_4703.jpg?width=6240&height=4160&name=IMG_4703.jpg)
 
 ### **Great Distance For Everyone**
 
@@ -26,7 +26,7 @@ That’s why our events start on weekend mornings, and we aim for them to be com
 
 There are many ultra-cycling races that are very long distances, as much as 5000 km. Preparing for these can take a lot of time and can be as long as a month away from normal life for many.
 
-![A Dusty Gravel Trail](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5161.jpg?width=1078&height=719&name=IMG_5161.jpg)
+![A Dusty Gravel Trail](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5161.jpg?width=1078&height=719&name=IMG_5161.jpg)
 
 ### **Easier For Race Preparation**
 
@@ -40,7 +40,7 @@ When it comes to Gravalist events, we only allow 13 participants per ride. This 
 
 These riders are not there as your competition. They are a part of your adventure, and they will be sharing a similar journey with you. A shorter-distance event will bring everyone together, and knowing they are close will make the experience special for you. 
 
-![A Lonely Road In The Outback](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5322.jpg?width=6240&height=4160&name=IMG_5322.jpg)
+![A Lonely Road In The Outback](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5322.jpg?width=6240&height=4160&name=IMG_5322.jpg)
 
 ### **It Doesn’t Require Huge Amounts Of Training**
 
@@ -54,7 +54,7 @@ Ultra cycling can be expensive. At the Gravalist, we are huge believers in keepi
 
 When doing 500 km events, not only does our price stay low, but your adventure won’t break the bank. You can travel more and enjoy more places on your bike throughout the year. 
 
-![A gravel road in the distance](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5143.jpg?width=6240&height=4160&name=IMG_5143.jpg)  
+![A gravel road in the distance](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5143.jpg?width=6240&height=4160&name=IMG_5143.jpg)  
   
 
 ## A Final Note 

@@ -2,7 +2,7 @@
 title: "Too kind to care"
 author: "D Luke"
 date: "Oct 31, 2023 8:09:02 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_2031.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_2031.jpg"
 slug: "too-kind-to-care"
 ---
 

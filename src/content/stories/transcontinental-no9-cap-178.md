@@ -2,7 +2,7 @@
 title: "Transcontinental No9 Cap 178"
 author: "D Luke"
 date: "Oct 20, 2023 5:20:32 PM"
-coverImage: "https://gravalist.com/hubfs/XH2J4218%20%282%29.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/XH2J4218%20%282%29.jpg"
 slug: "transcontinental-no9-cap-178"
 ---
 

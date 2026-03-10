@@ -2,11 +2,11 @@
 title: "The 3% Rule for Building Unsupported Ultra Gravel Bikepacking Routes"
 author: "D Luke"
 date: "Feb 1, 2025 10:03:02 AM"
-coverImage: "https://gravalist.com/hubfs/IMG_7B65325028D6-1.jpeg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_7B65325028D6-1.jpeg"
 slug: "the-3-rule-for-building-unsupported-ultra-gravel-bikepacking-routes"
 ---
 
-## **![Gravalist500 - Sedgefield 500 2023 (45 of 137) (1)](https://gravalist.com/hs-fs/hubfs/Gravalist500%20-%20Sedgefield%20500%202023%20(45%20of%20137)%20(1).jpg?width=2000&height=1333&name=Gravalist500%20-%20Sedgefield%20500%202023%20(45%20of%20137)%20(1).jpg)**
+## **![Gravalist500 - Sedgefield 500 2023 (45 of 137) (1)](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Gravalist500%20-%20Sedgefield%20500%202023%20(45%20of%20137)%20(1).jpg?width=2000&height=1333&name=Gravalist500%20-%20Sedgefield%20500%202023%20(45%20of%20137)%20(1).jpg)**
 
 ## **Beyond Distance: The Philosophy of Route Design**
 
@@ -100,7 +100,7 @@ This is the final **mental battle**—a chance for riders to push through exhaus
 
 • Let the finish be **earned, not given**.
 
-![IMG_7B65325028D6-1](https://gravalist.com/hs-fs/hubfs/IMG_7B65325028D6-1.jpeg?width=223&height=483&name=IMG_7B65325028D6-1.jpeg)
+![IMG_7B65325028D6-1](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_7B65325028D6-1.jpeg?width=223&height=483&name=IMG_7B65325028D6-1.jpeg)
 
 ## **Final Thoughts: Designing Routes That Change People**
 

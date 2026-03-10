@@ -2,7 +2,7 @@
 title: "Gravel Ride 2024 South Africa,  Waiting List"
 author: "Gravalist"
 date: "Jun 3, 2024 3:34:25 PM"
-coverImage: "https://gravalist.com/hubfs/Burra%20500/DSC09789.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Burra%20500/DSC09789.jpg"
 slug: "introducing_the_gravalist_waiting_list"
 ---
 

@@ -2,7 +2,7 @@
 title: "Route Highlights of the Burra 500, Midlands and Drakensberg Magic"
 author: "Gravalist"
 date: "May 3, 2024 11:45:05 AM"
-coverImage: "https://gravalist.com/hs-fs/hubfs/Burra%20500/DJI_0056%20%283%29.jpg?height=2000&name=DJI_0056%20%283%29.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Burra%20500/DJI_0056%20%283%29.jpg?height=2000&name=DJI_0056%20%283%29.jpg"
 slug: "route-highlights-of-the-burra-500-midlands-and-drakensberg-magic"
 ---
 
@@ -24,6 +24,6 @@ Embark on an exhilarating journey through the challenging Drakensberg Mountains,
 
 In the heart of KwaZulu-Natal's lush green landscape lies the captivating Karkloof Forest. Surrounded by rolling hills, this enchanting forest is a sanctuary of wildflowers and natural melodies, beckoning intrepid explorers to discover its hidden wonders.
 
-![DJI_0056 (3)](https://gravalist.com/hs-fs/hubfs/Burra%20500/DJI_0056%20(3).jpg?width=1333&height=2000&name=DJI_0056%20(3).jpg)
+![DJI_0056 (3)](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Burra%20500/DJI_0056%20(3).jpg?width=1333&height=2000&name=DJI_0056%20(3).jpg)
 
 Take part in the Burra 500 this June, [learn more.](../../../com/gravalist/burra-500.html)

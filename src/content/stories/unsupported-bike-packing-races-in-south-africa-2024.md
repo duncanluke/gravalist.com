@@ -2,7 +2,7 @@
 title: "Unsupported Bike Packing Races in South Africa, 2024"
 author: "Gravalist"
 date: "Feb 14, 2024 1:54:00 PM"
-coverImage: "https://gravalist.com/hubfs/IMG_1687%202.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_1687%202.jpg"
 slug: "unsupported-bike-packing-races-in-south-africa-2024"
 ---
 
@@ -20,11 +20,11 @@ The Unsupported Bike Packing Races encompass two distinct categories, ensuring a
 
 Celebrating personal achievement of over 40 riders in 2023, the Gravalist expanded the event horizon in 2023 by introducing new and exciting route formats and races that traverse the spectacular landscapes of South Africa. These races promise an unparalleled adventure, with only a bicycle capable of navigating the untamed paths leading to breathtaking destinations. The exhilaration of conquering unexplored terrains sets these races apart, allowing participants to revel in the sense of accomplishment on two wheels.
 
--   ![self-care](https://gravalist.com/hs-fs/hubfs/IMG_1840%202.jpg?width=4032&height=3024&name=IMG_1840%202.jpg)
+-   ![self-care](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_1840%202.jpg?width=4032&height=3024&name=IMG_1840%202.jpg)
     
     self-care for night riding
     
--   ![refuel](https://gravalist.com/hs-fs/hubfs/IMG_1842%202.jpg?width=3024&height=4032&name=IMG_1842%202.jpg)
+-   ![refuel](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/IMG_1842%202.jpg?width=3024&height=4032&name=IMG_1842%202.jpg)
     
     Find your aid station and resupply. 
 

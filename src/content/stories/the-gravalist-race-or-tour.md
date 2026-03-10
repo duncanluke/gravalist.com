@@ -2,7 +2,7 @@
 title: "The Gravalist: Race Or Tour"
 author: "Gravalist"
 date: "Apr 7, 2024 1:07:55 PM"
-coverImage: "https://gravalist.com/hubfs/Cape%20Hope%20500/IMG_5415.jpg"
+coverImage: "https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Cape%20Hope%20500/IMG_5415.jpg"
 slug: "the-gravalist-race-or-tour"
 ---
 
@@ -15,7 +15,7 @@ At each event, we have a great mix of people, and some want to be the first to f
 -   **Touring A Gravalist Event: What To Expect**
 -   **Which Is For You, Race Or Tour?**
 
-![IMG_5125](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5125.jpg?width=6240&height=4160&name=IMG_5125.jpg)
+![IMG_5125](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5125.jpg?width=6240&height=4160&name=IMG_5125.jpg)
 
 ## What Are Gravalist Events?
 
@@ -25,7 +25,7 @@ The events are 500 km long, and we only allow 13 participants per event. They ar
 
 We keep the prices low so we can get as many cyclists on the journeys as possible, and we are constantly adding new events to inspire more people to go to different places and embrace new cultures. 
 
-![IMG_5415](https://gravalist.com/hs-fs/hubfs/Cape%20Hope%20500/IMG_5415.jpg?width=2048&height=1365&name=IMG_5415.jpg)  
+![IMG_5415](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Cape%20Hope%20500/IMG_5415.jpg?width=2048&height=1365&name=IMG_5415.jpg)  
   
 
 ## Racing A Gravalist Event: What To Expect
@@ -52,7 +52,7 @@ Many cyclists struggle more with the mental side of racing an event compared to 
 
 If you're planning on racing, it’s important to understand that you will miss out on some amazing sights. You will need to ride at night, and this can, for many, take away from the experience. You can also easily forget the ride when you're very tired. 
 
-![IMG_2493](https://gravalist.com/hs-fs/hubfs/Cape%20Hope%20500/Tulbagh/IMG_2493.jpg?width=2016&height=1134&name=IMG_2493.jpg)
+![IMG_2493](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Cape%20Hope%20500/Tulbagh/IMG_2493.jpg?width=2016&height=1134&name=IMG_2493.jpg)
 
 ## Touring A Gravalist Event: What To Expect
 
@@ -78,7 +78,7 @@ If you plan to race the event, there’s very little chance of you getting much 
 
 When you are touring, you have time for conversations. You are going to be on the same course as 12 other people and will cross them from time to time. Stop and talk to them, and share what you feel. It adds to theirs and your experience. 
 
-![IMG_5141](https://gravalist.com/hs-fs/hubfs/Ceres%20500/IMG_5141.jpg?width=6240&height=4160&name=IMG_5141.jpg)
+![IMG_5141](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Ceres%20500/IMG_5141.jpg?width=6240&height=4160&name=IMG_5141.jpg)
 
 ## Which Is For You, Race Or Tour?
 
@@ -91,7 +91,7 @@ The same goes the other way. Starting touring and then ramping up the pressure t
 **PICK WHAT YOU WANT TO DO BEFORE THE EVENT!**
 
   
-![IMG_2479](https://gravalist.com/hs-fs/hubfs/Cape%20Hope%20500/Tulbagh/IMG_2479.jpg?width=2016&height=1134&name=IMG_2479.jpg)
+![IMG_2479](https://139710685.fs1.hubspotusercontent-eu1.net/hub/139710685/hubfs/Cape%20Hope%20500/Tulbagh/IMG_2479.jpg?width=2016&height=1134&name=IMG_2479.jpg)
 
 ## A Final Note
 

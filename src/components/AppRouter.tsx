@@ -14,8 +14,6 @@ import { AddRoutePage } from './AddRoutePage';
 import { OnboardingRouter } from './OnboardingRouter';
 import { TermsPage } from './TermsPage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
-import { AuthCallback } from './AuthCallback';
-import { VerificationCallback } from './VerificationCallback';
 import { StoriesPage } from './StoriesPage';
 import { StoryDetailPage } from './StoryDetailPage';
 import { ResetPasswordPage } from './ResetPasswordPage';
@@ -185,6 +183,7 @@ export function AppRouter({
             <DynamicEventPage
               eventSlug={viewModeStr}
               onEnterEvent={onEnterEvent}
+              onNavigateToUpgrade={() => onViewModeChange('upgrade')}
             />
           );
         }

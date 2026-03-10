@@ -61,10 +61,11 @@ export function SimplifiedOnboardingLayout({
   const currentPhaseData = phases.find(p => p.id === currentPhase);
   const currentStep = currentPhaseData?.steps.find(s => s.id === currentStepId);
   const allSteps = phases.flatMap(p => p.steps);
+  const visibleSteps = allSteps.filter(s => s.id !== 0); // Hide email step from progress count
   const currentIndex = allSteps.findIndex(s => s.id === currentStepId);
-  const isFirstStep = currentStepId === 0; // Email step is always first
+  const isFirstVisibleStep = currentStepId === 1; // Step 1 is the first visible step
   const isLastStep = currentIndex === allSteps.length - 1;
-  
+
   // Swipe detection state
   const touchStartX = useRef<number>(0);
   const touchStartY = useRef<number>(0);
@@ -79,12 +80,12 @@ export function SimplifiedOnboardingLayout({
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isSwipeActive) return;
-    
+
     const currentX = e.touches[0].clientX;
     const currentY = e.touches[0].clientY;
     const deltaX = Math.abs(currentX - touchStartX.current);
     const deltaY = Math.abs(currentY - touchStartY.current);
-    
+
     // If vertical scroll is more significant, disable swipe
     if (deltaY > deltaX) {
       setIsSwipeActive(false);
@@ -93,11 +94,11 @@ export function SimplifiedOnboardingLayout({
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!isSwipeActive) return;
-    
+
     const touchEndX = e.changedTouches[0].clientX;
     const deltaX = touchStartX.current - touchEndX;
     const minSwipeDistance = 50;
-    
+
     if (Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
         // Swipe left - go to next step
@@ -106,12 +107,12 @@ export function SimplifiedOnboardingLayout({
         }
       } else {
         // Swipe right - go to previous step
-        if (!isFirstStep) {
+        if (!isFirstVisibleStep) {
           onBack();
         }
       }
     }
-    
+
     setIsSwipeActive(false);
   };
 
@@ -156,38 +157,38 @@ export function SimplifiedOnboardingLayout({
                 <div className="flex-1">
                   {currentStep && (
                     <div className="text-base font-medium text-foreground">
-                      {currentStepId === 5 ? 'Liability, Waiver, Assumption of Risk, and Indemnity Agreement' : currentStepId === 6 ? 'Medical Insurance' : currentStepId === 17 ? 'Your Digital Patch' : currentStep.title}
+                      {currentStepId === 6 ? 'Liability, Waiver, Assumption of Risk, and Indemnity Agreement' : currentStepId === 7 ? 'Medical Insurance' : currentStepId === 17 ? 'Your Digital Patch' : currentStep.title}
                     </div>
                   )}
                 </div>
-                
+
 
               </div>
-              
+
               {/* Bottom row: Overall progress bar and phase/step info */}
               <div className="space-y-2">
                 {/* Overall Progress Bar */}
                 <div className="w-full bg-muted/30 rounded-full h-1.5">
-                  <div 
+                  <div
                     className="bg-primary h-1.5 rounded-full transition-all duration-300 ease-out"
-                    style={{ 
-                      width: `${Math.round(((allSteps.findIndex(s => s.id === currentStepId) + 1) / allSteps.length) * 100)}%` 
+                    style={{
+                      width: `${Math.round(((visibleSteps.findIndex(s => s.id === currentStepId) + 1) / visibleSteps.length) * 100)}%`
                     }}
                   />
                 </div>
-                
+
                 {/* Progress Info */}
                 <div className="flex items-center justify-between text-xs">
                   <div className="text-muted-foreground">
                     <span className="font-medium">{currentPhaseData.title}</span>
                     {currentStep && (
                       <span className="ml-1">
-                        • {currentStepId === 5 ? 'Liability Agreement' : currentStepId === 6 ? 'Medical Insurance' : currentStepId === 17 ? 'Digital Patch' : currentStep.title}
+                        • {currentStepId === 6 ? 'Liability Agreement' : currentStepId === 7 ? 'Medical Insurance' : currentStepId === 17 ? 'Digital Patch' : currentStep.title}
                       </span>
                     )}
                   </div>
                   <div className="text-muted-foreground">
-                    Step {allSteps.findIndex(s => s.id === currentStepId) + 1} of {allSteps.length}
+                    Step {visibleSteps.findIndex(s => s.id === currentStepId) + 1} of {visibleSteps.length}
                   </div>
                 </div>
               </div>
@@ -196,18 +197,18 @@ export function SimplifiedOnboardingLayout({
         )}
 
         {/* Main Content */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 relative scrollbar-hide"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {children}
-          
+
 
         </div>
       </div>
-      
+
       {/* Fixed Bottom Navigation - Hide for email collection step */}
       {currentStepId !== 0 && (
         <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm md:max-w-lg p-4 bg-card border-t border-border z-40 border-l border-r border-border/60 rounded-t-lg shadow-lg" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom))' }}>
@@ -215,13 +216,13 @@ export function SimplifiedOnboardingLayout({
             <Button
               variant="outline"
               onClick={onBack}
-              disabled={isFirstStep}
+              disabled={isFirstVisibleStep}
               className="flex items-center gap-2 border-border hover:bg-muted min-w-[80px]"
             >
               <ChevronLeft className="h-4 w-4" />
               Back
             </Button>
-            
+
             <Button
               onClick={() => {
                 if (currentStepId === 18) {

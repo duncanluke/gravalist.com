@@ -20,10 +20,10 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [currentStep, setCurrentStep] = useState('');
-  
+
   // Check if user is already a premium subscriber
   const isPremiumUser = profile?.is_premium_subscriber && profile?.subscription_status === 'active';
-  
+
   // Check for success/cancel parameters
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -33,27 +33,27 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
     if (success === 'true') {
       setShowSuccessMessage(true);
       toast.success('Welcome to Gravalist Premium! Your subscription is now active.');
-      
+
       // Refresh user profile to get updated premium status
       if (isAuthenticated && refreshProfile) {
         refreshProfile();
       }
-      
+
       // Check if we should return to onboarding
       const returnEvent = localStorage.getItem('gravalist_return_to_event');
       const returnStep = localStorage.getItem('gravalist_return_step');
-      
+
       if (returnEvent && returnStep) {
         toast.success('Returning to your onboarding journey...', { duration: 3000 });
-        
+
         // Clean up localStorage
         localStorage.removeItem('gravalist_return_to_event');
         localStorage.removeItem('gravalist_return_step');
-        
+
         // Navigate back to onboarding after a brief delay
         setTimeout(() => {
           const returnToOnboardingEvent = new CustomEvent('returnToOnboarding', {
-            detail: { 
+            detail: {
               eventName: returnEvent,
               stepId: parseInt(returnStep, 10)
             }
@@ -61,25 +61,25 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
           window.dispatchEvent(returnToOnboardingEvent);
         }, 2000);
       }
-      
+
       // Clean up URL after a short delay to ensure success message is shown
       setTimeout(() => {
         window.history.replaceState({}, '', window.location.pathname);
       }, 1000);
     } else if (canceled === 'true') {
       toast.error('Upgrade canceled. You can try again anytime.');
-      
+
       // Check if we should return to onboarding
       const returnEvent = localStorage.getItem('gravalist_return_to_event');
       const returnStep = localStorage.getItem('gravalist_return_step');
-      
+
       if (returnEvent && returnStep) {
         toast('Returning to your journey...', { duration: 2000 });
-        
+
         // Navigate back without cleaning up (they might want to try again)
         setTimeout(() => {
           const returnToOnboardingEvent = new CustomEvent('returnToOnboarding', {
-            detail: { 
+            detail: {
               eventName: returnEvent,
               stepId: parseInt(returnStep, 10)
             }
@@ -87,19 +87,19 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
           window.dispatchEvent(returnToOnboardingEvent);
         }, 1500);
       }
-      
+
       // Clean up URL
       setTimeout(() => {
         window.history.replaceState({}, '', window.location.pathname);
       }, 1000);
     }
   }, [isAuthenticated, refreshProfile]);
-  
+
   const benefits = [
     'Access to community rides and routes',
     'Eligibility for the community leaderboard',
-    'Support finding new routes',
-    'Help maintain existing routes',
+    'No-fuss, self-managed adventures',
+    '100% independent, non-corporate platform',
     'Contribute to growing the community'
   ];
 
@@ -113,11 +113,11 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
 
     setIsLoading(true);
     setCurrentStep('Authenticating...');
-    
+
     try {
       // Get user's access token
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
+
       if (sessionError || !session?.access_token) {
         throw new Error('Authentication required. Please sign in again.');
       }
@@ -145,62 +145,62 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
 
         const responseData = await response.json();
 
-      if (!response.ok) {
-        
-        const errorMessage = responseData.error || 'Failed to create checkout session';
-        const errorDetails = responseData.details ? ` (${responseData.details})` : '';
-        
-        // Provide specific guidance for common errors
-        let userMessage = errorMessage + errorDetails;
-        if (errorMessage.includes('Payment plan not found')) {
-          userMessage = 'Payment plan configuration issue. Please contact support at hello@gravalist.com';
-        } else if (errorMessage.includes('configuration')) {
-          userMessage = 'Payment system is temporarily unavailable. Please try again later or contact support.';
-        }
-        
-        throw new Error(userMessage);
-      }
+        if (!response.ok) {
 
-      const { checkoutUrl } = responseData;
-      
-      if (!checkoutUrl) {
-        throw new Error('No checkout URL received from payment provider');
-      }
+          const errorMessage = responseData.error || 'Failed to create checkout session';
+          const errorDetails = responseData.details ? ` (${responseData.details})` : '';
 
-      setCurrentStep('Redirecting to payment...');
-      
-      // Force redirect at top level to avoid iframe issues
-      try {
-        if (window.top && window.top !== window) {
-          // We're in an iframe, force top-level navigation
-          window.top.location.href = checkoutUrl;
-        } else {
-          // We're at top level, use normal redirect
-          window.location.href = checkoutUrl;
+          // Provide specific guidance for common errors
+          let userMessage = errorMessage + errorDetails;
+          if (errorMessage.includes('Payment plan not found')) {
+            userMessage = 'Payment plan configuration issue. Please contact support at hello@gravalist.com';
+          } else if (errorMessage.includes('configuration')) {
+            userMessage = 'Payment system is temporarily unavailable. Please try again later or contact support.';
+          }
+
+          throw new Error(userMessage);
         }
-      } catch (e) {
-        // Fallback: create a link element with target="_top"
-        const link = document.createElement('a');
-        link.href = checkoutUrl;
-        link.target = '_top';
-        link.rel = 'noopener noreferrer';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-      
+
+        const { checkoutUrl } = responseData;
+
+        if (!checkoutUrl) {
+          throw new Error('No checkout URL received from payment provider');
+        }
+
+        setCurrentStep('Redirecting to payment...');
+
+        // Force redirect at top level to avoid iframe issues
+        try {
+          if (window.top && window.top !== window) {
+            // We're in an iframe, force top-level navigation
+            window.top.location.href = checkoutUrl;
+          } else {
+            // We're at top level, use normal redirect
+            window.location.href = checkoutUrl;
+          }
+        } catch (e) {
+          // Fallback: create a link element with target="_top"
+          const link = document.createElement('a');
+          link.href = checkoutUrl;
+          link.target = '_top';
+          link.rel = 'noopener noreferrer';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
       } catch (fetchError) {
         clearTimeout(timeoutId);
-        
+
         // Handle specific fetch errors
         if (fetchError instanceof Error && fetchError.name === 'AbortError') {
           throw new Error('Request is taking too long. Please check your connection and try again.');
         }
-        
+
         // Re-throw other errors to be handled by outer catch
         throw fetchError;
       }
-      
+
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to start upgrade process';
       toast.error(errorMessage);
@@ -243,7 +243,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
                       See where you stand among the community. Earn points by completing rides and climb the rankings.
                     </p>
                     <div className="pt-2">
-                      <Button 
+                      <Button
                         onClick={onNavigateToLeaderboard}
                         variant="outline"
                         size="sm"
@@ -285,7 +285,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
                       Browse upcoming community rides and register for your next adventure. Download GPX routes and track your completion.
                     </p>
                     <div className="pt-2">
-                      <Button 
+                      <Button
                         onClick={onNavigateToRides}
                         className="gap-2 bg-primary hover:bg-primary/90"
                         size="sm"
@@ -330,8 +330,8 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
           <div className="space-y-4 max-w-lg relative pb-32">
             {/* Decorative background image */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md mx-auto pointer-events-none z-0">
-              <img 
-                src={backgroundImage} 
+              <img
+                src={backgroundImage}
                 alt="Gravel riding scenery"
                 className="w-full h-auto opacity-30"
                 style={{
@@ -340,7 +340,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
                 }}
               />
             </div>
-            
+
             {showSuccessMessage ? (
               <div className="space-y-4 relative z-10">
                 <h1>Welcome to Gravalist Premium!</h1>
@@ -348,7 +348,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
                   Your subscription is now active. You now have access to all premium features including the community leaderboard, curated routes, and priority support.
                 </p>
                 {onNavigateToHome && (
-                  <Button 
+                  <Button
                     onClick={onNavigateToHome}
                     className="bg-primary text-primary-foreground hover:bg-primary/90"
                     size="lg"
@@ -359,9 +359,9 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
               </div>
             ) : (
               <div className="relative z-10">
-                <h1>Join the Exclusive Gravel Community</h1>
+                <h1>The Gravel Roads Are Yours (And Free)</h1>
                 <p className="text-muted-foreground">
-                  Connect with riders like you — people looking for something between ultra-distance racing and endless route-hunting. Unlock curated rides, routes, and leaderboard spots while supporting the platform that fuels new adventures.
+                  We just help you get there. Gravalist offers a no-fuss, non-corporate-sponsored platform for you to simply enjoy your life and unapologetic gravel riding. Subscribe to unlock our curated routes, leaderboards, and an independent community that shares your ethos.
                 </p>
               </div>
             )}
@@ -384,7 +384,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
                   ))}
                 </div>
 
-                <Button 
+                <Button
                   onClick={handleUpgrade}
                   disabled={isLoading}
                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90"

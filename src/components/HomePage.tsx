@@ -137,10 +137,10 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
             {/* Content */}
             <div className="max-w-4xl mx-auto space-y-8 relative z-10">
               <h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight">
-                Rides
+                The Gravel Roads Are Yours
               </h1>
               <h2 className="text-xl md:text-3xl lg:text-4xl text-muted-foreground">
-                Self-managed routes. Register below to join the community.
+                Zero fuss. Zero corporate sponsors. Just you, your bike, and the route. Register below to start your adventure.
               </h2>
             </div>
           </div>
@@ -153,16 +153,17 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
           )}
 
           {/* Events Grid */}
-          <div className="space-y-8">
+          {/* Events Grid Wrapper */}
+          <div className="py-8 relative min-h-[500px]">
             {loading ? (
-              <div className="flex items-center justify-center py-16">
-                <div className="text-center space-y-4">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center space-y-4 bg-background/80 p-6 rounded-xl backdrop-blur-sm border border-border mt-8">
                   <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                  <p className="text-muted-foreground">Loading routes...</p>
+                  <p className="text-muted-foreground font-medium">Loading premium routes...</p>
                 </div>
               </div>
             ) : (
-              <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 md:grid md:grid-cols-2 md:gap-8 md:overflow-x-visible md:pb-0">
+              <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-12 md:grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-8 md:overflow-x-visible md:pb-0 px-4 max-w-[1400px] mx-auto">
                 {events.length > 0 ? events.filter(event => event.is_published).map((event) => {
                   const displayEvent = formatEventForDisplay(event);
                   const progress = getUserProgress(event.id, event.name);
@@ -170,35 +171,44 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                   return (
                     <Card
                       key={event.id}
-                      className="bg-card/50 border-primary/30 hover:bg-card hover:border-primary transition-all duration-300 group cursor-pointer overflow-hidden flex-shrink-0 w-[320px] md:w-auto"
+                      className="relative bg-background/40 backdrop-blur-xl border-primary/20 hover:border-primary/50 transition-all duration-500 group cursor-pointer overflow-hidden flex-shrink-0 w-[340px] md:w-auto rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(255,87,34,0.15)] flex flex-col h-full"
                       onClick={() => {
                         console.log('HomePage - Card clicked:', { eventId: event.id, eventName: event.name, eventSlug: event.slug });
                         onEventSelect?.(event.name);
                       }}
                     >
-                      <CardContent className="p-8">
+                      {/* Dynamic Background Effect */}
+                      <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+
+                      <CardContent className="p-8 flex flex-col flex-1">
                         {/* Event Header */}
-                        <div className="flex items-start justify-between mb-6">
+                        <div className="flex items-start justify-between mb-8 relative z-10">
                           <div>
-                            <h3 className="mb-3 group-hover:text-primary transition-colors">{displayEvent.name}</h3>
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2 text-muted-foreground">
-                                <MapPin className="w-4 h-4" />
-                                <span className="text-sm">{displayEvent.location}</span>
-                              </div>
-                              <div className="flex items-center gap-2 text-muted-foreground">
-                                <Calendar className="w-4 h-4" />
-                                <span className="text-sm">{displayEvent.date}</span>
-                              </div>
+                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{displayEvent.name}</h3>
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <MapPin className="w-4 h-4" />
+                              <span className="text-sm font-medium">{displayEvent.location}</span>
                             </div>
                           </div>
-                          <div className="text-4xl font-bold text-primary/20 group-hover:text-primary/40 transition-colors">
-                            {displayEvent.distance_km || 500}
+                        </div>
+
+                        {/* High-end Stats Bar */}
+                        <div className="grid grid-cols-2 gap-4 py-4 mb-6 border-y border-border/50 relative z-10">
+                          <div className="flex flex-col items-center justify-center text-center">
+                            <span className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Distance</span>
+                            <span className="text-xl font-bold text-foreground">{displayEvent.distance_km || 500}<span className="text-sm font-normal text-muted-foreground ml-1">km</span></span>
+                          </div>
+                          <div className="flex flex-col items-center justify-center text-center border-l border-border/50">
+                            <span className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Date</span>
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-3 h-3 text-primary hidden sm:block" />
+                              <span className="text-sm font-bold text-foreground">{displayEvent.date}</span>
+                            </div>
                           </div>
                         </div>
 
                         {/* Description */}
-                        <div className="mb-6">
+                        <div className="mb-6 relative z-10 flex-grow">
                           <p className={`text-muted-foreground leading-relaxed ${!expandedDescriptions[displayEvent.name] ? 'line-clamp-4' : ''}`}>
                             {displayEvent.description}
                           </p>
@@ -208,22 +218,20 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                                 e.stopPropagation();
                                 setExpandedDescriptions(prev => ({ ...prev, [displayEvent.name]: !prev[displayEvent.name] }));
                               }}
-                              className="text-primary hover:text-primary/80 text-sm mt-2 transition-colors"
+                              className="text-primary hover:text-primary/80 text-sm mt-2 transition-colors font-medium"
                             >
                               {expandedDescriptions[displayEvent.name] ? 'Read less' : 'Read more...'}
                             </button>
                           )}
                         </div>
 
-                        {/* Highlights */}
-                        <div className="mb-8">
-                          <h4 className="mb-3 text-foreground">Route Highlights</h4>
-                          <div className="space-y-2">
+                        {/* Highlights (Compact) */}
+                        <div className="mb-8 relative z-10">
+                          <div className="flex flex-wrap gap-2">
                             {displayEvent.highlights.slice(0, 3).map((highlight, highlightIndex) => (
-                              <div key={highlightIndex} className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-primary rounded-full flex-shrink-0" />
-                                <span className="text-sm text-muted-foreground">{highlight}</span>
-                              </div>
+                              <Badge key={highlightIndex} variant="secondary" className="bg-secondary/50 text-secondary-foreground text-xs font-normal border-none">
+                                {highlight}
+                              </Badge>
                             ))}
                           </div>
                         </div>
@@ -232,7 +240,7 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                         {(() => {
                           if (userEmail && progress) {
                             return (
-                              <div className="space-y-3">
+                              <div className="space-y-3 relative z-10 mt-auto pt-4">
                                 {/* Progress Bar */}
                                 <div className="w-full bg-muted rounded-full h-2">
                                   <div
@@ -282,29 +290,39 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                             );
                           }
 
-                          // Default button for events without progress or unauthenticated users
+                          // Default premium button for unauthenticated users or users with no progress
                           return (
-                            <Button
-                              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground group"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                // Always use event.name for consistency
-                                console.log('HomePage - View Details clicked:', { eventId: event.id, eventName: event.name, eventSlug: event.slug });
-                                onEventSelect?.(event.name);
-                              }}
-                            >
-                              <Info className="w-4 h-4 mr-2" />
-                              View Details
-                              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                            </Button>
+                            <div className="relative z-10 mt-auto pt-4 flex flex-col items-center">
+                              {!userEmail && (
+                                <div className="mb-3 text-[10px] sm:text-xs font-medium tracking-wide text-primary/80 uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                                  Premium Access Required
+                                </div>
+                              )}
+                              <Button
+                                className="w-full relative overflow-hidden bg-primary/90 hover:bg-primary text-primary-foreground font-semibold py-6 text-lg group transition-all duration-300 shadow-[0_0_15px_rgba(255,87,34,0.3)] hover:shadow-[0_0_25px_rgba(255,87,34,0.5)] border-none"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('HomePage - Get Access clicked:', { eventId: event.id, eventName: event.name });
+                                  onEventSelect?.(event.name);
+                                }}
+                              >
+                                <span className="relative z-10 flex items-center justify-center w-full">
+                                  <MapPin className="w-5 h-5 mr-3" />
+                                  {userEmail ? 'Get Route Access' : 'Unlock Route & Commit'}
+                                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" />
+                                </span>
+
+                                {/* Inner button glow effect */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary-foreground/0 via-primary-foreground/20 to-primary-foreground/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+                              </Button>
+                            </div>
                           );
                         })()}
                       </CardContent>
                     </Card>
                   );
                 }) : (
-                  <div className="col-span-1 md:col-span-2 text-center py-16">
+                  <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-3 text-center py-16">
                     <div className="space-y-4">
                       <h3 className="text-xl text-muted-foreground">No routes available</h3>
                       <p className="text-muted-foreground">

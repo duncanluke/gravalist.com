@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from './ui/drawer';
+import { useIsMobile } from './ui/use-mobile';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -173,349 +175,372 @@ export function AuthModal({
     onClose();
   };
 
-  return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="w-full max-w-md mx-auto bg-background border border-border">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-center">
-            {activeTab === 'forgot_password'
-              ? 'Reset Password'
-              : invitationToken
-                ? 'Join Gravalist'
-                : 'Welcome to Gravalist'}
-          </DialogTitle>
-          <DialogDescription className="text-center text-muted-foreground">
-            {activeTab === 'forgot_password'
-              ? 'Enter your email and we will send you a reset link'
-              : invitationToken
-                ? 'Complete your account setup to join the community'
-                : 'Sign in to your account or create a new one to get started'}
-          </DialogDescription>
-        </DialogHeader>
+  const isMobile = useIsMobile();
 
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-muted/30 p-1">
-            <TabsTrigger
-              value="signin"
-              className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
-            >
-              Sign In
-            </TabsTrigger>
-            <TabsTrigger
-              value="signup"
-              className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
-            >
-              Sign Up
-            </TabsTrigger>
-          </TabsList>
+  const modalTitle = activeTab === 'forgot_password'
+    ? 'Reset Password'
+    : invitationToken
+      ? 'Join Gravalist'
+      : 'Welcome to Gravalist';
 
-          {/* Global error message */}
-          {error && !emailExistsWarning && (
-            <Alert variant="destructive" className="mt-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+  const modalDescription = activeTab === 'forgot_password'
+    ? 'Enter your email and we will send you a reset link'
+    : invitationToken
+      ? 'Complete your account setup to join the community'
+      : 'Sign in to your account or create a new one to get started';
 
-          {/* Email exists warning - only show in signup tab */}
-          {emailExistsWarning && activeTab === 'signup' && (
-            <Alert className="mt-4 bg-primary/10 border-primary/30">
-              <AlertCircle className="h-4 w-4 text-primary" />
-              <AlertDescription className="space-y-3">
-                <p>This email is already registered.</p>
-                <Button
-                  onClick={() => {
-                    setActiveTab('signin');
-                    setEmailExistsWarning(false);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                >
-                  Sign In Instead
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
+  const modalContent = (
+    <>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-muted/30 p-1">
+          <TabsTrigger
+            value="signin"
+            className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
+          >
+            Sign In
+          </TabsTrigger>
+          <TabsTrigger
+            value="signup"
+            className="data-[state=active]:bg-background data-[state=active]:border data-[state=active]:border-primary data-[state=active]:text-foreground transition-all"
+          >
+            Sign Up
+          </TabsTrigger>
+        </TabsList>
 
-          {/* Invitation message */}
-          {invitationToken && (
-            <Alert className="mt-4">
-              <Mail className="h-4 w-4" />
-              <AlertDescription>
-                You've been invited to join the Gravalist community!
-                Create your account to get started.
-              </AlertDescription>
-            </Alert>
-          )}
+        {/* Global error message */}
+        {error && !emailExistsWarning && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-          <TabsContent value="signin" className="space-y-4 mt-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`pl-10 ${formErrors.email ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.email && (
-                  <p className="text-sm text-destructive">{formErrors.email}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="signin-password">Password</Label>
-                  <button
-                    type="button"
-                    onClick={() => handleTabChange('forgot_password')}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    className={`pl-10 ${formErrors.password ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.password && (
-                  <p className="text-sm text-destructive">{formErrors.password}</p>
-                )}
-              </div>
-
+        {/* Email exists warning - only show in signup tab */}
+        {emailExistsWarning && activeTab === 'signup' && (
+          <Alert className="mt-4 bg-primary/10 border-primary/30">
+            <AlertCircle className="h-4 w-4 text-primary" />
+            <AlertDescription className="space-y-3">
+              <p>This email is already registered.</p>
               <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
+                onClick={() => {
+                  setActiveTab('signin');
+                  setEmailExistsWarning(false);
+                }}
+                variant="outline"
+                size="sm"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign In'
-                )}
+                Sign In Instead
               </Button>
-            </form>
-          </TabsContent>
+            </AlertDescription>
+          </Alert>
+        )}
 
-          <TabsContent value="signup" className="space-y-4 mt-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Invitation message */}
+        {invitationToken && (
+          <Alert className="mt-4">
+            <Mail className="h-4 w-4" />
+            <AlertDescription>
+              You've been invited to join the Gravalist community!
+              Create your account to get started.
+            </AlertDescription>
+          </Alert>
+        )}
 
-
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`pl-10 ${formErrors.email ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.email && (
-                  <p className="text-sm text-destructive">{formErrors.email}</p>
-                )}
-                {emailExistsWarning && (
-                  <p className="text-sm text-destructive">Email already exists. Please sign in or use a different email.</p>
-                )}
+        <TabsContent value="signin" className="space-y-4 mt-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="signin-email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="signin-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={`pl-10 ${formErrors.email ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
               </div>
+              {formErrors.email && (
+                <p className="text-sm text-destructive">{formErrors.email}</p>
+              )}
+            </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="signup-password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
-                    className={`pl-10 ${formErrors.password ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.password && (
-                  <p className="text-sm text-destructive">{formErrors.password}</p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="signup-confirm">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="signup-confirm"
-                    type="password"
-                    placeholder="••••••••"
-                    value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                    className={`pl-10 ${formErrors.confirmPassword ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.confirmPassword && (
-                  <p className="text-sm text-destructive">{formErrors.confirmPassword}</p>
-                )}
-              </div>
-
-              {/* Terms and Privacy Agreement */}
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="agree-terms"
-                    checked={formData.agreeToTerms}
-                    onCheckedChange={(checked: boolean) => handleInputChange('agreeToTerms', checked)}
-                    className={`mt-0.5 ${!formData.agreeToTerms ? 'border-primary/60 hover:border-primary' : ''}`}
-                  />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="agree-terms"
-                      className="text-sm leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      I agree to the{' '}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onNavigateToTerms?.();
-                          onClose();
-                        }}
-                        className="text-primary hover:underline"
-                      >
-                        Terms of Service
-                      </button>
-                      {' '}and{' '}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          onNavigateToPrivacy?.();
-                          onClose();
-                        }}
-                        className="text-primary hover:underline"
-                      >
-                        Privacy Policy
-                      </button>
-                    </label>
-                  </div>
-                </div>
-                {formErrors.agreeToTerms && (
-                  <p className="text-sm text-destructive ml-6">{formErrors.agreeToTerms}</p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating account...
-                  </>
-                ) : (
-                  'Create Account'
-                )}
-              </Button>
-            </form>
-          </TabsContent>
-
-          <TabsContent value="forgot_password" className="space-y-4 mt-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="reset-email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                  <Input
-                    id="reset-email"
-                    type="email"
-                    placeholder="your@email.com"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`pl-10 ${formErrors.email && !formErrors.email.includes('sent') ? 'border-destructive' : ''}`}
-                    disabled={loading}
-                  />
-                </div>
-                {formErrors.email && (
-                  <p className={`text-sm ${formErrors.email.includes('sent') ? 'text-green-500' : 'text-destructive'}`}>
-                    {formErrors.email}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading || formErrors.email?.includes('sent')}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending link...
-                  </>
-                ) : (
-                  formErrors.email?.includes('sent') ? 'Link Sent' : 'Send Reset Link'
-                )}
-              </Button>
-
-              <div className="text-center mt-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="signin-password">Password</Label>
                 <button
                   type="button"
-                  onClick={() => handleTabChange('signin')}
-                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  onClick={() => handleTabChange('forgot_password')}
+                  className="text-sm text-primary hover:underline"
                 >
-                  Back to Sign In
+                  Forgot password?
                 </button>
               </div>
-            </form>
-          </TabsContent>
-        </Tabs>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="signin-password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  className={`pl-10 ${formErrors.password ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
+              </div>
+              {formErrors.password && (
+                <p className="text-sm text-destructive">{formErrors.password}</p>
+              )}
+            </div>
 
-        <div className="text-center text-sm text-muted-foreground mt-6">
-          {activeTab === 'signin' ? (
-            <>
-              Don't have an account?{' '}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="signup" className="space-y-4 mt-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+
+            <div className="space-y-2">
+              <Label htmlFor="signup-email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="signup-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={`pl-10 ${formErrors.email ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
+              </div>
+              {formErrors.email && (
+                <p className="text-sm text-destructive">{formErrors.email}</p>
+              )}
+              {emailExistsWarning && (
+                <p className="text-sm text-destructive">Email already exists. Please sign in or use a different email.</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="signup-password">Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="signup-password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  className={`pl-10 ${formErrors.password ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
+              </div>
+              {formErrors.password && (
+                <p className="text-sm text-destructive">{formErrors.password}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="signup-confirm">Confirm Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="signup-confirm"
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                  className={`pl-10 ${formErrors.confirmPassword ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
+              </div>
+              {formErrors.confirmPassword && (
+                <p className="text-sm text-destructive">{formErrors.confirmPassword}</p>
+              )}
+            </div>
+
+            {/* Terms and Privacy Agreement */}
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <Checkbox
+                  id="agree-terms"
+                  checked={formData.agreeToTerms}
+                  onCheckedChange={(checked: boolean) => handleInputChange('agreeToTerms', checked)}
+                  className={`mt-0.5 ${!formData.agreeToTerms ? 'border-primary/60 hover:border-primary' : ''}`}
+                />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="agree-terms"
+                    className="text-sm leading-relaxed peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    I agree to the{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onNavigateToTerms?.();
+                        onClose();
+                      }}
+                      className="text-primary hover:underline"
+                    >
+                      Terms of Service
+                    </button>
+                    {' '}and{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onNavigateToPrivacy?.();
+                        onClose();
+                      }}
+                      className="text-primary hover:underline"
+                    >
+                      Privacy Policy
+                    </button>
+                  </label>
+                </div>
+              </div>
+              {formErrors.agreeToTerms && (
+                <p className="text-sm text-destructive ml-6">{formErrors.agreeToTerms}</p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create Account'
+              )}
+            </Button>
+          </form>
+        </TabsContent>
+
+        <TabsContent value="forgot_password" className="space-y-4 mt-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="reset-email">Email</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input
+                  id="reset-email"
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  className={`pl-10 ${formErrors.email && !formErrors.email.includes('sent') ? 'border-destructive' : ''}`}
+                  disabled={loading}
+                />
+              </div>
+              {formErrors.email && (
+                <p className={`text-sm ${formErrors.email.includes('sent') ? 'text-green-500' : 'text-destructive'}`}>
+                  {formErrors.email}
+                </p>
+              )}
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || formErrors.email?.includes('sent')}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending link...
+                </>
+              ) : (
+                formErrors.email?.includes('sent') ? 'Link Sent' : 'Send Reset Link'
+              )}
+            </Button>
+
+            <div className="text-center mt-4">
               <button
                 type="button"
-                onClick={() => setActiveTab('signup')}
-                className="text-primary hover:underline"
+                onClick={() => handleTabChange('signin')}
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
-                Sign up
+                Back to Sign In
               </button>
-            </>
-          ) : (
-            <>
-              Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => setActiveTab('signin')}
-                className="text-primary hover:underline"
-              >
-                Sign in
-              </button>
-            </>
-          )}
-        </div>
+            </div>
+          </form>
+        </TabsContent>
+      </Tabs>
+
+      <div className="text-center text-sm text-muted-foreground mt-6">
+        {activeTab === 'signin' ? (
+          <>
+            Don't have an account?{' '}
+            <button
+              type="button"
+              onClick={() => setActiveTab('signup')}
+              className="text-primary hover:underline"
+            >
+              Sign up
+            </button>
+          </>
+        ) : (
+          <>
+            Already have an account?{' '}
+            <button
+              type="button"
+              onClick={() => setActiveTab('signin')}
+              className="text-primary hover:underline"
+            >
+              Sign in
+            </button>
+          </>
+        )}
+      </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={(isOpen: boolean) => { if (!isOpen) handleClose() }}>
+        <DrawerContent className="bg-background border-border px-4 pb-8 max-h-[85vh]">
+          <DrawerHeader>
+            <DrawerTitle className="text-xl font-semibold text-center">{modalTitle}</DrawerTitle>
+            <DrawerDescription className="text-center text-muted-foreground">{modalDescription}</DrawerDescription>
+          </DrawerHeader>
+          <div className="w-full mx-auto overflow-y-auto px-2 pb-8 overscroll-contain">
+            {modalContent}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(isOpen: boolean) => { if (!isOpen) handleClose() }}>
+      <DialogContent className="w-full max-w-md mx-auto bg-background border border-border">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold text-center">{modalTitle}</DialogTitle>
+          <DialogDescription className="text-center text-muted-foreground">{modalDescription}</DialogDescription>
+        </DialogHeader>
+        {modalContent}
       </DialogContent>
     </Dialog>
   );

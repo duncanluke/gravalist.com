@@ -83,52 +83,52 @@ export function OnboardingStepRenderer({
       </div>
     ),
     1: (
-      <WelcomeStep 
+      <WelcomeStep
         eventName={currentEvent}
         onContinue={onNext}
       />
     ),
     2: (
-      <AboutYouStep 
+      <AboutYouStep
         onContinue={onAboutYouSubmit}
         onFormStateChange={onAboutYouFormStateChange}
       />
     ),
     3: (
-      <SubscriberRouteDownloadStep 
-        onContinue={onNext}
+      <RegistrationAlmostCompleteStep
+        eventName={currentEvent}
+        onContinue={onComplete} // End of initial registration flow! Drops them back to dashboard.
       />
     ),
     4: (
-      <EquipmentDownloadStep 
+      <SubscriberRouteDownloadStep
         onContinue={onNext}
       />
     ),
     5: (
-      <AgreementsStep 
+      <EquipmentDownloadStep
+        onContinue={onNext}
+      />
+    ),
+    6: (
+      <AgreementsStep
         onContinue={onNext}
         onValidationChange={onValidationChange}
       />
     ),
-    6: (
-      <OnboardingFormStep 
+    7: (
+      <OnboardingFormStep
         step="medical"
         onContinue={onNext}
       />
     ),
-    7: (
-      <CommunitySupport 
-        onContinue={onNext}
-      />
-    ),
     8: (
-      <RegistrationAlmostCompleteStep 
-        eventName={currentEvent}
+      <CommunitySupport
         onContinue={onNext}
       />
     ),
     9: (
-      <ReadyToRideStep 
+      <ReadyToRideStep
         eventName={currentEvent}
         participants={eventParticipants}
         loading={loading}
@@ -138,48 +138,48 @@ export function OnboardingStepRenderer({
       />
     ),
     10: (
-      <StartStep 
+      <StartStep
         onContinue={onNext}
         onFinish={onFinish}
       />
     ),
     11: (
-      <StartingPhotoStep 
+      <StartingPhotoStep
         onContinue={onNext}
         onFinish={onFinish}
       />
     ),
     12: (
-      <PreRideCheckStep 
+      <PreRideCheckStep
         onContinue={onNext}
         onFinish={onFinish}
       />
     ),
     13: (
-      <RideStartStep 
+      <RideStartStep
         onContinue={onNext}
         onFinish={onNext}
       />
     ),
     14: (
-      <GoGoGoStep 
+      <GoGoGoStep
         onContinue={onNext}
         currentEvent={currentEvent}
       />
     ),
     15: (
-      <RideEndConfirmationStep 
+      <RideEndConfirmationStep
         onContinue={onNext}
       />
     ),
     16: (
-      <PostRideReflectionStep 
+      <PostRideReflectionStep
         onContinue={onNext}
         onFinish={onNext}
       />
     ),
     17: (
-      <FinishStep 
+      <FinishStep
         onContinue={onComplete}
         onFinish={onComplete}
       />

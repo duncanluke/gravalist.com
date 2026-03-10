@@ -6,3 +6,5 @@ build/
 *.zip
 *.csv
 hubspot_export/
+.vercel
+.env*.local

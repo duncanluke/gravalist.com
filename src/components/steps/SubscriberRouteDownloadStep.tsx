@@ -17,18 +17,18 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
   const { state } = useAppState();
   const { profile } = useAuth();
   const [isDownloading, setIsDownloading] = useState(false);
-  
+
   // Force refresh events on component mount
   useEffect(() => {
     refreshEvents();
   }, [refreshEvents]);
-  
+
   // Find the current event
   const currentEvent = events.find(event => event.name === state.currentEvent);
-  
+
   // Check subscription status
   const isSubscriber = profile?.is_premium_subscriber && profile?.subscription_status === 'active';
-  
+
   const handleDownload = async () => {
     if (!currentEvent) {
       toast.error('No event selected');
@@ -46,21 +46,21 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
     }
 
     setIsDownloading(true);
-    
+
     try {
       const { downloadUrl, fileName } = await apiClient.getGpxDownloadUrl(currentEvent.id);
-      
+
       const link = document.createElement('a');
       link.href = downloadUrl;
       link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
+
       toast.success('GPX file downloaded successfully!');
     } catch (error: any) {
       console.error('Error downloading GPX file:', error);
-      
+
       // Check if it's a subscription error
       if (error?.message?.includes('Subscription required') || error?.statusCode === 403) {
         toast.error('Active subscription required to download routes', {
@@ -81,11 +81,11 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
       localStorage.setItem('gravalist_return_to_event', state.currentEvent);
       localStorage.setItem('gravalist_return_step', state.currentStepId.toString());
     }
-    
+
     // Navigate to upgrade page using the app's view mode system
     // This ensures we stay within the app, not a hard page reload
-    const upgradeEvent = new CustomEvent('navigateToUpgrade', { 
-      detail: { returnToOnboarding: true } 
+    const upgradeEvent = new CustomEvent('navigateToUpgrade', {
+      detail: { returnToOnboarding: true }
     });
     window.dispatchEvent(upgradeEvent);
   };
@@ -132,7 +132,7 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
             </div>
             <div>
               <h3>Gravalist Subscription</h3>
-              <p className="text-sm text-muted-foreground">Join the community</p>
+              <p className="text-sm text-muted-foreground">Keep it independent</p>
             </div>
           </div>
 
@@ -170,16 +170,16 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
             <div className="flex items-start gap-3">
               <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium">Discord community access</p>
+                <p className="font-medium">No-fuss, non-corporate experience</p>
                 <p className="text-sm text-muted-foreground">
-                  Connect with fellow riders, share tips
+                  Just you, your bike, and the route
                 </p>
               </div>
             </div>
           </div>
 
           <div className="pt-4 border-t border-primary/20">
-            <Button 
+            <Button
               onClick={handleUpgrade}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               size="lg"
@@ -193,7 +193,7 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
 
         {/* Skip Option */}
         <div className="text-center">
-          <Button 
+          <Button
             onClick={onContinue}
             variant="ghost"
             className="text-muted-foreground"
@@ -239,10 +239,10 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
             </p>
           )}
         </div>
-        
+
         {currentEvent?.gpx_file_path ? (
           <div className="space-y-3">
-            <Button 
+            <Button
               onClick={handleDownload}
               className="w-full bg-primary hover:bg-primary/90"
               size="lg"
@@ -261,7 +261,7 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
               )}
             </Button>
 
-            <Button 
+            <Button
               onClick={onContinue}
               variant="outline"
               className="w-full"
@@ -276,7 +276,7 @@ export function SubscriberRouteDownloadStep({ onContinue }: SubscriberRouteDownl
             <p className="text-sm text-muted-foreground">
               No GPX file available for this event yet
             </p>
-            <Button 
+            <Button
               onClick={onContinue}
               variant="outline"
               className="w-full"

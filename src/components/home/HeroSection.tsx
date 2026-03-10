@@ -27,10 +27,10 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
 
                 <div className="max-w-4xl mx-auto space-y-8 relative z-10">
                     <h1 className="sr-only">
-                        UNSUPPORTED ULTRACYCLING GRAVEL BIKEPACKING
+                        The Gravel Roads Are Yours (And Free)
                     </h1>
                     <h2 className="text-xl md:text-3xl lg:text-4xl text-white/90 drop-shadow">
-                        Routes, Not Events. Ride Without the Pressure.
+                        No Fuss. No Corporate Sponsors. Just You and the Route.
                     </h2>
                     <div className="text-base md:text-lg lg:text-xl text-white/80 max-w-2xl mx-auto space-y-6 leading-relaxed pt-8 drop-shadow-sm">
                         <p>Gravalist gives you curated ultra-distance gravel routes — without turning them into events.</p>

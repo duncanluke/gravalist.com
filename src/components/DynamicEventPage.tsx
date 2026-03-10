@@ -11,9 +11,10 @@ import logoImage from '../assets/logo.png';
 interface DynamicEventPageProps {
   eventSlug: string;
   onEnterEvent: (eventName: string) => void;
+  onNavigateToUpgrade?: () => void;
 }
 
-export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPageProps) {
+export function DynamicEventPage({ eventSlug, onEnterEvent, onNavigateToUpgrade }: DynamicEventPageProps) {
   const { events, loading, error } = useEvents();
   const [event, setEvent] = useState<Event | null>(null);
 
@@ -351,6 +352,41 @@ export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPagePr
             Begin your personalized 3-phase preparation for this epic ride
           </p>
         </div>
+      </div>
+
+      {/* Mobile Sticky Bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-40 lg:hidden shadow-[0_-4px_6px_-1px_rgb(0,0,0,0.1)] animate-in slide-in-from-bottom-full duration-500">
+        <div className="flex items-center justify-between gap-4 max-w-sm mx-auto">
+          <div className="flex flex-col">
+            <span className="font-semibold text-sm">Ride this route</span>
+            <span className="text-xs text-muted-foreground">Get GPX & Join Leaderboard</span>
+          </div>
+          <Button onClick={onNavigateToUpgrade} size="sm" className="whitespace-nowrap px-6 shadow-sm hover:scale-105 transition-transform">
+            <Award className="w-4 h-4 mr-2" />
+            Upgrade
+          </Button>
+        </div>
+      </div>
+
+      {/* Desktop Floating CTA */}
+      <div className="fixed bottom-8 right-8 hidden lg:block w-80 z-40 animate-in slide-in-from-right-8 duration-500">
+        <Card className="border-primary/20 shadow-2xl bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Route className="w-6 h-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-lg leading-tight mb-1">Ride this route</h3>
+                <p className="text-sm text-muted-foreground leading-snug">Get the official GPX file and join the event leaderboard.</p>
+              </div>
+            </div>
+            <Button onClick={onNavigateToUpgrade} className="w-full shadow-sm hover:-translate-y-0.5 transition-transform" size="lg">
+              <Award className="w-4 h-4 mr-2" />
+              Upgrade to Access
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

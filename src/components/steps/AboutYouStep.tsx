@@ -37,7 +37,7 @@ export function AboutYouStep({ onContinue, onFormStateChange }: AboutYouStepProp
 
   const handleContinue = useCallback(async () => {
     if (!isFormValid) return;
-    
+
     setIsSubmitting(true);
     try {
       await onContinue({
@@ -52,19 +52,12 @@ export function AboutYouStep({ onContinue, onFormStateChange }: AboutYouStepProp
     }
   }, [isFormValid, firstName, lastName, city, onContinue]);
 
-  // Track previous values to prevent unnecessary calls
-  const prevValues = useRef({ isFormValid, isSubmitting });
-
-  // Notify parent of form state changes only when values actually change
+  // Notify parent of form state changes reliably
   useEffect(() => {
-    if (onFormStateChange && 
-        (prevValues.current.isFormValid !== isFormValid || 
-         prevValues.current.isSubmitting !== isSubmitting)) {
-      
+    if (onFormStateChange) {
       onFormStateChange(isFormValid, isSubmitting, handleContinue);
-      prevValues.current = { isFormValid, isSubmitting };
     }
-  }, [isFormValid, isSubmitting, onFormStateChange, handleContinue]);
+  }, [isFormValid, isSubmitting, handleContinue, onFormStateChange]);
 
   return (
     <div className="flex flex-col h-screen bg-black text-foreground">
@@ -90,13 +83,12 @@ export function AboutYouStep({ onContinue, onFormStateChange }: AboutYouStepProp
                 onChange={(e) => setFirstName(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Your first name"
-                className={`transition-colors ${
-                  firstName === '' 
-                    ? 'border-border' 
-                    : firstName.trim() 
-                    ? 'border-success/40 focus:border-success' 
-                    : 'border-destructive/40 focus:border-destructive'
-                }`}
+                className={`transition-colors ${firstName === ''
+                    ? 'border-border'
+                    : firstName.trim()
+                      ? 'border-success/40 focus:border-success'
+                      : 'border-destructive/40 focus:border-destructive'
+                  }`}
                 autoFocus
               />
               {firstName.trim() && (
@@ -116,13 +108,12 @@ export function AboutYouStep({ onContinue, onFormStateChange }: AboutYouStepProp
                 onChange={(e) => setLastName(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Your last name"
-                className={`transition-colors ${
-                  lastName === '' 
-                    ? 'border-border' 
-                    : lastName.trim() 
-                    ? 'border-success/40 focus:border-success' 
-                    : 'border-destructive/40 focus:border-destructive'
-                }`}
+                className={`transition-colors ${lastName === ''
+                    ? 'border-border'
+                    : lastName.trim()
+                      ? 'border-success/40 focus:border-success'
+                      : 'border-destructive/40 focus:border-destructive'
+                  }`}
               />
               {lastName.trim() && (
                 <div className="flex items-center gap-2 text-xs text-success">
@@ -141,13 +132,12 @@ export function AboutYouStep({ onContinue, onFormStateChange }: AboutYouStepProp
                 onChange={(e) => setCity(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Your city"
-                className={`transition-colors ${
-                  city === '' 
-                    ? 'border-border' 
-                    : city.trim() 
-                    ? 'border-success/40 focus:border-success' 
-                    : 'border-destructive/40 focus:border-destructive'
-                }`}
+                className={`transition-colors ${city === ''
+                    ? 'border-border'
+                    : city.trim()
+                      ? 'border-success/40 focus:border-success'
+                      : 'border-destructive/40 focus:border-destructive'
+                  }`}
               />
               {city.trim() && (
                 <div className="flex items-center gap-2 text-xs text-success">

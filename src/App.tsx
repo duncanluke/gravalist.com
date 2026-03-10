@@ -59,6 +59,21 @@ function AppContent() {
   // Simple URL routing - run once on mount
   useEffect(() => {
     const path = window.location.pathname;
+    const hash = window.location.hash;
+
+    // Check for Supabase Auth errors in the URL hash (e.g., expired OTP links)
+    if (hash && hash.includes('error_code=otp_expired')) {
+      console.log('Detected expired OTP link in URL hash');
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('showErrorToast', {
+          detail: { message: 'Your sign-in link expired. Please sign up or log in again to get a new one.' }
+        }));
+        window.dispatchEvent(new CustomEvent('requestAuth', { detail: { mode: 'signup' } }));
+      }, 500);
+
+      // Clean up the URL hash without reloading the page
+      window.history.replaceState(null, '', path);
+    }
 
     try {
       if (path.includes('/upgrade')) {

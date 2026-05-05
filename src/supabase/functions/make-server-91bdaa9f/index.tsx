@@ -520,9 +520,31 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       .eq('email', user.email)
       .single()
 
+    let targetUserData = userData
+
     if (userError || !userData) {
-      console.log('Error finding user for stripe checkout:', userError)
-      return c.json({ error: 'User not found' }, 404)
+      if (userError?.code === 'PGRST116' || !userData) {
+        console.log('STRIPE - User not found in database, creating on the fly for checkout...')
+        
+        // Auto-create user record if it doesn't exist but auth is valid
+        const { data: newUser, error: insertError } = await supabase
+          .from('users')
+          .insert([
+            { email: user.email, display_name: user.email?.split('@')[0] || 'Rider' }
+          ])
+          .select('id, email, display_name')
+          .single()
+          
+        if (insertError || !newUser) {
+          console.log('Error creating user for stripe checkout:', insertError)
+          return c.json({ error: 'User could not be created for payment' }, 500)
+        }
+        
+        targetUserData = newUser
+      } else {
+        console.log('Error finding user for stripe checkout:', userError)
+        return c.json({ error: 'User not found' }, 404)
+      }
     }
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY')
@@ -532,10 +554,10 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
     }
 
     // Get price ID from environment or use default
-    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1QTVJlANT1yLdvVBaApU0yc4'
+    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1TTj64INQTZMd46noHmxOa34'
 
-    console.log('STRIPE - Creating checkout session for user:', userData.email)
-    console.log('STRIPE - Display name:', userData.display_name)
+    console.log('STRIPE - Creating checkout session for user:', targetUserData.email)
+    console.log('STRIPE - Display name:', targetUserData.display_name)
     console.log('STRIPE - Using price ID:', priceId)
 
     const origin = c.req.header('origin') || 'https://gravalist.com'
@@ -548,15 +570,16 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       },
       body: new URLSearchParams({
         'payment_method_types[0]': 'card',
-        'mode': 'subscription',
+        'mode': 'payment',
         'line_items[0][price]': priceId,
         'line_items[0][quantity]': '1',
         'allow_promotion_codes': 'true',
-        'metadata[user_id]': userData.id,
-        'metadata[user_email]': userData.email,
+        'metadata[user_id]': targetUserData.id,
+        'metadata[user_email]': targetUserData.email,
+        'client_reference_id': targetUserData.id,
+        'customer_email': targetUserData.email,
         'success_url': `${origin}/upgrade?success=true`,
         'cancel_url': `${origin}/upgrade?canceled=true`,
-        'customer_email': userData.email,
       })
     })
 

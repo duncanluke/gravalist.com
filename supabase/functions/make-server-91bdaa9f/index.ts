@@ -2,7 +2,8 @@ import { Hono } from 'npm:hono'
 import { cors } from 'npm:hono/cors'
 import { logger } from 'npm:hono/logger'
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { sendWelcomeEmail, sendRideRegistrationEmail } from './mailersend.tsx'
+import Stripe from 'npm:stripe@^14.0.0'
+import { sendWelcomeEmail, sendRideRegistrationEmail } from './mailersend.ts'
 
 // Initialize Supabase client with service role for admin operations
 const supabase = createClient(
@@ -17,6 +18,12 @@ const supabaseAuth = createClient(
 )
 
 const app = new Hono()
+
+// Initialize Stripe client
+const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') || '', {
+  apiVersion: '2023-10-16',
+  httpClient: Stripe.createFetchHttpClient(),
+})
 
 // Middleware  
 app.use('*', cors({
@@ -155,11 +162,7 @@ app.post('/make-server-91bdaa9f/auth/signup', async (c) => {
 
 // Health check
 app.get('/make-server-91bdaa9f/health', (c) => {
-  return c.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    server: 'Gravalist Make Server'
-  })
+  return c.json({ status: 'ok', timestamp: new Date().toISOString() })
 })
 
 // Get leaderboard
@@ -527,7 +530,15 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
         const { data: newUser, error: insertError } = await supabase
           .from('users')
           .insert([
-            { email: user.email, display_name: user.email?.split('@')[0] || 'Rider' }
+            { 
+              id: user.id,
+              email: user.email, 
+              display_name: user.email?.split('@')[0] || 'Rider',
+              first_name: '',
+              last_name: '',
+              city: '',
+              total_points: 0
+            }
           ])
           .select('id, email, display_name')
           .single()
@@ -551,7 +562,7 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
     }
 
     // Get price ID from environment or use default
-    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1QTVJlANT1yLdvVBaApU0yc4'
+    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1TTj64INQTZMd46noHmxOa34'
 
     console.log('STRIPE - Creating checkout session for user:', targetUserData.email)
     console.log('STRIPE - Display name:', targetUserData.display_name)
@@ -614,19 +625,63 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       sessionId: session.id
     })
 
-  } catch (error) {
+  } catch (error: any) {
     console.log('Error in stripe checkout route:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    return c.json({ error: `Internal server error: ${error.message}`, details: error.stack }, 500)
   }
 })
 
 // Stripe webhook handler
 app.post('/make-server-91bdaa9f/stripe/webhook', async (c) => {
   try {
-    const rawBody = await c.req.text()
-    console.log('STRIPE WEBHOOK - Received event')
+    const signature = c.req.header('Stripe-Signature')
+    const webhookSecret = Deno.env.get('STRIPE_WEBHOOK_SECRET')
 
-    const event = JSON.parse(rawBody)
+    if (!signature || !webhookSecret) {
+      console.log('STRIPE WEBHOOK - Missing signature or webhook secret')
+      // Fallback to old behavior if no secret is configured (for testing)
+      if (!webhookSecret) {
+        console.log('STRIPE WEBHOOK - WARNING: No webhook secret configured, skipping signature validation! This is insecure.')
+        const rawBody = await c.req.text()
+        const event = JSON.parse(rawBody)
+        console.log('STRIPE WEBHOOK - Event type:', event.type)
+
+        switch (event.type) {
+          case 'checkout.session.completed':
+            await handleCheckoutSessionCompleted(event.data.object)
+            break
+          case 'customer.subscription.created':
+            await handleSubscriptionCreated(event.data.object)
+            break
+          case 'customer.subscription.updated':
+            await handleSubscriptionUpdated(event.data.object)
+            break
+          case 'customer.subscription.deleted':
+            await handleSubscriptionDeleted(event.data.object)
+            break
+          default:
+            console.log('STRIPE WEBHOOK - Unhandled event type:', event.type)
+        }
+        return c.json({ received: true })
+      }
+      return c.json({ error: 'Webhook Error: Missing signature or secret' }, 400)
+    }
+
+    const rawBody = await c.req.text()
+    console.log('STRIPE WEBHOOK - Received event, verifying signature')
+
+    let event;
+    try {
+      event = await stripe.webhooks.constructEventAsync(
+        rawBody,
+        signature,
+        webhookSecret
+      )
+    } catch (err: any) {
+      console.log(`STRIPE WEBHOOK - Signature verification failed: ${err.message}`)
+      return c.json({ error: `Webhook Error: ${err.message}` }, 400)
+    }
+
     console.log('STRIPE WEBHOOK - Event type:', event.type)
 
     switch (event.type) {
@@ -1479,7 +1534,7 @@ app.post('/make-server-91bdaa9f/events/:eventId/withdraw', async (c) => {
       userEmail: user.email
     }
 
-    const kvStore = await import('./kv_store.tsx')
+    const kvStore = await import('./kv_store.ts')
     await kvStore.set(withdrawalKey, JSON.stringify(withdrawalData))
 
     console.log('WITHDRAW - Successfully withdrawn and stored metadata')

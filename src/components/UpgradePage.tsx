@@ -11,11 +11,10 @@ import backgroundImage from '@/assets/generic-2.png';
 interface UpgradePageProps {
   onUpgrade: () => void;
   onNavigateToHome?: () => void;
-  onNavigateToLeaderboard?: () => void;
   onNavigateToRides?: () => void;
 }
 
-export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboard, onNavigateToRides }: UpgradePageProps) {
+export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: UpgradePageProps) {
   const { user, profile, isAuthenticated, refreshProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
@@ -96,17 +95,18 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
   }, [isAuthenticated, refreshProfile]);
 
   const benefits = [
-    'Access to community rides and routes',
-    'Eligibility for the community leaderboard',
+    'Lifetime access to official GPX route files',
+    'Participation in community dates & tracking',
     'No-fuss, self-managed adventures',
     '100% independent, non-corporate platform',
-    'Contribute to growing the community'
+    'Directly contribute to growing the community'
   ];
 
   const handleUpgrade = async () => {
-    if (!isAuthenticated) {
-      toast.error('Please sign in to upgrade your account');
-      // Trigger auth modal
+    // Check authentication BEFORE setting loading state
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (sessionError || !session?.access_token) {
       window.dispatchEvent(new CustomEvent('requestAuth', { detail: { mode: 'signin' } }));
       return;
     }
@@ -115,11 +115,37 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
     setCurrentStep('Authenticating...');
 
     try {
-      // Get user's access token
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      setCurrentStep('Verifying profile...');
 
-      if (sessionError || !session?.access_token) {
-        throw new Error('Authentication required. Please sign in again.');
+      let effectiveUserId = session.user.id;
+      let effectiveUserEmail = session.user.email;
+
+      // Guarantee the user exists in public.users to bypass backend "User not found" race conditions
+      if (effectiveUserEmail) {
+        const { data: existingUser, error: queryError } = await supabase
+          .from('users')
+          .select('id')
+          .eq('email', effectiveUserEmail)
+          .maybeSingle();
+
+        if (!existingUser) {
+          console.log('User profile not found in public schema. Creating before checkout...');
+          const { error: insertError } = await supabase
+            .from('users')
+            .insert([{
+              id: effectiveUserId,
+              email: effectiveUserEmail,
+              display_name: effectiveUserEmail.split('@')[0] || 'Rider',
+              first_name: '',
+              last_name: '',
+              city: '',
+              total_points: 0
+            }]);
+            
+          if (insertError) {
+             console.log('Frontend profile creation blocked by RLS, relying on Edge function:', insertError.message);
+          }
+        }
       }
 
       setCurrentStep('Creating payment session...');
@@ -210,199 +236,86 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToLeaderboa
     }
   };
 
-
-
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 text-center px-4">
-      {/* Premium User Success State */}
-      {isPremiumUser && !showSuccessMessage ? (
-        <div className="space-y-8 max-w-2xl w-full">
-          {/* Header */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-center gap-2 text-primary">
-              <Crown className="w-8 h-8" />
-            </div>
-            <h1>You're a Premium Member</h1>
-            <p className="text-muted-foreground">
-              You're all set with Gravalist Premium. Here's what you can do next to get the most out of your membership.
-            </p>
-          </div>
-
-          {/* Next Steps Cards */}
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Leaderboard Card */}
-            <Card className="border-border/30 hover:border-primary/30 transition-colors">
-              <CardContent className="p-6 space-y-4 text-left">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <Trophy className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <h3 className="text-lg">Check the Leaderboard</h3>
-                    <p className="text-sm text-muted-foreground">
-                      See where you stand among the community. Earn points by completing rides and climb the rankings.
-                    </p>
-                    <div className="pt-2">
-                      <Button
-                        onClick={onNavigateToLeaderboard}
-                        variant="outline"
-                        size="sm"
-                        className="gap-2 border-primary/30 hover:bg-primary/10"
-                      >
-                        View Leaderboard
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="pl-16 space-y-1 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>Track your progress over time</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>Compare with fellow riders</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>See who's crushing it</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Rides Card */}
-            <Card className="border-border/30 hover:border-primary/30 transition-colors">
-              <CardContent className="p-6 space-y-4 text-left">
-                <div className="flex items-start gap-4">
-                  <div className="p-3 rounded-lg bg-primary/10">
-                    <Map className="w-6 h-6 text-primary" />
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    <h3 className="text-lg">Register for a Ride</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Browse upcoming community rides and register for your next adventure. Download GPX routes and track your completion.
-                    </p>
-                    <div className="pt-2">
-                      <Button
-                        onClick={onNavigateToRides}
-                        className="gap-2 bg-primary hover:bg-primary/90"
-                        size="sm"
-                      >
-                        Browse Rides
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-                <div className="pl-16 space-y-1 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>Access curated routes</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>Download GPX files</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-3 h-3 text-primary" />
-                    <span>Join community dates</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Bottom info */}
-          <div className="pt-4 space-y-2">
-            <p className="text-sm text-muted-foreground">
-              Your subscription gives you unlimited access to all rides, routes, and leaderboard features.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Questions? Reach out at <span className="text-primary">hello@gravalist.com</span>
-            </p>
-          </div>
+      {/* Existing upgrade flow */}
+      <div className="space-y-4 max-w-lg relative pb-32">
+        {/* Decorative background image */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md mx-auto pointer-events-none z-0">
+          <img
+            src={backgroundImage}
+            alt="Gravel riding scenery"
+            className="w-full h-auto opacity-30"
+            style={{
+              maskImage: 'radial-gradient(ellipse 80% 80% at center, black 40%, transparent 100%)',
+              WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at center, black 40%, transparent 100%)'
+            }}
+          />
         </div>
-      ) : (
-        <>
-          {/* Existing upgrade flow for non-premium users */}
-          <div className="space-y-4 max-w-lg relative pb-32">
-            {/* Decorative background image */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md mx-auto pointer-events-none z-0">
-              <img
-                src={backgroundImage}
-                alt="Gravel riding scenery"
-                className="w-full h-auto opacity-30"
-                style={{
-                  maskImage: 'radial-gradient(ellipse 80% 80% at center, black 40%, transparent 100%)',
-                  WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at center, black 40%, transparent 100%)'
-                }}
-              />
-            </div>
 
-            {showSuccessMessage ? (
-              <div className="space-y-4 relative z-10">
-                <h1>Welcome to Gravalist Premium!</h1>
-                <p className="text-muted-foreground">
-                  Your subscription is now active. You now have access to all premium features including the community leaderboard, curated routes, and priority support.
-                </p>
-                {onNavigateToHome && (
-                  <Button
-                    onClick={onNavigateToHome}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    size="lg"
-                  >
-                    Continue to Gravalist
-                  </Button>
-                )}
-              </div>
-            ) : (
-              <div className="relative z-10">
-                <h1>The Gravel Roads Are Yours (And Free)</h1>
-                <p className="text-muted-foreground">
-                  We just help you get there. Gravalist offers a no-fuss, non-corporate-sponsored platform for you to simply enjoy your life and unapologetic gravel riding. Subscribe to unlock our curated routes, leaderboards, and an independent community that shares your ethos.
-                </p>
-              </div>
+        {showSuccessMessage ? (
+          <div className="space-y-4 relative z-10">
+            <h1>Welcome to Gravalist!</h1>
+            <p className="text-muted-foreground">
+              Your entry is now secured. You have full access to download your official event GPX routes and prepare for the journey using our seamless digital checklist.
+            </p>
+            {onNavigateToHome && (
+              <Button
+                onClick={onNavigateToHome}
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+                size="lg"
+              >
+                Continue to Gravalist
+              </Button>
             )}
           </div>
+        ) : (
+          <div className="relative z-10">
+            <h1>How It Works</h1>
+            <p className="text-muted-foreground mb-4">
+              The gravel roads are yours, and they're free. We just help you get there. Gravalist offers a no-fuss, non-corporate-sponsored platform for you to simply enjoy your life and unapologetic gravel riding.
+            </p>
+            <p className="text-muted-foreground">
+              Instead of a massive yearly subscription, you simply purchase a once-off entry for the specific events you want to ride. This covers your official GPX route download, and funds the maintenance of our independent community that shares your ethos. Pick an event, grab an entry, and get riding!
+            </p>
+          </div>
+        )}
+      </div>
 
-          {!showSuccessMessage && (
-            <Card className="w-full max-w-md border-border/30">
-              <CardContent className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <div className="text-3xl font-medium text-primary">$169</div>
-                  <div className="text-muted-foreground">per year</div>
+      {!showSuccessMessage && (
+        <Card className="w-full max-w-md border-border/30">
+          <CardContent className="p-8 space-y-6">
+            <div className="space-y-2">
+              <div className="text-3xl font-medium text-primary">R 2750</div>
+              <div className="text-muted-foreground">One-time entry fee per event</div>
+            </div>
+
+            <div className="space-y-3">
+              {benefits.map((benefit, index) => (
+                <div key={index} className="flex items-start gap-3 text-left">
+                  <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                  <span className="text-sm text-foreground">{benefit}</span>
                 </div>
+              ))}
+            </div>
 
-                <div className="space-y-3">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-start gap-3 text-left">
-                      <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground">{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <Button
-                  onClick={handleUpgrade}
-                  disabled={isLoading}
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                  size="lg"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      {currentStep || 'Processing...'}
-                    </>
-                  ) : (
-                    'Upgrade Now'
-                  )}
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </>
+            <Button
+              onClick={handleUpgrade}
+              disabled={isLoading}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+              size="lg"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  {currentStep || 'Processing...'}
+                </>
+              ) : (
+                'Secure Your Entry'
+              )}
+            </Button>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

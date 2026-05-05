@@ -371,11 +371,7 @@ export function RidesPage({ onEventSelect, onEnterEvent, userEmail, onNavigateTo
                     // Default button for events without progress or unauthenticated users
                     return (
                       <div className="relative z-10 mt-auto pt-4 flex flex-col items-center">
-                        {!userEmail && (
-                          <div className="mb-3 text-[10px] sm:text-xs font-medium tracking-wide text-primary/80 uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                            Premium Access Required
-                          </div>
-                        )}
+
                         <Button
                           className="w-full relative overflow-hidden bg-primary/90 hover:bg-primary text-primary-foreground font-semibold py-6 text-lg group transition-all duration-300 shadow-[0_0_15px_rgba(255,87,34,0.3)] hover:shadow-[0_0_25px_rgba(255,87,34,0.5)] border-none"
                           onClick={(e) => {
@@ -385,7 +381,7 @@ export function RidesPage({ onEventSelect, onEnterEvent, userEmail, onNavigateTo
                         >
                           <span className="relative z-10 flex items-center justify-center w-full">
                             <MapPin className="w-5 h-5 mr-3" />
-                            {userEmail ? 'Get Route Access' : 'Unlock Route & Commit'}
+                            {userEmail ? 'Get Route Access' : 'Enter'}
                             <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" />
                           </span>
 

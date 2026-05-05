@@ -417,6 +417,9 @@ export function useAuth() {
                 error: null,
                 isOfflineMode: false
               })
+
+              // Notify the app that user signed in successfully to trigger welcome flow
+              window.dispatchEvent(new CustomEvent('userSignedIn'))
             } catch (error) {
               console.log('SIGN_IN EVENT - Profile fetch failed:', error)
               console.log('SIGN_IN EVENT - Error details:', {
@@ -539,21 +542,17 @@ export function useAuth() {
     }
   }, [])
 
-  // Sign in with email and password
-  const signIn = useCallback(async (email: string, password: string) => {
+  // Sign in with OTP (Passwordless Login)
+  const signInWithOtp = useCallback(async (email: string) => {
     try {
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
-      // Add timeout to sign in - increased to 15 seconds
-      const signInPromise = supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        password,
+        options: {
+          shouldCreateUser: true
+        }
       })
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Sign in timeout')), 15000)
-      )
-
-      const { data, error } = await Promise.race([signInPromise, timeoutPromise])
 
       if (error) {
         setAuthState(prev => ({
@@ -564,66 +563,24 @@ export function useAuth() {
         return { success: false, error: error.message }
       }
 
-      // Auth state will be updated by the listener
-      return { success: true, data }
+      setAuthState(prev => ({ ...prev, loading: false }))
+      return { success: true }
     } catch (error) {
-      const errorMessage = error instanceof Error
-        ? (error.message.includes('timeout') ? 'Connection timeout - please try again' : error.message)
-        : 'Sign in failed'
-      setAuthState(prev => ({
-        ...prev,
-        loading: false,
-        error: errorMessage
-      }))
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send PIN'
+      setAuthState(prev => ({ ...prev, loading: false, error: errorMessage }))
       return { success: false, error: errorMessage }
     }
   }, [])
 
-  // Sign up with email and password
-  const signUp = useCallback(async (
-    email: string,
-    password: string,
-    displayName: string,
-    invitationToken?: string
-  ) => {
+  // Verify OTP
+  const verifyOtp = useCallback(async (email: string, token: string) => {
     try {
-
       setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
-      // Use the server signup endpoint which handles user creation AND welcome email
-      const signupResponse = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-91bdaa9f/auth/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${publicAnonKey}`
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          displayName,
-          invitationToken
-        })
-      })
-
-      if (!signupResponse.ok) {
-        const errorData = await signupResponse.json()
-        const errorMessage = errorData.error || 'Signup failed'
-
-        // Check if the error is due to duplicate email
-        if (errorMessage.includes('already') || errorMessage.includes('exists') || errorMessage.includes('duplicate')) {
-          throw new Error('Email already exists')
-        }
-
-        throw new Error(errorMessage)
-      }
-
-      const signupData = await signupResponse.json()
-      console.log('✅ Server signup successful, user created and welcome email sent')
-
-      // Now sign in with the created credentials to get a session
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.verifyOtp({
         email,
-        password,
+        token,
+        type: 'email'
       })
 
       if (error) {
@@ -635,51 +592,10 @@ export function useAuth() {
         return { success: false, error: error.message }
       }
 
-      // Submit to HubSpot after successful signup
-      if (data.user && data.session) {
-        try {
-          // Submit to HubSpot form
-          const hubspotFormData = new FormData()
-          hubspotFormData.append('email', email)
-
-          await fetch('https://api.hsforms.com/submissions/v3/integration/submit/139710685/4aa1b60a-6ede-4ecd-ae36-fddfc7c6686e', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              fields: [
-                {
-                  name: 'email',
-                  value: email
-                }
-              ],
-              context: {
-                pageUri: window.location.href,
-                pageName: 'Gravalist Signup'
-              }
-            })
-          })
-
-          console.log('HubSpot form submission successful for:', email)
-        } catch (hubspotError) {
-          // Don't fail the signup if HubSpot submission fails
-          console.error('HubSpot form submission failed:', hubspotError)
-        }
-      }
-
-      // Auth state will be updated by the listener
       return { success: true, data }
-
     } catch (error) {
-      const errorMessage = error instanceof Error
-        ? (error.message.includes('timeout') ? 'Connection timeout - please try again' : error.message)
-        : 'Sign up failed'
-      setAuthState(prev => ({
-        ...prev,
-        loading: false,
-        error: errorMessage
-      }))
+      const errorMessage = error instanceof Error ? error.message : 'Invalid PIN'
+      setAuthState(prev => ({ ...prev, loading: false, error: errorMessage }))
       return { success: false, error: errorMessage }
     }
   }, [])
@@ -850,37 +766,6 @@ export function useAuth() {
     setAuthState(prev => ({ ...prev, error: null }))
   }, [])
 
-  // Send password reset email
-  const resetPassword = useCallback(async (email: string) => {
-    try {
-      setAuthState(prev => ({ ...prev, loading: true, error: null }))
-
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      })
-
-      if (error) {
-        setAuthState(prev => ({
-          ...prev,
-          loading: false,
-          error: error.message
-        }))
-        return { success: false, error: error.message }
-      }
-
-      setAuthState(prev => ({ ...prev, loading: false }))
-      return { success: true }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Password reset failed'
-      setAuthState(prev => ({
-        ...prev,
-        loading: false,
-        error: errorMessage
-      }))
-      return { success: false, error: errorMessage }
-    }
-  }, [])
-
   // Session Rewind Tracking
   useEffect(() => {
     if (authState.user && authState.profile && window.sessionRewind) {
@@ -902,13 +787,12 @@ export function useAuth() {
     ...authState,
     isAuthenticated,
     hasProfile,
-    signIn,
-    signUp,
+    signInWithOtp,
+    verifyOtp,
     signOut,
     updateProfile,
     refreshProfile,
     clearError,
-    awardPoints,
-    resetPassword
+    awardPoints
   }
 }

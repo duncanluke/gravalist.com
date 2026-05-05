@@ -1,138 +1,162 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './ui/button';
-import { Badge } from './ui/badge';
 import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
-import { SessionManager } from '../utils/sessionManager';
-import { createOnboardingFlow } from '../utils/onboardingFlow';
+import { FileDown, FileSignature, CreditCard, Loader2 } from 'lucide-react';
+import { projectId } from '../utils/supabase/info';
+import { apiClient, supabase } from '../utils/supabase/client';
 
 interface EventProgressButtonProps {
   eventName: string;
   onEnterEvent: () => void;
 }
 
-export function EventProgressButton({ eventName, onEnterEvent }: EventProgressButtonProps) {
-  const { isAuthenticated } = useAuth();
-  const { events, getCurrentStepForEvent } = useEvents();
-  
-  // Find the event and check progress
-  const event = events.find(e => e.name === eventName);
-  let hasProgress = false;
-  let currentStepId = 1;
-  let currentPhase: 'before' | 'start' | 'end' = 'before';
-  let progressPercentage = 0;
-  let isCompleted = false;
-  
-  if (event && isAuthenticated) {
-    // Check database progress
-    const dbStep = getCurrentStepForEvent(event.id);
-    
-    // Check session progress for this specific event
-    const sessionStep = SessionManager.getCurrentStepForEvent(eventName);
-    
-    // Use the higher step number if both are valid
-    const actualStep = Math.max(dbStep, sessionStep);
-    
-    if (actualStep > 0) {
-      hasProgress = true;
-      currentStepId = actualStep;
-      
-      // Determine phase from step number
-      if (currentStepId >= 15) {
-        currentPhase = 'end';
-      } else if (currentStepId >= 10) {
-        currentPhase = 'start';
-      } else {
-        currentPhase = 'before';
-      }
-      
-      // Check if completed (step 18 is the final step in the 19-step flow: 0-18)
-      isCompleted = currentStepId >= 18;
-      
-      // Calculate progress percentage
-      const phases = createOnboardingFlow(currentStepId, eventName);
-      const allSteps = phases.flatMap(p => p.steps);
-      const currentIndex = allSteps.findIndex(s => s.id === currentStepId);
-      progressPercentage = Math.round(((currentIndex + 1) / allSteps.length) * 100);
+export function EventProgressButton({ eventName }: EventProgressButtonProps) {
+  const { isAuthenticated, profile, session } = useAuth();
+  const { events } = useEvents();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Consider user premium if they have the subscription status
+  const isPremium = profile?.is_premium_subscriber === true;
+
+  const handleCheckout = async () => {
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (!session?.access_token) {
+      window.dispatchEvent(new CustomEvent('requestAuth', { detail: { mode: 'signin' } }));
+      return;
     }
-  }
-  
-  const getButtonLabel = () => {
-    if (isCompleted) return 'View Completion';
-    
-    // Show phase-specific labels for in-progress rides
-    if (currentPhase === 'register') return 'Start Registration';
-    if (currentPhase === 'start_line') return 'Continue to Start Line';
-    if (currentPhase === 'end') return 'Complete Registration';
-    
-    return 'Continue Registration';
+
+    if (!session?.access_token) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Guarantee the user exists in public.users to bypass backend "User not found" race conditions
+      if (session.user?.email) {
+        const { data: existingUser } = await supabase
+          .from('users')
+          .select('id')
+          .eq('email', session.user.email)
+          .maybeSingle();
+
+        if (!existingUser) {
+          console.log('User profile not found in public schema. Creating before checkout...');
+          await supabase
+            .from('users')
+            .insert([{
+              id: session.user.id,
+              email: session.user.email,
+              display_name: session.user.email.split('@')[0] || 'Rider',
+              first_name: '',
+              last_name: '',
+              city: '',
+              total_points: 0
+            }]);
+        }
+      }
+
+      const response = await fetch(`https://${projectId}.supabase.co/functions/v1/make-server-91bdaa9f/stripe/create-checkout-session`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+          'Origin': window.location.origin
+        }
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Failed to start checkout');
+      }
+
+      if (responseData.checkoutUrl) {
+        window.location.href = responseData.checkoutUrl;
+      }
+    } catch (err: unknown) {
+      const errMessage = err instanceof Error ? err.message : 'Unknown error during checkout';
+      setError(errMessage);
+    } finally {
+      setLoading(false);
+    }
   };
-  
-  const getProgressText = () => {
-    const phases = createOnboardingFlow(currentStepId, eventName);
-    const currentPhaseData = phases.find(p => p.id === currentPhase);
-    const currentStep = currentPhaseData?.steps.find(s => s.id === currentStepId);
-    
-    if (!currentPhaseData || !currentStep) return null;
-    
-    return {
-      phase: currentPhaseData.title,
-      step: currentStepId === 5 ? 'Liability Agreement' : 
-            currentStepId === 6 ? 'Medical Insurance' : 
-            currentStepId === 17 ? 'Digital Patch' : 
-            currentStep.title,
-      percentage: progressPercentage
-    };
+
+  const handleDownloadGpx = async () => {
+    if (!session?.access_token) return;
+    try {
+      setLoading(true);
+      const event = events.find(e => e.name === eventName);
+      if (!event) throw new Error("Event not found");
+
+      const { downloadUrl } = await apiClient.getGpxDownloadUrl(event.id);
+      
+      // Create a temporary link to force download Instead of opening in a new tab
+      const a = document.createElement('a');
+      a.href = downloadUrl;
+      a.download = `Gravalist_${eventName.replace(/\s+/g, '_')}_Route.gpx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+    } catch (err) {
+      alert("Failed to download GPX: " + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setLoading(false);
+    }
   };
-  
-  const progressInfo = hasProgress ? getProgressText() : null;
-  
+
+  const handleDownloadIndemnity = () => {
+    window.open('https://www.jotform.com/sign/252482044276053/invite/01k4f7zxgr0bb5c2048f886a3b', '_blank');
+  };
+
   return (
     <div className="text-center space-y-4">
-      {/* Progress display for authenticated users with progress */}
-      {hasProgress && progressInfo && (
-        <div className="max-w-md mx-auto space-y-3 p-4 bg-muted/30 rounded-lg border border-border">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">Your Progress</span>
-            <Badge variant="outline" className="text-xs">
-              {progressInfo.percentage}% Complete
-            </Badge>
-          </div>
-          
-          {/* Progress Bar */}
-          <div className="w-full bg-muted/30 rounded-full h-2">
-            <div 
-              className="bg-primary h-2 rounded-full transition-all duration-300 ease-out"
-              style={{ width: `${progressInfo.percentage}%` }}
-            />
-          </div>
-          
-          {/* Current Phase/Step */}
-          <div className="text-center text-sm space-y-1">
-            <div className="font-medium text-foreground">{progressInfo.phase}</div>
-            <div className="text-muted-foreground">{progressInfo.step}</div>
-          </div>
+      {error && (
+        <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg max-w-sm mx-auto mb-4">
+          {error}
         </div>
       )}
-      
-      {/* Action Button */}
-      <div>
-        <Button 
-          size="lg" 
-          onClick={onEnterEvent}
-          className="px-8 py-3 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground"
-        >
-          {getButtonLabel()}
-        </Button>
-        
-        {/* Subtitle */}
-        <p className="text-sm text-muted-foreground">
-          {hasProgress ? 
-            "Pick up where you left off in your personalized preparation" :
-            "Begin your personalized 3-phase preparation for this epic ride"
-          }
-        </p>
-      </div>
+
+      {!isPremium ? (
+        <div>
+          <Button 
+            size="lg" 
+            onClick={handleCheckout}
+            disabled={loading}
+            className="px-8 py-4 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-all duration-300"
+          >
+            {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CreditCard className="w-5 h-5 mr-2" />}
+            Buy Entry — R 2750
+          </Button>
+          <p className="text-sm font-medium text-muted-foreground max-w-sm mx-auto">
+            Secure your lifetime access to the official GPX route and unlock this event's completion badge.
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Button 
+            size="lg" 
+            onClick={handleDownloadGpx}
+            disabled={loading}
+            className="px-6 py-3 bg-white text-black hover:bg-neutral-200 font-bold border"
+          >
+            {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <FileDown className="w-5 h-5 mr-2" />}
+            Download GPX Route
+          </Button>
+
+          <Button 
+            size="lg" 
+            onClick={handleDownloadIndemnity}
+            className="px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
+          >
+            <FileSignature className="w-5 h-5 mr-2" />
+            Complete Indemnity Phase
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

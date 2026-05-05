@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
-import { ArrowLeft, Mail, User, Check, Map, Trophy, Calendar, Crown, Plus, LogOut, UserPlus, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Mail, User, Check, Map, Trophy, Calendar, Crown, Plus, LogOut, UserPlus, Sun, Moon, Home } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Separator } from './ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
@@ -208,15 +208,23 @@ export function Header({
 
   const navigationItems = [
     {
-      id: 'rides',
-      label: 'Rides',
-      icon: Calendar,
-      active: viewMode === 'rides' || viewMode === 'home',
+      id: 'home',
+      label: 'Home',
+      icon: Home,
+      active: viewMode === 'home',
       onClick: () => {
-        // Always navigate to home/rides section
+        onNavigateToHome();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    },
+    {
+      id: 'rides',
+      label: 'Events',
+      icon: Calendar,
+      active: viewMode === '500-series',
+      onClick: () => {
         if (onNavigateToRides) {
           onNavigateToRides();
-          // After navigation, scroll to rides section if on home page
           setTimeout(() => {
             const ridesSection = document.getElementById('community-rides');
             if (ridesSection) {
@@ -227,27 +235,19 @@ export function Header({
       }
     },
     {
-      id: 'leaderboard',
-      label: 'Leaderboard',
-      icon: Trophy,
-      active: viewMode === 'leaderboard',
-      onClick: onNavigateToLeaderboard
-    },
-    {
-      id: 'add-route',
-      label: 'Add Route',
-      icon: Plus,
-      active: viewMode === 'add-route',
-      onClick: onNavigateToAddRoute
-    },
-    {
       id: 'subscribe',
-      label: isPremiumUser ? 'Premium' : 'Subscribe',
+      label: 'Enter Now',
       icon: Crown,
       active: viewMode === 'upgrade',
       onClick: onNavigateToSubscribe,
-      isPrimary: !isPremiumUser,
-      isPremium: isPremiumUser
+      isPrimary: true
+    },
+    {
+      id: 'stories',
+      label: 'Stories',
+      icon: BookOpen,
+      active: window.location.pathname.startsWith('/stories'),
+      onClick: onNavigateToStories
     }
   ];
 
@@ -274,108 +274,35 @@ export function Header({
 
         {/* Center section: Navigation buttons */}
         <div className="flex items-center gap-2 flex-1 justify-center overflow-x-auto scrollbar-hide px-4">
-          {/* Rides Button */}
-          {(() => {
-            const ridesItem = navigationItems.find(item => item.id === 'rides');
-            if (!ridesItem) return null;
-            const Icon = ridesItem.icon;
-            const isActive = ridesItem.active;
-
+          {navigationItems.map((item) => {
+            if (!item) return null;
+            const Icon = item.icon;
             return (
               <Button
+                key={item.id}
                 variant="ghost"
                 size="sm"
-                onClick={ridesItem.onClick}
+                onClick={item.onClick}
                 className={`
                   flex-shrink-0 px-3 py-2 h-auto rounded-full border transition-colors
                   flex items-center gap-2 relative z-10
-                  ${isActive
-                    ? 'border-primary/20 bg-primary/10 text-primary hover:bg-primary/20'
-                    : 'border-muted-foreground/20 text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary'
+                  ${item.isPrimary
+                    ? 'border-primary/20 bg-primary text-primary-foreground hover:bg-primary/90'
+                    : item.active
+                      ? 'border-primary/20 bg-primary/10 text-primary hover:bg-primary/20'
+                      : 'border-transparent text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary'
                   }
                 `}
               >
                 <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{ridesItem.label}</span>
+                <span className="hidden sm:inline">{item.label}</span>
               </Button>
             );
-          })()}
-
-          {/* Leaderboard Button */}
-          {(() => {
-            const leaderboardItem = navigationItems.find(item => item.id === 'leaderboard');
-            if (!leaderboardItem) return null;
-            const Icon = leaderboardItem.icon;
-            const isActive = leaderboardItem.active;
-
-            return (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={leaderboardItem.onClick}
-                className={`
-                  flex-shrink-0 px-3 py-2 h-auto rounded-full border transition-colors
-                  flex items-center gap-2 relative z-10
-                  ${isActive
-                    ? 'border-primary/20 bg-primary/10 text-primary hover:bg-primary/20'
-                    : 'border-muted-foreground/20 text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary'
-                  }
-                `}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{leaderboardItem.label}</span>
-              </Button>
-            );
-          })()}
-
-          {/* Subscribe Button */}
-          {(() => {
-            const subscribeItem = navigationItems.find(item => item.id === 'subscribe');
-            if (!subscribeItem) return null;
-            const Icon = subscribeItem.icon;
-            const isActive = subscribeItem.active;
-            const isPrimary = subscribeItem.isPrimary;
-            const isPremium = subscribeItem.isPremium;
-
-            return (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={subscribeItem.onClick}
-                className={`
-                  flex-shrink-0 px-3 py-2 h-auto rounded-full border transition-colors
-                  flex items-center gap-2 relative z-10
-                  ${isPremium
-                    ? 'border-primary/30 bg-primary/20 text-primary hover:bg-primary/30 cursor-pointer'
-                    : isPrimary
-                      ? 'border-primary/20 bg-primary text-primary-foreground hover:bg-primary/90'
-                      : isActive
-                        ? 'border-primary/20 bg-primary/10 text-primary hover:bg-primary/20'
-                        : 'border-muted-foreground/20 text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary'
-                  }
-                `}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="hidden sm:inline">{subscribeItem.label}</span>
-              </Button>
-            );
-          })()}
+          })}
         </div>
 
-        {/* Right section: Stories Link (Smaller) & User profile */}
+        {/* Right section: User profile */}
         <div className="flex items-center gap-3 flex-shrink-0">
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onNavigateToStories}
-            className={`text-sm font-medium transition-colors hidden sm:flex ${window.location.pathname.startsWith('/stories')
-                ? 'text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-              }`}
-          >
-            Stories
-          </Button>
 
           <div className="flex items-center">{isAuthenticated ? (
             <>
@@ -386,93 +313,40 @@ export function Header({
                     <User className="w-5 h-5 sm:w-4 sm:h-4 text-muted-foreground" />
                     <div className="hidden sm:flex items-center gap-2">
                       <span className="text-sm text-foreground truncate max-w-[120px]">
-                        {localProfile?.email || userProfile?.email || "No email"}
+                        {displayEmail || "No email"}
                       </span>
-                      <div className="flex items-center gap-1 px-2 py-1 bg-primary/20 rounded-full">
-                        <Trophy className="w-3 h-3 text-primary" />
-                        <span className="text-xs text-primary font-medium">
-                          {localProfile?.total_points || userProfile?.total_points || 0}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-80 p-0" align="end">
-                  <div className="p-4 space-y-4">
-                    {/* User Info Header */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-medium">Profile</h4>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={handleNameModalOpen}
-                          className="text-xs h-6 px-2"
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium">{displayName || (localProfile?.email?.split('@')[0] || "Gravalist Rider")}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {localProfile?.city || userProfile?.city || "City not set"}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {displayEmail}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Points Section */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Points</span>
-                        <div className="flex items-center gap-1 px-2 py-1 bg-primary/20 rounded-full">
-                          <Trophy className="w-3 h-3 text-primary" />
-                          <span className="text-sm text-primary font-medium">
-                            {localProfile?.total_points || userProfile?.total_points || 0}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        Earned from ride registrations and route contributions
+                <PopoverContent className="w-64 p-2" align="end">
+                  <div className="space-y-1">
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium truncate">
+                        {displayEmail || "No email"}
                       </p>
                     </div>
 
-                    <Separator />
+                    <Separator className="my-1" />
 
-                    {/* Actions */}
-                    <div className="space-y-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowInviteModal(true)}
-                        className="w-full justify-start h-8"
-                      >
-                        <UserPlus className="w-4 h-4 mr-2" />
-                        Invite Friend
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleNameModalOpen}
-                        className="w-full justify-start h-8"
-                      >
-                        <User className="w-4 h-4 mr-2" />
-                        Update Profile
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleLogout}
-                        className="w-full justify-start h-8 text-destructive hover:text-destructive"
-                      >
-                        <LogOut className="w-4 h-4 mr-2" />
-                        Logout
-                      </Button>
-                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowInviteModal(true)}
+                      className="w-full justify-start h-9"
+                    >
+                      <UserPlus className="w-4 h-4 mr-2 text-muted-foreground" />
+                      Invite Friend
+                    </Button>
+
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleLogout}
+                      className="w-full justify-start h-9 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
                   </div>
                 </PopoverContent>
               </Popover>
@@ -488,8 +362,8 @@ export function Header({
             >
               <User className="w-4 h-4 text-muted-foreground" />
               <div className="hidden sm:flex items-center gap-2">
-                <span className="text-sm text-foreground">
-                  Create Profile
+                <span className="text-sm font-medium text-foreground">
+                  Sign In
                 </span>
                 <div className="flex items-center gap-1 px-2 py-1 bg-primary/20 rounded-full">
                   <Trophy className="w-3 h-3 text-primary" />

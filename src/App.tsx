@@ -13,6 +13,7 @@ import { useEventNavigation } from './hooks/useEventNavigation';
 import { SessionManager } from './utils/sessionManager';
 import { AppRouter } from './components/AppRouter';
 import { AuthModal } from './components/AuthModal';
+import SupportWidget from './components/SupportWidget';
 import { STEP_IDS } from './constants/app';
 import { ViewMode } from './types/app';
 
@@ -132,7 +133,6 @@ function AppContent() {
 
   // Auth modal state
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'signin' | 'signup'>('signin');
 
   // Update user email when authenticated
   useEffect(() => {
@@ -144,15 +144,23 @@ function AppContent() {
   // Event listeners for global navigation
   useEffect(() => {
     const handleRequestAuth = (event: CustomEvent) => {
-      setAuthModalTab(event.detail?.mode || 'signin');
       setShowAuthModal(true);
     };
 
-    const handleRequestEmailInput = () => {
+    const handleRequestEmailInput = (e: Event) => {
       if (!isAuthenticated) {
-        setAuthModalTab('signup');
+        const customEvent = e as CustomEvent;
+        if (customEvent.detail?.email) {
+          setState({ pendingAuthEmail: customEvent.detail.email });
+        }
         setShowAuthModal(true);
       }
+    };
+
+    const handleUserSignedIn = () => {
+      setShowAuthModal(false);
+      setViewMode('welcome');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleNavigateToLeaderboard = () => setViewMode('leaderboard');
@@ -188,6 +196,7 @@ function AppContent() {
 
     window.addEventListener('requestAuth', handleRequestAuth as EventListener);
     window.addEventListener('requestEmailInput', handleRequestEmailInput);
+    window.addEventListener('userSignedIn', handleUserSignedIn);
     window.addEventListener('navigateToLeaderboard', handleNavigateToLeaderboard);
     window.addEventListener('navigateToHome', handleNavigateToHome);
     window.addEventListener('navigateToUpgrade', handleNavigateToUpgrade);
@@ -197,6 +206,7 @@ function AppContent() {
     return () => {
       window.removeEventListener('requestAuth', handleRequestAuth as EventListener);
       window.removeEventListener('requestEmailInput', handleRequestEmailInput);
+      window.removeEventListener('userSignedIn', handleUserSignedIn);
       window.removeEventListener('navigateToLeaderboard', handleNavigateToLeaderboard);
       window.removeEventListener('navigateToHome', handleNavigateToHome);
       window.removeEventListener('navigateToUpgrade', handleNavigateToUpgrade);
@@ -326,10 +336,9 @@ function AppContent() {
       />
 
       <Footer
-        onNavigateToLeaderboard={handleNavigateToLeaderboard}
         onNavigateToAddRoute={handleNavigateToAddRoute}
-        onNavigateToTerms={handleNavigateToTerms}
-        onNavigateToPrivacy={handleNavigateToPrivacy}
+        onNavigateToTerms={() => setViewMode('terms')}
+        onNavigateToPrivacy={() => setViewMode('privacy-policy')}
       />
 
       <HelpModal
@@ -338,6 +347,7 @@ function AppContent() {
       />
 
       <Toaster position="top-center" />
+      <SupportWidget />
 
       {state.sessionSummary && (
         <SessionWelcomeModal
@@ -376,10 +386,7 @@ function AppContent() {
             });
           }
         }}
-        defaultTab={authModalTab}
         initialEmail={state.pendingAuthEmail}
-        onNavigateToTerms={handleNavigateToTerms}
-        onNavigateToPrivacy={handleNavigateToPrivacy}
       />
     </div>
   );

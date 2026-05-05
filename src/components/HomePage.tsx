@@ -13,19 +13,17 @@ import heroBackground3 from '@/assets/home-bg-3.png';
 import heroBackgroundRides from '@/assets/rides-hero.png';
 import newHeroBackgroundRides from '@/assets/new-rides-hero.png';
 import { HeroSection } from './home/HeroSection';
-import { IntroGridSection } from './home/IntroGridSection';
 import { GlobalMapSection } from './home/GlobalMapSection';
 
 interface HomePageProps {
   onViewRides: () => void;
   onEventSelect?: (eventName: string) => void;
   onEnterEvent?: (eventName: string) => void;
-  onNavigateToLeaderboard?: () => void;
   onNavigateToAddRoute?: () => void;
   userEmail?: string;
 }
 
-export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateToLeaderboard, onNavigateToAddRoute, userEmail }: HomePageProps) {
+export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateToAddRoute, userEmail }: HomePageProps) {
   const {
     events,
     loading,
@@ -100,8 +98,6 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
 
   return (
     <div className="min-h-screen bg-black text-foreground">
-      {/* Intro Grid Section (New Content) */}
-      <IntroGridSection />
 
       {/* Hero Section & CTA */}
       <HeroSection
@@ -121,7 +117,7 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
         <section id="community-rides">
           {/* Rides Hero Section */}
           <div
-            className="min-h-screen flex items-center justify-center text-center px-6 py-12 relative overflow-hidden -mt-16 mb-16"
+            className="min-h-[50vh] flex items-center justify-center text-center px-6 py-32 relative overflow-hidden -mt-16 mb-16"
             style={{
               backgroundColor: '#000000'
             }}
@@ -129,18 +125,44 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
             {/* Dark overlay for base */}
             <div className="absolute inset-0 bg-black/70" />
 
-            {/* Subtle background icon - positioned above the overlay */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none z-[1]">
-              <MapPin className="w-[600px] h-[600px] text-primary" strokeWidth={0.5} />
+            {/* Animated Background Topography/Image (Subtle) */}
+            <div className="absolute inset-0 z-[1] opacity-20 pointer-events-none overflow-hidden flex items-center justify-center mix-blend-screen">
+              <style>
+                {`
+                  @keyframes scrollMarquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                  }
+                  .animate-scroll-marquee {
+                    animation: scrollMarquee 40s linear infinite;
+                  }
+                  @media (max-width: 768px) {
+                    .animate-scroll-marquee {
+                      animation-duration: 20s;
+                    }
+                  }
+                `}
+              </style>
+              
+              {/* Massive Scrolling Typography Layer */}
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex min-w-[200%] animate-scroll-marquee whitespace-nowrap">
+                <span className="text-[120px] md:text-[220px] font-black uppercase tracking-tighter text-transparent opacity-30 select-none px-4" style={{ WebkitTextStroke: '2px rgba(255, 255, 255, 0.5)' }}>
+                  UNSUPPORTED • UNMAPPED • PURE GRAVEL •
+                </span>
+                <span className="text-[120px] md:text-[220px] font-black uppercase tracking-tighter text-transparent opacity-30 select-none px-4" style={{ WebkitTextStroke: '2px rgba(255, 255, 255, 0.5)' }}>
+                  UNSUPPORTED • UNMAPPED • PURE GRAVEL •
+                </span>
+              </div>
             </div>
 
             {/* Content */}
-            <div className="max-w-4xl mx-auto space-y-8 relative z-10">
-              <h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight">
-                The Gravel Roads Are Yours
+            <div className="max-w-5xl mx-auto space-y-8 relative z-10 px-4 md:px-0 mix-blend-exclusion">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl leading-tight font-extrabold text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+                We offer curated routes for those wanting to try bikepacking, ultra racing or an epic gravel day out.
               </h1>
-              <h2 className="text-xl md:text-3xl lg:text-4xl text-muted-foreground">
-                Zero fuss. Zero corporate sponsors. Just you, your bike, and the route. Register below to start your adventure.
+              <div className="w-24 h-1 bg-primary mx-auto rounded-full mt-6 mb-8" />
+              <h2 className="text-xl md:text-3xl lg:text-4xl text-white/90 font-medium drop-shadow-md">
+                The route can be attempted in 24 hours, or ridden as a bikepacking adventure for the Sunday 6pm cut-off, which is not as easy as it may sound.
               </h2>
             </div>
           </div>
@@ -293,11 +315,7 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                           // Default premium button for unauthenticated users or users with no progress
                           return (
                             <div className="relative z-10 mt-auto pt-4 flex flex-col items-center">
-                              {!userEmail && (
-                                <div className="mb-3 text-[10px] sm:text-xs font-medium tracking-wide text-primary/80 uppercase bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
-                                  Premium Access Required
-                                </div>
-                              )}
+
                               <Button
                                 className="w-full relative overflow-hidden bg-primary/90 hover:bg-primary text-primary-foreground font-semibold py-6 text-lg group transition-all duration-300 shadow-[0_0_15px_rgba(255,87,34,0.3)] hover:shadow-[0_0_25px_rgba(255,87,34,0.5)] border-none"
                                 onClick={(e) => {
@@ -308,7 +326,7 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                               >
                                 <span className="relative z-10 flex items-center justify-center w-full">
                                   <MapPin className="w-5 h-5 mr-3" />
-                                  {userEmail ? 'Get Route Access' : 'Unlock Route & Commit'}
+                                  {userEmail ? 'Get Route Access' : 'Enter'}
                                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" />
                                 </span>
 
@@ -468,53 +486,6 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
 
         </section>
 
-        {/* Community Leaderboard Section */}
-        <section>
-          <Card className="bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20">
-            <CardContent className="p-12 text-center">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Trophy className="w-8 h-8 text-primary" />
-                <h2>Community Leaderboard</h2>
-              </div>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Track your progress, earn points for every ride completed, and see how you rank
-                among fellow Gravalists. From registration to finish line, every milestone counts
-                toward your community standing.
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-2xl mx-auto">
-                <div className="text-center space-y-2">
-                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                    <Award className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium">Register & Start</h3>
-                  <p className="text-xs text-muted-foreground">Earn points for joining rides and completing preparation steps</p>
-                </div>
-                <div className="text-center space-y-2">
-                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                    <Award className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium">Complete Challenges</h3>
-                  <p className="text-xs text-muted-foreground">Major points for crossing the finish line of ultra endurance rides</p>
-                </div>
-                <div className="text-center space-y-2">
-                  <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto">
-                    <Trophy className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-medium">Community Prize</h3>
-                  <p className="text-xs text-muted-foreground">Top rider each quarter receives exclusive Gravalist gear</p>
-                </div>
-              </div>
-              <Button
-                onClick={onNavigateToLeaderboard}
-                className="bg-transparent text-primary hover:bg-primary/10 border border-primary/20 hover:border-primary/40 transition-colors"
-                size="lg"
-              >
-                <Trophy className="w-5 h-5 mr-2" />
-                Leaderboard
-              </Button>
-            </CardContent>
-          </Card>
-        </section>
 
         {/* Global Map Section */}
         <GlobalMapSection />

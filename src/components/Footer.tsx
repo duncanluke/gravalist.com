@@ -1,13 +1,12 @@
 import React from 'react';
 
 interface FooterProps {
-  onNavigateToLeaderboard?: () => void;
   onNavigateToAddRoute: () => void;
   onNavigateToTerms?: () => void;
   onNavigateToPrivacy?: () => void;
 }
 
-export function Footer({ onNavigateToLeaderboard, onNavigateToAddRoute, onNavigateToTerms, onNavigateToPrivacy }: FooterProps) {
+export function Footer({ onNavigateToAddRoute, onNavigateToTerms, onNavigateToPrivacy }: FooterProps) {
   return (
     <footer className="border-t border-border/30 bg-background">
       <div className="max-w-6xl mx-auto px-4 py-6">

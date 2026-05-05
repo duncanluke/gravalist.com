@@ -8,15 +8,16 @@ import { Franschhoek500Page } from './Franschhoek500Page';
 import { CapeHope500Page } from './CapeHope500Page';
 import { DynamicEventPage } from './DynamicEventPage';
 
-import { LeaderboardPage } from './LeaderboardPage';
+// Leaderboard removed
 import { UpgradePage } from './UpgradePage';
 import { AddRoutePage } from './AddRoutePage';
-import { OnboardingRouter } from './OnboardingRouter';
+
 import { TermsPage } from './TermsPage';
 import { PrivacyPolicyPage } from './PrivacyPolicyPage';
 import { StoriesPage } from './StoriesPage';
 import { StoryDetailPage } from './StoryDetailPage';
 import { ResetPasswordPage } from './ResetPasswordPage';
+import { WelcomePage } from './WelcomePage';
 
 import { AppState, ViewMode, EventName } from '../types/app';
 
@@ -57,7 +58,6 @@ export function AppRouter({
             onViewRides={() => onViewModeChange('home')}
             onEventSelect={onEventSelect}
             onEnterEvent={onEnterEvent}
-            onNavigateToLeaderboard={() => onViewModeChange('leaderboard')}
             onNavigateToAddRoute={onNavigateToAddRoute}
             userEmail={state.userEmail}
           />
@@ -93,14 +93,6 @@ export function AppRouter({
 
 
 
-      case 'leaderboard':
-        return (
-          <LeaderboardPage
-            onBackToHome={() => onViewModeChange('home')}
-            onNavigateToAddRoute={onNavigateToAddRoute}
-          />
-        );
-
       case 'upgrade':
         return (
           <UpgradePage
@@ -108,7 +100,6 @@ export function AppRouter({
               console.log('Processing upgrade...');
             }}
             onNavigateToHome={() => onViewModeChange('home')}
-            onNavigateToLeaderboard={() => onViewModeChange('leaderboard')}
             onNavigateToRides={() => onViewModeChange('500-series')}
           />
         );
@@ -122,14 +113,7 @@ export function AppRouter({
           />
         );
 
-      case 'onboarding':
-        return (
-          <OnboardingRouter
-            state={state}
-            onViewModeChange={onViewModeChange}
-            setState={setState}
-          />
-        );
+
 
       case 'terms':
         return (
@@ -150,6 +134,18 @@ export function AppRouter({
           <ResetPasswordPage
             onNavigateToHome={() => {
               onNavigate('/');
+              onViewModeChange('home');
+            }}
+          />
+        );
+
+      case 'welcome':
+        return (
+          <WelcomePage
+            onNavigateToHome={() => onViewModeChange('home')}
+            onNavigateToSubscribe={() => onViewModeChange('upgrade')}
+            onNavigateToStories={() => {
+              onNavigate('/stories');
               onViewModeChange('home');
             }}
           />
@@ -193,6 +189,7 @@ export function AppRouter({
 
   const getPageMaxWidth = () => {
     switch (state.viewMode) {
+      case 'welcome':
       case 'add-route':
         return 'w-full';
       case 'home':
@@ -212,6 +209,7 @@ export function AppRouter({
 
   const getPagePadding = () => {
     switch (state.viewMode) {
+      case 'welcome':
       case 'add-route':
         return 'pt-36 pb-16 px-4';
       case 'onboarding':

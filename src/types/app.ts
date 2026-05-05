@@ -13,7 +13,8 @@ export type ViewMode =
   | 'add-route'
   | 'terms'
   | 'privacy-policy'
-  | 'reset-password';
+  | 'reset-password'
+  | 'welcome';
 
 export type Phase = 'before' | 'start' | 'end';
 

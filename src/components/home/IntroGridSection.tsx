@@ -8,11 +8,10 @@ export function IntroGridSection() {
                 <div className="flex-1 space-y-6 text-center lg:text-left">
                     <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight uppercase text-foreground">
                         THE ROADS<br />
-                        <span className="text-primary">ARE YOURS</span><br />
-                        (AND FREE)
+                        <span className="text-primary">ARE YOURS</span>
                     </h1>
                     <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                        Gravel roads are yours and free. We just help you get there by offering a no-fuss, non-corporate-sponsored opportunity for you to enjoy your life and unapologetic gravel riding.
+                        Gravel roads are yours. We just help you get there by offering a no-fuss, non-corporate-sponsored opportunity for you to enjoy your life and unapologetic gravel riding.
                     </p>
                 </div>
 

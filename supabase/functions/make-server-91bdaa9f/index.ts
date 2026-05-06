@@ -578,7 +578,7 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       },
       body: new URLSearchParams({
         'payment_method_types[0]': 'card',
-        'mode': 'subscription',
+        'mode': 'payment',
         'line_items[0][price]': priceId,
         'line_items[0][quantity]': '1',
         'allow_promotion_codes': 'true',

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
-import { Check, Loader2, Trophy, Map, Crown, ArrowRight } from 'lucide-react';
+import { Check, Loader2, Trophy, Map, Crown, ArrowRight, Compass, Clock, ShieldCheck, Heart } from 'lucide-react';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { supabase } from '../utils/supabase/client';
 import { useAuth } from '../hooks/useAuth';
@@ -270,13 +270,10 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
             )}
           </div>
         ) : (
-          <div className="relative z-10">
-            <h1>How It Works</h1>
-            <p className="text-muted-foreground mb-4">
-              The gravel roads are yours, and they're free. We just help you get there. Gravalist offers a no-fuss, non-corporate-sponsored platform for you to simply enjoy your life and unapologetic gravel riding.
-            </p>
-            <p className="text-muted-foreground">
-              Instead of a massive yearly subscription, you simply purchase a once-off entry for the specific events you want to ride. This covers your official GPX route download, and funds the maintenance of our independent community that shares your ethos. Pick an event, grab an entry, and get riding!
+          <div className="relative z-10 flex flex-col items-center">
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">Secure Your Entry</h1>
+            <p className="text-xl text-muted-foreground max-w-lg text-center">
+              Join the independent gravel community and get instant access to your next adventure.
             </p>
           </div>
         )}
@@ -316,6 +313,63 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
             </Button>
           </CardContent>
         </Card>
+      )}
+
+      {!showSuccessMessage && (
+        <div className="w-full max-w-5xl mt-24 mb-16 px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-semibold tracking-tight mb-4">Why Ride With Gravalist?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              We're building an independent platform for riders who just want to ride. No red tape, no bloated entry fees.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div className="p-8 rounded-3xl bg-muted/20 border border-border/40 hover:bg-muted/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Compass className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-xl font-medium mb-3">Verified GPX Routes</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Hand-curated, gravel-tested routes ready for your Wahoo or Garmin. Less time planning, more time riding.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-muted/20 border border-border/40 hover:bg-muted/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <Clock className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-xl font-medium mb-3">No Cutoff Times</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Race the sun or ride at a leisure pace with friends. There's no pressure, no broom wagon, and no stress.
+              </p>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-muted/20 border border-border/40 hover:bg-muted/30 transition-colors group">
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                <ShieldCheck className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-xl font-medium mb-3">100% Independent</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Funded entirely by riders. Every entry fee supports the platform and ensures these epic routes stay accessible.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Return to Events Action */}
+      {!showSuccessMessage && onNavigateToRides && (
+        <div className="w-full text-center pb-16">
+          <Button 
+            variant="ghost" 
+            onClick={onNavigateToRides}
+            className="text-muted-foreground hover:text-foreground group"
+          >
+            <ArrowRight className="w-4 h-4 mr-2 rotate-180 transition-transform group-hover:-translate-x-1" />
+            Check out more events
+          </Button>
+        </div>
       )}
     </div>
   );

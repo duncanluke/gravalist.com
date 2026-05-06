@@ -284,13 +284,13 @@ export function Header({
                 size="sm"
                 onClick={item.onClick}
                 className={`
-                  flex-shrink-0 px-3 py-2 h-auto rounded-full border transition-colors
-                  flex items-center gap-2 relative z-10
+                  flex-shrink-0 px-4 py-2 h-auto rounded-full border transition-all duration-200
+                  flex items-center gap-2 relative z-10 font-medium
                   ${item.isPrimary
-                    ? 'border-primary/20 bg-primary text-primary-foreground hover:bg-primary/90'
+                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(255,106,0,0.3)]'
                     : item.active
-                      ? 'border-primary/20 bg-primary/10 text-primary hover:bg-primary/20'
-                      : 'border-transparent text-muted-foreground hover:border-primary/20 hover:bg-primary/10 hover:text-primary'
+                      ? 'border-primary bg-primary/15 text-primary'
+                      : 'border-transparent text-muted-foreground hover:border-primary/30 hover:bg-primary/5 hover:text-foreground'
                   }
                 `}
               >
@@ -353,26 +353,40 @@ export function Header({
 
             </>
           ) : (
-            /* Unauthenticated: Login profile display */
-            <div
-              className="flex items-center gap-2 px-3 py-2 bg-muted/30 rounded-full border border-muted cursor-pointer hover:bg-muted/50 transition-colors"
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('requestEmailInput'));
+            /* Unauthenticated: Open email field */
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const form = e.target as HTMLFormElement;
+                const emailInput = form.elements.namedItem('headerEmail') as HTMLInputElement;
+                const email = emailInput?.value;
+                if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                  window.dispatchEvent(new CustomEvent('requestEmailInput', { detail: { email } }));
+                } else {
+                  toast.error('Please enter a valid email');
+                }
               }}
+              className="flex items-center group"
             >
-              <User className="w-4 h-4 text-muted-foreground" />
-              <div className="hidden sm:flex items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
-                  Sign In
-                </span>
-                <div className="flex items-center gap-1 px-2 py-1 bg-primary/20 rounded-full">
-                  <Trophy className="w-3 h-3 text-primary" />
-                  <span className="text-xs text-primary font-medium">
-                    0
-                  </span>
-                </div>
+              <div className="relative flex items-center transition-all duration-300 w-[200px] sm:w-[260px]">
+                <User className="absolute left-3 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                <Input
+                  name="headerEmail"
+                  type="email"
+                  placeholder="Enter email to sign in"
+                  className="pl-9 pr-12 h-10 w-full rounded-full bg-muted/40 border-muted placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+                  autoComplete="email"
+                />
+                <Button 
+                  type="submit" 
+                  size="sm" 
+                  variant="ghost"
+                  className="absolute right-1 text-primary hover:bg-primary hover:text-primary-foreground h-8 rounded-full px-3 py-0 font-medium transition-colors"
+                >
+                  Go
+                </Button>
               </div>
-            </div>
+            </form>
           )}
           </div>
         </div>

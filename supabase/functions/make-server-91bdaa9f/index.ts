@@ -561,7 +561,7 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       return c.json({ error: 'Payment system not configured' }, 500)
     }
 
-    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1TTj64INQTZMd46noHmxOa34'
+    const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1TU7UdINQTZMd46n9mBauYVa'
 
     // Extract event name from body if present
     const bodyText = await c.req.text()

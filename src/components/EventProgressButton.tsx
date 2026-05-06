@@ -49,6 +49,18 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
     }
   }, [isPremium, event?.id, session?.user?.id]);
 
+  // Sync attendance state across multiple instances on the page
+  useEffect(() => {
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (event && customEvent.detail?.eventId === event.id) {
+        setIsAttending(customEvent.detail.isAttending);
+      }
+    };
+    window.addEventListener('attendanceChanged', handleSync);
+    return () => window.removeEventListener('attendanceChanged', handleSync);
+  }, [event?.id]);
+
   const handleToggleAttending = async (checked: boolean) => {
     if (!event) return;
     
@@ -57,6 +69,7 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
         setLoading(true);
         await apiClient.softRegisterForEvent(event.id);
         setIsAttending(true);
+        window.dispatchEvent(new CustomEvent('attendanceChanged', { detail: { eventId: event.id, isAttending: true } }));
         toast.success(`You are now attending ${eventName}`);
       } catch (err: any) {
         toast.error(err.message || 'Failed to register for event');
@@ -71,6 +84,9 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
   const handleWithdrawSuccess = () => {
     setIsAttending(false);
     setShowWithdraw(false);
+    if (event) {
+      window.dispatchEvent(new CustomEvent('attendanceChanged', { detail: { eventId: event.id, isAttending: false } }));
+    }
   };
 
   const handleCheckout = async () => {
@@ -80,8 +96,6 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
       window.dispatchEvent(new CustomEvent('requestAuth', { detail: { mode: 'signin' } }));
       return;
     }
-
-    if (!session?.access_token) return;
 
     setLoading(true);
     setError(null);
@@ -139,10 +153,10 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
     if (!session?.access_token) return;
     try {
       setLoading(true);
-      const event = events.find(e => e.name === eventName);
-      if (!event) throw new Error("Event not found");
+      const ev = events.find(e => e.name.trim().toLowerCase() === eventName.trim().toLowerCase());
+      if (!ev) throw new Error("Event not found");
 
-      const { downloadUrl } = await apiClient.getGpxDownloadUrl(event.id);
+      const { downloadUrl } = await apiClient.getGpxDownloadUrl(ev.id);
       
       const a = document.createElement('a');
       a.href = downloadUrl;
@@ -163,7 +177,7 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
   };
 
   return (
-    <div className="text-center space-y-4">
+    <div className="text-center space-y-4 w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
       {error && (
         <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-lg max-w-sm mx-auto mb-4">
           {error}
@@ -187,61 +201,65 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
             size="lg" 
             onClick={handleCheckout}
             disabled={loading}
-            className="px-8 py-4 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-all duration-300"
+            className="w-full px-8 py-6 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xl shadow-xl shadow-primary/20 hover:scale-105 transition-all duration-300"
           >
-            {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <CreditCard className="w-5 h-5 mr-2" />}
+            {loading ? <Loader2 className="w-6 h-6 mr-3 animate-spin" /> : <CreditCard className="w-6 h-6 mr-3" />}
             Buy Entry — R 2750
           </Button>
-          <p className="text-sm font-medium text-muted-foreground max-w-sm mx-auto">
+          <p className="text-sm font-medium text-muted-foreground w-full">
             Secure your lifetime access to the official GPX route and unlock this event's completion badge.
           </p>
         </div>
       ) : (
-        <div className="flex flex-col space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button 
-              size="lg" 
-              onClick={handleDownloadGpx}
-              disabled={loading}
-              className="px-6 py-3 bg-white text-black hover:bg-neutral-200 font-bold border"
-            >
-              {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <FileDown className="w-5 h-5 mr-2" />}
-              Download GPX Route
-            </Button>
-
-            <Button 
-              size="lg" 
-              onClick={handleDownloadIndemnity}
-              className="px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
-            >
-              <FileSignature className="w-5 h-5 mr-2" />
-              Complete Indemnity Phase
-            </Button>
-          </div>
-
+        <div className="flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
+          {/* 1. Toggle Section (Big & Bold) */}
           {isAttending === null ? (
-            <div className="flex items-center justify-center p-4 border border-white/10 rounded-2xl max-w-sm mx-auto bg-black/20">
-               <Loader2 className="w-5 h-5 animate-spin text-white/50" />
-               <span className="ml-3 text-white/50 text-sm font-medium">Checking status...</span>
+            <div className="flex items-center justify-center p-6 border border-white/10 rounded-3xl w-full bg-black/20 shadow-lg">
+               <Loader2 className="w-6 h-6 animate-spin text-white/50" />
+               <span className="ml-3 text-white/50 text-base font-medium">Load status...</span>
             </div>
           ) : (
-            <div className={`flex items-center justify-between p-4 border rounded-2xl max-w-sm mx-auto shadow-2xl backdrop-blur-xl transition-all duration-300 ${isAttending ? 'bg-primary/10 border-primary/20' : 'bg-black/40 border-white/10'}`}>
+            <div className={`flex items-center justify-between p-6 border-2 rounded-3xl w-full shadow-[0_0_40px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] ${isAttending ? 'bg-primary/10 border-primary/40' : 'bg-black/60 border-white/20'}`}>
               <div className="flex flex-col text-left mr-4">
-                 <span className={`font-bold tracking-wider uppercase ${isAttending ? 'text-primary' : 'text-white'}`}>
+                 <span className={`text-xl font-black tracking-widest uppercase mb-1 drop-shadow-sm ${isAttending ? 'text-primary' : 'text-white'}`}>
                    Attending
                  </span>
-                 <span className="text-white/50 text-[11px] leading-tight mt-1">
-                   {isAttending ? 'Your spot is confirmed. See you at the start.' : 'Claim your spot if you are riding.'}
+                 <span className="text-white/60 text-sm leading-snug font-medium max-w-[200px]">
+                   {isAttending ? 'Your spot is confirmed. Prepare to ride.' : 'Confirm attendance to release routes.'}
                  </span>
               </div>
-              <div className="flex items-center space-x-2">
-                 {loading && <Loader2 className="w-4 h-4 animate-spin text-white/50" />}
-                 <span className={`text-xs font-bold uppercase tracking-wider ${isAttending ? 'text-primary' : 'text-white/50'}`}>
+              <div className="flex items-center space-x-4 bg-black/40 p-2 pl-4 rounded-full border border-white/5">
+                 {loading && <Loader2 className="w-5 h-5 animate-spin text-white/50" />}
+                 <span className={`text-base font-black uppercase tracking-wider ${isAttending ? 'text-primary' : 'text-white/50'}`}>
                    {isAttending ? 'Yes' : 'No'}
                  </span>
-                 <Switch checked={isAttending} onCheckedChange={handleToggleAttending} disabled={loading} />
+                 <Switch checked={isAttending} onCheckedChange={handleToggleAttending} disabled={loading} className="scale-125 mx-1 shadow-inner" />
               </div>
             </div>
+          )}
+
+          {/* 2. Download Buttons Section (Only if attending) */}
+          {isAttending === true && (
+             <div className="flex flex-col gap-4 pt-4 border-t border-white/10 w-full animate-in zoom-in-95 fade-in duration-500">
+                <Button 
+                  size="lg" 
+                  onClick={handleDownloadGpx}
+                  disabled={loading}
+                  className="w-full py-6 bg-white text-black hover:bg-neutral-200 font-bold text-lg shadow-xl"
+                >
+                  {loading ? <Loader2 className="w-5 h-5 mr-3 animate-spin" /> : <FileDown className="w-5 h-5 mr-3" />}
+                  Download GPX Route
+                </Button>
+
+                <Button 
+                  size="lg" 
+                  onClick={handleDownloadIndemnity}
+                  className="w-full py-6 bg-primary/20 border border-primary/50 hover:bg-primary/30 text-primary-foreground font-bold text-lg backdrop-blur-md"
+                >
+                  <FileSignature className="w-5 h-5 mr-3 text-primary" />
+                  Complete Indemnity Phase
+                </Button>
+             </div>
           )}
         </div>
       )}

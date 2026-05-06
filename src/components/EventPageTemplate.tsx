@@ -5,7 +5,7 @@ import { Card, CardContent } from './ui/card';
 import { useWindowScroll } from 'react-use';
 import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
-import { apiClient } from '../utils/supabase/client';
+import { apiClient, supabase } from '../utils/supabase/client';
 import { Button } from './ui/button';
 
 interface TagIconProps {
@@ -51,8 +51,43 @@ export function EventPageTemplate({
   const { profile, session } = useAuth();
   const { events } = useEvents();
   const [downloadingGpx, setDownloadingGpx] = useState(false);
+  const [isAttending, setIsAttending] = useState<boolean | null>(null);
 
   const isPremium = profile?.is_premium_subscriber === true;
+
+  // Initialize attendance state and sync across components
+  useEffect(() => {
+    if (isPremium && session?.user?.id && events.length > 0) {
+       const fetchAttendance = async () => {
+         const event = events.find(e => e.name.toLowerCase() === title.toLowerCase());
+         if (!event) return;
+         const { data, error } = await supabase.from('user_events')
+           .select('registration_status')
+           .eq('user_id', session.user.id)
+           .eq('event_id', event.id)
+           .maybeSingle();
+
+         if (!error && data && ['confirmed', 'started', 'finished'].includes(data.registration_status || '')) {
+           setIsAttending(true);
+         } else {
+           setIsAttending(false);
+         }
+       };
+       fetchAttendance();
+    }
+  }, [isPremium, title, session?.user?.id, events]);
+
+  useEffect(() => {
+    const handleSync = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const event = events.find(ev => ev.name.toLowerCase() === title.toLowerCase());
+      if (event && customEvent.detail?.eventId === event.id) {
+        setIsAttending(customEvent.detail.isAttending);
+      }
+    };
+    window.addEventListener('attendanceChanged', handleSync);
+    return () => window.removeEventListener('attendanceChanged', handleSync);
+  }, [events, title]);
 
   const handleDownloadGpx = async () => {
     if (!session?.access_token) return;
@@ -194,9 +229,14 @@ export function EventPageTemplate({
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
-                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
-                    {isPremium ? (
-                      <Button onClick={handleDownloadGpx} disabled={downloadingGpx} className="w-full sm:w-auto py-8 px-10 text-xl font-bold bg-white text-black hover:bg-neutral-200 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+                  {isPremium && isAttending !== true && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-primary/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-primary/90 text-center px-4">Attendance Required</span>
+                    <span className="text-sm text-white/70 mt-3 font-medium text-center max-w-xs px-4">You must claim your spot by toggling 'Attending' above before accessing the route.</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${(!isPremium || isAttending !== true) ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium && isAttending === true ? (
+                      <Button onClick={handleDownloadGpx} disabled={downloadingGpx} className="w-full sm:w-auto py-8 px-10 text-xl font-bold bg-white text-black hover:bg-neutral-200 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:scale-105 transition-transform duration-300">
                         {downloadingGpx ? 'Downloading...' : 'Get Route Data'}
                       </Button>
                     ) : (
@@ -230,10 +270,16 @@ export function EventPageTemplate({
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
-                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
-                    {isPremium ? (
-                      <Button onClick={handleDownloadIndemnity} variant="outline" className="w-full sm:w-auto py-8 px-10 text-xl font-bold border-white/20 hover:bg-white/10 rounded-2xl bg-black/40 shadow-xl">
-                        Sign Official Indemnity
+                  {isPremium && isAttending !== true && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-primary/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-primary/90 text-center px-4">Attendance Required</span>
+                    <span className="text-sm text-white/70 mt-3 font-medium text-center max-w-xs px-4">You must claim your spot by toggling 'Attending' above before accessing indemnity forms.</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${(!isPremium || isAttending !== true) ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium && isAttending === true ? (
+                      <Button onClick={handleDownloadIndemnity} variant="outline" className="w-full sm:w-auto py-8 px-10 text-xl font-bold border-white/20 hover:bg-white/10 rounded-2xl bg-black/40 shadow-xl hover:scale-105 transition-transform duration-300 overflow-hidden relative group">
+                        <span className="relative z-10">Sign Official Indemnity</span>
+                        <div className="absolute inset-0 bg-primary/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
                       </Button>
                     ) : (
                       <div className="space-y-4 w-full">

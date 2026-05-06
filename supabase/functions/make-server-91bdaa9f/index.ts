@@ -561,12 +561,26 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
       return c.json({ error: 'Payment system not configured' }, 500)
     }
 
-    // Get price ID from environment or use default
     const priceId = Deno.env.get('STRIPE_PRICE_ID') || 'price_1TTj64INQTZMd46noHmxOa34'
+
+    // Extract event name from body if present
+    const bodyText = await c.req.text()
+    let eventName = 'Unknown Event'
+    try {
+      if (bodyText) {
+        const bodyJson = JSON.parse(bodyText)
+        if (bodyJson.eventName) {
+          eventName = bodyJson.eventName
+        }
+      }
+    } catch (e) {
+      console.log('STRIPE - Error parsing body:', e)
+    }
 
     console.log('STRIPE - Creating checkout session for user:', targetUserData.email)
     console.log('STRIPE - Display name:', targetUserData.display_name)
     console.log('STRIPE - Using price ID:', priceId)
+    console.log('STRIPE - Event Name:', eventName)
 
     const origin = c.req.header('origin') || 'https://gravalist.com'
 
@@ -584,6 +598,7 @@ app.post('/make-server-91bdaa9f/stripe/create-checkout-session', async (c) => {
         'allow_promotion_codes': 'true',
         'metadata[user_id]': targetUserData.id,
         'metadata[user_email]': targetUserData.email,
+        'metadata[event_name]': eventName,
         'client_reference_id': targetUserData.id,
         'customer_email': targetUserData.email,
         'success_url': `${origin}/upgrade?success=true`,
@@ -736,6 +751,39 @@ async function handleCheckoutSessionCompleted(session: any) {
       console.log('STRIPE - Error updating user subscription on checkout completion:', error)
     } else {
       console.log('STRIPE - Successfully updated user subscription on checkout completion')
+    }
+
+    // Process event mapping if present
+    const eventName = session.metadata?.event_name
+    if (eventName && eventName !== 'Unknown Event') {
+      console.log('STRIPE - Registration specifically for event:', eventName)
+      
+      const { data: eventData, error: eventError } = await supabase
+        .from('events')
+        .select('id')
+        .or(`name.ilike.%${eventName}%,slug.ilike.%${eventName}%`)
+        .limit(1)
+        .maybeSingle()
+        
+      if (eventData) {
+        // Find existing progress or insert new
+        const { error: upsertError } = await supabase
+          .from('user_events')
+          .upsert({
+            user_id: userId,
+            event_id: eventData.id,
+            registration_status: 'confirmed',
+            registered_at: new Date().toISOString()
+          }, { onConflict: 'user_id, event_id' })
+          
+        if (upsertError) {
+           console.log('STRIPE - Failed to register user to event:', upsertError)
+        } else {
+           console.log('STRIPE - Successfully linked user to event:', eventData.id)
+        }
+      } else {
+        console.log('STRIPE - Could not match event name to database:', eventName)
+      }
     }
 
   } catch (error) {

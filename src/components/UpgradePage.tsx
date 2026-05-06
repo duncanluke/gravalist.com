@@ -164,6 +164,9 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
             'Content-Type': 'application/json',
             'Origin': window.location.origin
           },
+          body: JSON.stringify({
+            eventName: localStorage.getItem('gravalist_return_to_event') || 'Gravalist Event'
+          }),
           signal: controller.signal
         });
 

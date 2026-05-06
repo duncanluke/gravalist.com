@@ -5,8 +5,8 @@ import { Check, Loader2, Trophy, Map, Crown, ArrowRight, Compass, Clock, ShieldC
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { supabase } from '../utils/supabase/client';
 import { useAuth } from '../hooks/useAuth';
-import { toast } from 'sonner@2.0.3';
-import backgroundImage from '@/assets/generic-2.png';
+import { toast } from 'sonner';
+
 
 interface UpgradePageProps {
   onUpgrade: () => void;
@@ -94,12 +94,18 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
     }
   }, [isAuthenticated, refreshProfile]);
 
-  const benefits = [
-    'Lifetime access to official GPX route files',
-    'Participation in community dates & tracking',
-    'No-fuss, self-managed adventures',
-    '100% independent, non-corporate platform',
-    'Directly contribute to growing the community'
+  const whatYouGet = [
+    { title: 'Curation', desc: 'Expertly mapped ultra-distance gravel routes designed to navigate around private lands.' },
+    { title: 'Stewardship', desc: 'We act as digital custodians, maintaining the route integrity and the community platform.' },
+    { title: 'The Challenge', desc: 'Access to the digital leaderboard to compare times against other riders.' },
+    { title: 'Validation', desc: 'Digital verification of your ride for community ranking.' }
+  ];
+
+  const whatIsExcluded = [
+    { title: 'No Humans', desc: 'No staff, marshals, or organizers at the start, finish, or on-course.' },
+    { title: 'No Tracking', desc: 'No live event tracking is provided or monitored by us.' },
+    { title: 'No Rescue', desc: 'No sweep vehicles, medical support, or "bail-out" assistance.' },
+    { title: 'No Infrastructure', desc: 'No water points, medals, goody bags, or physical timing.' }
   ];
 
   const handleUpgrade = async () => {
@@ -165,7 +171,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
             'Origin': window.location.origin
           },
           body: JSON.stringify({
-            eventName: localStorage.getItem('gravalist_return_to_event') || 'Gravalist Event'
+            eventName: localStorage.getItem('gravalist_return_to_event') || 'Gravalist Route'
           }),
           signal: controller.signal
         });
@@ -242,11 +248,11 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8 text-center px-4">
       {/* Existing upgrade flow */}
-      <div className="space-y-4 max-w-lg relative pb-32">
+      <div className="space-y-4 max-w-lg relative pb-20">
         {/* Decorative background image */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-md mx-auto pointer-events-none z-0">
           <img
-            src={backgroundImage}
+            src="/home-1.jpg"
             alt="Gravel riding scenery"
             className="w-full h-auto opacity-30"
             style={{
@@ -260,7 +266,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
           <div className="space-y-4 relative z-10">
             <h1>Welcome to Gravalist!</h1>
             <p className="text-muted-foreground">
-              Your entry is now secured. You have full access to download your official event GPX routes and prepare for the journey using our seamless digital checklist.
+              Your access is now secured. You have full access to download your official event GPX routes and prepare for the journey using our seamless digital checklist.
             </p>
             {onNavigateToHome && (
               <Button
@@ -273,47 +279,81 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
             )}
           </div>
         ) : (
-          <div className="relative z-10 flex flex-col items-center">
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">Secure Your Entry</h1>
+          <div className="relative z-10 flex flex-col items-center pt-10">
+            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">Secure Route Access</h1>
             <p className="text-xl text-muted-foreground max-w-lg text-center">
-              Join the independent gravel community and get instant access to your next adventure.
+              Join the independent gravel community as a self-supported rider.
             </p>
           </div>
         )}
       </div>
 
       {!showSuccessMessage && (
-        <Card className="w-full max-w-md border-border/30">
-          <CardContent className="p-8 space-y-6">
-            <div className="space-y-2">
-              <div className="text-3xl font-medium text-primary">R 2750</div>
-              <div className="text-muted-foreground">One-time entry fee per event</div>
+        <Card className="w-full max-w-4xl border-border/30 bg-card/60 backdrop-blur-xl">
+          <CardContent className="p-0 flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-border/20">
+            {/* Left Column: What You Get & Payment */}
+            <div className="flex-1 p-8 md:p-12 space-y-8 bg-card/40">
+               <div className="space-y-2 text-left">
+                 <div className="text-4xl font-black tracking-tight text-primary">R 499</div>
+                 <div className="text-sm font-medium text-muted-foreground max-w-xs">One-time contribution for lifetime route access and digital stewardship</div>
+               </div>
+
+               <div className="space-y-4 text-left">
+                 <h4 className="text-sm font-bold uppercase tracking-widest text-foreground/80">What You Get</h4>
+                 <div className="space-y-4">
+                   {whatYouGet.map((item, index) => (
+                     <div key={index} className="flex items-start gap-4 text-left border border-white/5 p-4 rounded-xl bg-black/10">
+                       <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                       <div>
+                         <span className="text-sm font-bold block text-foreground">{item.title}</span>
+                         <span className="text-xs text-muted-foreground mt-0.5 block">{item.desc}</span>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+
+               <div className="pt-4 border-t border-white/5">
+                 <Button
+                   onClick={handleUpgrade}
+                   disabled={isLoading}
+                   className="w-full bg-primary text-primary-foreground hover:bg-primary/90 text-lg py-7 font-black tracking-wide"
+                   size="lg"
+                 >
+                   {isLoading ? (
+                     <>
+                       <Loader2 className="w-5 h-5 mr-3 animate-spin" />
+                       {currentStep || 'Processing...'}
+                     </>
+                   ) : (
+                     'Contribute & Unlock Access'
+                   )}
+                 </Button>
+                 <p className="text-xs text-center text-muted-foreground mt-4 font-medium px-4">
+                   This is NOT an event entry. This is a contribution to platform stewardship.
+                 </p>
+               </div>
             </div>
 
-            <div className="space-y-3">
-              {benefits.map((benefit, index) => (
-                <div key={index} className="flex items-start gap-3 text-left">
-                  <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                  <span className="text-sm text-foreground">{benefit}</span>
-                </div>
-              ))}
-            </div>
+            {/* Right Column: Exclusions (The Nothing List) */}
+            <div className="flex-1 p-8 md:p-12 space-y-6 bg-red-950/20">
+               <div className="space-y-2 text-left">
+                 <h3 className="text-2xl font-bold tracking-tight text-red-500/90">What is EXCLUDED</h3>
+                 <p className="text-sm text-red-400/70 font-medium">Please review "The Nothing List" carefully before contributing. We do not provide physical event services.</p>
+               </div>
 
-            <Button
-              onClick={handleUpgrade}
-              disabled={isLoading}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              size="lg"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  {currentStep || 'Processing...'}
-                </>
-              ) : (
-                'Secure Your Entry'
-              )}
-            </Button>
+               <div className="space-y-4">
+                 {whatIsExcluded.map((item, index) => (
+                   <div key={index} className="flex items-start gap-4 text-left border border-red-500/20 p-4 rounded-xl bg-red-950/20">
+                     <ShieldCheck className="w-5 h-5 text-red-500/70 flex-shrink-0 mt-0.5" /> {/* Fallback icon, will change to X if properly structured, ShieldCheck ok as warning for now */}
+                     <div>
+                       <span className="text-sm font-bold block text-red-500/90">{item.title}</span>
+                       <span className="text-xs text-red-400/70 mt-0.5 block">{item.desc}</span>
+                     </div>
+                   </div>
+                 ))}
+               </div>
+            </div>
           </CardContent>
         </Card>
       )}

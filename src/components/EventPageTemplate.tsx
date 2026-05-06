@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, Route, Mountain, TreePine, Award, ChevronDown, Lock, Download, FileSignature, HelpCircle, Map } from 'lucide-react';
+import { Calendar, Clock, MapPin, Route, Mountain, TreePine, Award, ChevronDown, Lock, Download, FileSignature, HelpCircle, Map, ShieldX, AlertTriangle, Satellite } from 'lucide-react';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
 import { useWindowScroll } from 'react-use';
@@ -226,7 +226,7 @@ export function EventPageTemplate({
                 <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
                     <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
-                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
                   {isPremium && isAttending !== true && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
@@ -267,7 +267,7 @@ export function EventPageTemplate({
                 <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
                     <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
-                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
                   {isPremium && isAttending !== true && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
@@ -308,7 +308,7 @@ export function EventPageTemplate({
                 <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
                     <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
-                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
                   <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
@@ -344,7 +344,7 @@ export function EventPageTemplate({
                 <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
                     <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
-                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
                   <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
@@ -376,6 +376,46 @@ export function EventPageTemplate({
              </div>
           </div>
 
+        </div>
+        
+        {/* Mandatory Legal & Safety Protocols */}
+        <div className="max-w-4xl mx-auto space-y-8 mt-32">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight text-white/90">Mandatory Safety Protocol</h2>
+            <p className="text-lg text-white/50 mt-4 leading-relaxed font-medium">Please review these terms carefully. This is a private excursion, not an organized event.</p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="p-8 rounded-3xl bg-red-950/20 border border-red-500/20 backdrop-blur-sm">
+              <div className="flex items-start gap-6">
+                <ShieldX className="w-8 h-8 text-red-500/70 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-xl font-bold text-red-500/90 mb-2">The "Not an Event" Disclaimer</h3>
+                  <p className="text-red-400/70 leading-relaxed font-medium">This is not a sanctioned sporting event or an organized race. By registering, you acknowledge that you are embarking on a Private Excursion. You are a self-supported cyclist using public routes at your own risk. We provide no event infrastructure.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-orange-950/20 border border-orange-500/20 backdrop-blur-sm">
+              <div className="flex items-start gap-6">
+                <AlertTriangle className="w-8 h-8 text-orange-500/70 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-xl font-bold text-orange-500/90 mb-2">Search and Rescue Responsibility</h3>
+                  <p className="text-orange-400/70 leading-relaxed font-medium">In the event of an emergency, the participant is solely responsible for all costs associated with private search and rescue operations. The 'Custodian' assumes no duty of care for riders on the route.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-8 rounded-3xl bg-blue-950/20 border border-blue-500/20 backdrop-blur-sm">
+              <div className="flex items-start gap-6">
+                <Satellite className="w-8 h-8 text-blue-500/70 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-xl font-bold text-blue-500/90 mb-2">Private SOS GPS Trackers</h3>
+                  <p className="text-blue-400/70 leading-relaxed font-medium">Because we provide zero on-course support or tracking, we strongly recommend that all riders rent or purchase their own satellite-based SOS device (such as a Garmin inReach or SPOT Tracker). These devices are essential for private support coordination and 24/7 emergency monitoring. We do not provide this service; it is the rider's responsibility to ensure their own safety net.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         
         {/* Final CTA Banner */}

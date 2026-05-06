@@ -204,10 +204,10 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
             className="w-full px-8 py-6 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xl shadow-xl shadow-primary/20 hover:scale-105 transition-all duration-300"
           >
             {loading ? <Loader2 className="w-6 h-6 mr-3 animate-spin" /> : <CreditCard className="w-6 h-6 mr-3" />}
-            Buy Entry — R 2750
+            Access Contribution — R 499
           </Button>
           <p className="text-sm font-medium text-muted-foreground w-full">
-            Secure your lifetime access to the official GPX route and unlock this event's completion badge.
+            Your contribution unlocks lifetime access to the route, the digital leaderboard, and the rider's community platform.
           </p>
         </div>
       ) : (

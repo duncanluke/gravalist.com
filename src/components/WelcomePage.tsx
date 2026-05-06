@@ -52,10 +52,10 @@ export function WelcomePage({
           <section className="text-center md:text-left space-y-4 bg-white/5 border border-white/10 p-10 md:p-12 rounded-[2rem] backdrop-blur-md">
             <Mountain className="w-16 h-16 text-primary mx-auto md:mx-0 mb-6" />
             <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-widest text-primary drop-shadow-sm">
-              Ride It Your Way. Test Yourself.
+              Adventure Over Racing
             </h2>
             <p className="text-lg md:text-xl text-white/80 leading-relaxed font-medium text-balance">
-              Tackle the route in 24 hours to prove a point, or ride it as a weekend bikepacking trip. This is about your own terms, pushing your own limits, and respecting the gravel.
+              This is a private excursion, not a sanctioned race. Tackle the route in 24 hours to prove a point, or break it up into a weekend bikepacking trip. This is about your own terms, pushing your own limits, and respecting the gravel.
             </p>
           </section>
         </div>
@@ -74,7 +74,7 @@ export function WelcomePage({
             onClick={onNavigateToSubscribe}
             className="w-full sm:w-auto text-lg py-7 px-10 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-[0_0_30px_rgba(255,87,34,0.4)] border border-primary/50 transition-all scale-100 hover:scale-105"
           >
-            Enter An Event <ArrowRight className="w-6 h-6 ml-2" />
+            Unlock Route Access <ArrowRight className="w-6 h-6 ml-2" />
           </Button>
           
           <Button 

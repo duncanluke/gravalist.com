@@ -214,26 +214,26 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
         <div className="flex flex-col space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full">
           {/* 1. Toggle Section (Big & Bold) */}
           {isAttending === null ? (
-            <div className="flex items-center justify-center p-6 border border-white/10 rounded-3xl w-full bg-black/20 shadow-lg">
-               <Loader2 className="w-6 h-6 animate-spin text-white/50" />
-               <span className="ml-3 text-white/50 text-base font-medium">Load status...</span>
+            <div className="flex items-center justify-center p-4 sm:p-6 border border-white/10 rounded-2xl sm:rounded-3xl w-full bg-black/20 shadow-lg">
+               <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin text-white/50" />
+               <span className="ml-3 text-white/50 text-sm sm:text-base font-medium">Load status...</span>
             </div>
           ) : (
-            <div className={`flex items-center justify-between p-6 border-2 rounded-3xl w-full shadow-[0_0_40px_rgba(0,0,0,0.5)] backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] ${isAttending ? 'bg-primary/10 border-primary/40' : 'bg-black/60 border-white/20'}`}>
-              <div className="flex flex-col text-left mr-4">
-                 <span className={`text-xl font-black tracking-widest uppercase mb-1 drop-shadow-sm ${isAttending ? 'text-primary' : 'text-white'}`}>
+            <div className={`flex items-center justify-between p-4 sm:p-6 border sm:border-2 rounded-2xl sm:rounded-3xl w-full shadow-2xl backdrop-blur-xl transition-all duration-500 hover:scale-[1.02] ${isAttending ? 'bg-primary/10 border-primary/40' : 'bg-black/60 border-white/20'}`}>
+              <div className="flex flex-col text-left mr-2 sm:mr-4">
+                 <span className={`text-base sm:text-xl font-black tracking-widest uppercase mb-0.5 sm:mb-1 drop-shadow-sm ${isAttending ? 'text-primary' : 'text-white'}`}>
                    Attending
                  </span>
-                 <span className="text-white/60 text-sm leading-snug font-medium max-w-[200px]">
+                 <span className="text-white/60 text-[10px] sm:text-sm leading-tight sm:leading-snug font-medium max-w-[140px] sm:max-w-[200px]">
                    {isAttending ? 'Your spot is confirmed. Prepare to ride.' : 'Confirm attendance to release routes.'}
                  </span>
               </div>
-              <div className="flex items-center space-x-4 bg-black/40 p-2 pl-4 rounded-full border border-white/5">
-                 {loading && <Loader2 className="w-5 h-5 animate-spin text-white/50" />}
-                 <span className={`text-base font-black uppercase tracking-wider ${isAttending ? 'text-primary' : 'text-white/50'}`}>
+              <div className="flex items-center space-x-2 sm:space-x-4 bg-black/40 p-1.5 pl-3 sm:p-2 sm:pl-4 rounded-full border border-white/5">
+                 {loading && <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-white/50" />}
+                 <span className={`text-xs sm:text-base font-black uppercase tracking-wider ${isAttending ? 'text-primary' : 'text-white/50'}`}>
                    {isAttending ? 'Yes' : 'No'}
                  </span>
-                 <Switch checked={isAttending} onCheckedChange={handleToggleAttending} disabled={loading} className="scale-125 mx-1 shadow-inner" />
+                 <Switch checked={isAttending} onCheckedChange={handleToggleAttending} disabled={loading} className="scale-90 sm:scale-125 mx-0.5 sm:mx-1 shadow-inner" />
               </div>
             </div>
           )}

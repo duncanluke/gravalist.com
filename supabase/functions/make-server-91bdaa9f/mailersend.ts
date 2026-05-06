@@ -519,13 +519,117 @@ My tracking, my responsibility.
       name: SENDER_NAME
     },
     to: [{ email: userEmail }],
-    bcc: [{ email: '139710685@bcc.eu1.hubspot.com' }],
+    bcc: [{ email: 'hello@gravalist.com', name: 'Gravalist' }, { email: '139710685@bcc.eu1.hubspot.com' }],
     subject: 'Welcome to Gravalist - Select Your First Ride',
     html,
     text
   });
 }
 
+/**
+ * Send an event follow-up marketing email
+ */
+export async function sendEventFollowupEmail(
+  userEmail: string,
+  userName: string,
+  eventName: string
+): Promise<{ success: boolean; error?: string }> {
+  const displayName = userName || 'Rider';
+
+  const html = [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    '  <title>Your Adventure Awaits</title>',
+    '</head>',
+    '<body style="margin: 0; padding: 0; font-family: Inter, -apple-system, BlinkMacSystemFont, \\\'Segoe UI\\\', Roboto, sans-serif; background-color: #000000; color: #ffffff;">',
+    '  <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #000000;">',
+    '    <tr>',
+    '      <td align="center" style="padding: 40px 20px;">',
+    '        <table role="presentation" style="max-width: 600px; width: 100%; border-collapse: collapse;">',
+    '          <tr>',
+    '            <td style="padding: 0 0 40px 0; text-align: center;">',
+    '              <img src="' + LOGO_URL + '" alt="Gravalist" style="height: 48px; max-width: 100%; margin-bottom: 8px;" />',
+    '              <p style="margin: 8px 0 0 0; font-size: 14px; color: #999999; text-transform: uppercase; letter-spacing: 1px;">',
+    '                Unsupported Ultracycling',
+    '              </p>',
+    '            </td>',
+    '          </tr>',
+    '          <tr>',
+    '            <td style="background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px; padding: 40px;">',
+    '              <h2 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 600; text-align: center; color: #ffffff;">',
+    '                Still thinking about ' + eventName + '?',
+    '              </h2>',
+    '              <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #cccccc; text-align: center;">',
+    '                Hi ' + displayName + ', we noticed you exploring <strong>' + eventName + '</strong>.',
+    '                Are you ready to test your limits?',
+    '              </p>',
+    '              <div style="background-color: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 20px; margin: 0 0 32px 0;">',
+    '                <h3 style="margin: 0 0 16px 0; font-size: 16px; color: #FF6A00;">What makes this unique:</h3>',
+    '                <p style="margin: 0 0 12px 0; font-size: 14px; color: #cccccc; line-height: 1.5;">',
+    '                  ✓ Raw, unmapped terrain<br>',
+    '                  ✓ No corporate fuss—just pure unsupported gravel<br>',
+    '                  ✓ The ultimate physical and mental test<br>',
+    '                </p>',
+    '                <p style="margin: 0; font-size: 14px; color: #999999; line-height: 1.5;">',
+    '                  We map the routes, we verify the distances, but after that... you are entirely responsible for yourself.',
+    '                </p>',
+    '              </div>',
+    '              <table role="presentation" style="width: 100%; border-collapse: collapse;">',
+    '                <tr>',
+    '                  <td align="center">',
+    '                    <a href="https://gravalist.com/ride/' + encodeURIComponent(eventName) + '" style="display: inline-block; background-color: #FF6A00; color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 6px; font-weight: 600; font-size: 16px;">',
+    '                      Enter ' + eventName + ' Now',
+    '                    </a>',
+    '                  </td>',
+    '                </tr>',
+    '              </table>',
+    '            </td>',
+    '          </tr>',
+    '          <tr>',
+    '            <td style="padding: 32px 0 0 0; text-align: center;">',
+    '              <p style="margin: 0 0 8px 0; font-size: 13px; color: #666666;">',
+    '                My tracking, my responsibility.',
+    '              </p>',
+    '            </td>',
+    '          </tr>',
+    '        </table>',
+    '      </td>',
+    '    </tr>',
+    '  </table>',
+    '</body>',
+    '</html>'
+  ].join('\n');
+
+  const text = [
+    'Still thinking about ' + eventName + '?',
+    '',
+    'Hi ' + displayName + ', we noticed you exploring ' + eventName + '. Are you ready to test your limits?',
+    '',
+    'What makes this unique:',
+    '✓ Raw, unmapped terrain',
+    '✓ No corporate fuss—just pure unsupported gravel',
+    '✓ The ultimate physical and mental test',
+    '',
+    'Enter Now: https://gravalist.com/ride/' + encodeURIComponent(eventName),
+    '',
+    'My tracking, my responsibility.'
+  ].join('\n');
+
+  return sendEmail({
+    from: {
+      email: SENDER_EMAIL,
+      name: SENDER_NAME
+    },
+    to: [{ email: userEmail, name: displayName }],
+    bcc: [{ email: 'hello@gravalist.com', name: 'Gravalist' }, { email: '139710685@bcc.eu1.hubspot.com' }],
+    subject: "It's time to ride " + eventName,
+    html,
+    text
+  });
+}
 /**
  * Send a ride registration confirmation email
  */

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from './ui/card';
 import { useEvents } from '../hooks/useEvents';
-import { Event } from '../utils/supabase/client';
+import { Event, supabase } from '../utils/supabase/client';
 import { EventProgressButton } from './EventProgressButton';
 import { EventPageTemplate } from './EventPageTemplate';
 
@@ -14,6 +14,26 @@ interface DynamicEventPageProps {
 export function DynamicEventPage({ eventSlug, onEnterEvent }: DynamicEventPageProps) {
   const { events, loading, error } = useEvents();
   const [event, setEvent] = useState<Event | null>(null);
+
+  useEffect(() => {
+    let startTime = Date.now();
+    let sent = false;
+
+    return () => {
+      if (event && !sent) {
+        sent = true;
+        const viewDurationSeconds = Math.round((Date.now() - startTime) / 1000);
+        
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session && viewDurationSeconds > 3) {
+            supabase.functions.invoke('marketing', {
+              body: { action: 'track-view', eventId: event.id, viewDurationSeconds }
+            }).catch(e => console.error("Could not track view", e));
+          }
+        });
+      }
+    };
+  }, [event]);
 
   useEffect(() => {
     if (events && events.length > 0) {

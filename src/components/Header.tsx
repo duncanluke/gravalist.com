@@ -284,13 +284,13 @@ export function Header({
                 size="sm"
                 onClick={item.onClick}
                 className={`
-                  flex-shrink-0 px-4 py-2 h-auto rounded-full border transition-all duration-200
+                  flex-shrink-0 px-4 py-2 h-auto rounded-full transition-all duration-200
                   flex items-center gap-2 relative z-10 font-medium
                   ${item.isPrimary
-                    ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(255,106,0,0.3)]'
+                    ? 'border border-primary bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_15px_rgba(255,106,0,0.3)]'
                     : item.active
-                      ? 'border-primary bg-primary/15 text-primary'
-                      : 'border-transparent text-muted-foreground hover:border-primary/30 hover:bg-primary/5 hover:text-foreground'
+                      ? 'bg-foreground text-background shadow-sm'
+                      : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                   }
                 `}
               >

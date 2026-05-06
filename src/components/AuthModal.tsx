@@ -26,13 +26,28 @@ export function AuthModal({
   const [email, setEmail] = useState(initialEmail);
   const [pin, setPin] = useState('');
   const [formError, setFormError] = useState('');
+  const [autoSentEmail, setAutoSentEmail] = useState('');
 
-  // Update email when initialEmail prop changes
+  // Update email and auto-send PIN if initialEmail is provided from header
   React.useEffect(() => {
-    if (initialEmail && initialEmail !== email) {
+    if (open && initialEmail && initialEmail !== email) {
       setEmail(initialEmail);
     }
-  }, [initialEmail]);
+    
+    // Auto-send PIN if opened with a new initialEmail that is valid
+    if (open && initialEmail && initialEmail !== autoSentEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(initialEmail)) {
+      setAutoSentEmail(initialEmail);
+      const autoSendPin = async () => {
+        setFormError('');
+        clearError();
+        const { success } = await signInWithOtp(initialEmail);
+        if (success) {
+          setStep('pin');
+        }
+      };
+      autoSendPin();
+    }
+  }, [open, initialEmail, autoSentEmail, email, signInWithOtp, clearError]);
 
   const handleSendPin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,6 +85,7 @@ export function AuthModal({
     setStep('email');
     setPin('');
     setFormError('');
+    setAutoSentEmail('');
     clearError();
     onClose();
   };

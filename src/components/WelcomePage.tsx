@@ -45,7 +45,7 @@ export function WelcomePage({
               No Start Line. No End Line.
             </h2>
             <p className="text-lg md:text-xl text-white/80 leading-relaxed font-medium text-balance">
-              It will feel strange at first. There's no starting gun and no inflated arches. You choose when you ride. You choose the weather. You start when you want.
+              It will feel strange at first. There's no starting gun and no inflated arches. And when you finally finish, there won't be anyone there to congratulate you or hand you a medal.
             </p>
           </section>
 

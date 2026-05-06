@@ -172,100 +172,164 @@ export function EventPageTemplate({
           {routeHighlightsContent}
         </div>
         
-        {/* Ride Briefing / Gated Details */}
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Rider Briefing & Details</h2>
-            <p className="text-muted-foreground mt-4 max-w-2xl mx-auto text-lg">Essential documentation and tools for the event. Access is securely unlocked upon entry.</p>
-          </div>
+        {/* Ride Briefing / Gated Details (Stacked) */}
+        <div className="max-w-6xl mx-auto space-y-24 mt-24">
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {/* GPS Route */}
-            <Card className={`relative overflow-hidden transition-all duration-500 border-white/5 ${!isPremium ? 'bg-card/20 backdrop-blur-sm' : 'bg-card/60 backdrop-blur-xl border-primary/20 shadow-[0_0_30px_rgba(255,87,34,0.05)]'}`}>
-              {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-                <Lock className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">Entry Required</span>
-              </div>}
-              <CardContent className={`p-8 lg:p-10 flex flex-col h-full bg-gradient-to-br from-white/5 to-transparent ${!isPremium ? 'opacity-30 select-none' : ''}`}>
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <Download className="w-7 h-7 text-primary" />
+          {/* Section 1: GPS */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
+             <div className="flex-1 space-y-6">
+                <div className="h-20 w-20 rounded-[1.5rem] bg-primary/10 flex items-center justify-center">
+                   <Download className="w-10 h-10 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">Official GPX File</h3>
-                <p className="text-muted-foreground leading-relaxed mb-8 flex-1">Accurate, detailed route mapping carefully checked for anomalies. Download and import directly to your Garmin or Wahoo device.</p>
-                {isPremium && (
-                  <Button onClick={handleDownloadGpx} disabled={downloadingGpx} className="w-full sm:w-auto mt-auto py-6 font-bold bg-white text-black hover:bg-neutral-200">
-                    {downloadingGpx ? 'Downloading...' : 'Download GPX'}
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Indemnity */}
-            <Card className={`relative overflow-hidden transition-all duration-500 border-white/5 ${!isPremium ? 'bg-card/20 backdrop-blur-sm' : 'bg-card/60 backdrop-blur-xl border-primary/20 shadow-[0_0_30px_rgba(255,87,34,0.05)]'}`}>
-              {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-                <Lock className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">Entry Required</span>
-              </div>}
-              <CardContent className={`p-8 lg:p-10 flex flex-col h-full bg-gradient-to-br from-white/5 to-transparent ${!isPremium ? 'opacity-30 select-none' : ''}`}>
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <FileSignature className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3">Indemnity & Waiver</h3>
-                <p className="text-muted-foreground leading-relaxed mb-8 flex-1">Essential legal risk acknowledgement. This event is entirely self-supported and the risk rests solely on your shoulders.</p>
-                {isPremium && (
-                  <Button onClick={handleDownloadIndemnity} variant="outline" className="w-full sm:w-auto mt-auto py-6 font-bold border-white/20 hover:bg-white/10">
-                    Sign Indemnity
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Starting Point */}
-            <Card className={`relative overflow-hidden transition-all duration-500 border-white/5 ${!isPremium ? 'bg-card/20 backdrop-blur-sm' : 'bg-card/60 backdrop-blur-xl'}`}>
-              {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-                <Lock className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">Entry Required</span>
-              </div>}
-              <CardContent className={`p-8 lg:p-10 h-full bg-gradient-to-br from-white/5 to-transparent ${!isPremium ? 'opacity-30 filter blur-[4px] select-none' : ''}`}>
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <Map className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3">Hidden Start Location</h3>
-                <div className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">The exact undisclosed start point coordinations and parking logistics. Be prepared to roll out with zero fanfare.</p>
-                  {isPremium && (
-                    <div className="bg-black/40 p-4 rounded-xl border border-white/5 font-mono text-sm text-primary">
-                      COORDS: -33.918861, 19.115917<br/>
-                      PARKING: Town Hall Lot A
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Route Tips */}
-            <Card className={`relative overflow-hidden transition-all duration-500 border-white/5 ${!isPremium ? 'bg-card/20 backdrop-blur-sm' : 'bg-card/60 backdrop-blur-xl'}`}>
-              {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px]">
-                <Lock className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-                <span className="text-sm font-semibold tracking-widest uppercase text-muted-foreground">Entry Required</span>
-              </div>}
-              <CardContent className={`p-8 lg:p-10 h-full bg-gradient-to-br from-white/5 to-transparent ${!isPremium ? 'opacity-30 filter blur-[4px] select-none' : ''}`}>
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-6">
-                  <HelpCircle className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold mb-3">Insider Field Guide</h3>
-                <div className="space-y-4">
-                  <p className="text-muted-foreground leading-relaxed">Critical terrain warnings, water resupply coordinates, and tire choice recommendations straight from the scouts.</p>
-                  {isPremium && (
-                    <div className="bg-black/40 p-4 rounded-xl border border-white/5 text-sm space-y-2 text-white/80">
-                      <p>💧 <strong>KM 142:</strong> Reliable farm tap (bring filter)</p>
-                      <p>🪨 <strong>KM 215-240:</strong> Brutal washboard, drop pressure</p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Official GPX File</h2>
+                <p className="text-xl text-muted-foreground leading-relaxed font-light">
+                  The exact, meticulously mapped route. Having the official GPX file is your only way to navigate this unsupported challenge. Accurate and carefully checked for anomalies.
+                </p>
+             </div>
+             
+             <div className="flex-1 w-full">
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                  {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium ? (
+                      <Button onClick={handleDownloadGpx} disabled={downloadingGpx} className="w-full sm:w-auto py-8 px-10 text-xl font-bold bg-white text-black hover:bg-neutral-200 rounded-2xl shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+                        {downloadingGpx ? 'Downloading...' : 'Get Route Data'}
+                      </Button>
+                    ) : (
+                      <div className="space-y-4 w-full">
+                        <div className="h-4 bg-white/20 rounded w-5/6 mx-auto" />
+                        <div className="h-4 bg-white/20 rounded w-3/4 mx-auto" />
+                        <div className="h-20 bg-white/10 rounded-xl w-full mt-8" />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+             </div>
           </div>
+
+          {/* Section 2: Indemnity */}
+          <div className="flex flex-col lg:flex-row-reverse gap-8 lg:gap-16 items-center">
+             <div className="flex-1 space-y-6">
+                <div className="h-20 w-20 rounded-[1.5rem] bg-primary/10 flex items-center justify-center">
+                   <FileSignature className="w-10 h-10 text-primary" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Indemnity & Waiver</h2>
+                <p className="text-xl text-muted-foreground leading-relaxed font-light">
+                  Essential legal risk acknowledgement. This event is entirely self-supported and the risk rests solely on your shoulders. You cannot start without signing.
+                </p>
+             </div>
+             
+             <div className="flex-1 w-full">
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                  {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium ? (
+                      <Button onClick={handleDownloadIndemnity} variant="outline" className="w-full sm:w-auto py-8 px-10 text-xl font-bold border-white/20 hover:bg-white/10 rounded-2xl bg-black/40 shadow-xl">
+                        Sign Official Indemnity
+                      </Button>
+                    ) : (
+                      <div className="space-y-4 w-full">
+                         <div className="h-4 bg-white/20 rounded w-3/4 mx-auto" />
+                         <div className="h-20 bg-white/10 rounded-xl w-full mt-8" />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+             </div>
+          </div>
+
+          {/* Section 3: Start Location */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
+             <div className="flex-1 space-y-6">
+                <div className="h-20 w-20 rounded-[1.5rem] bg-primary/10 flex items-center justify-center">
+                   <Map className="w-10 h-10 text-primary" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Hidden Start Location</h2>
+                <p className="text-xl text-muted-foreground leading-relaxed font-light">
+                  The exact undisclosed start point coordinates and parking logistics. Be prepared to roll out with zero fanfare.
+                </p>
+             </div>
+             
+             <div className="flex-1 w-full">
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                  {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium ? (
+                      <div className="bg-black/80 p-8 rounded-3xl border border-white/10 font-mono text-center w-full shadow-2xl">
+                        <p className="text-primary text-xl md:text-2xl font-bold mb-4 tracking-widest text-[#ff6a00] drop-shadow-[0_0_15px_rgba(255,106,0,0.5)]">COORDS: -33.9188, 19.1159</p>
+                        <p className="text-white/80 text-lg">PARKING: Town Hall Lot A</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4 w-full">
+                        <div className="h-8 bg-white/20 rounded w-3/4 mx-auto mb-6" />
+                        <div className="h-6 bg-white/20 rounded w-1/2 mx-auto" />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+             </div>
+          </div>
+
+          {/* Section 4: Tips */}
+          <div className="flex flex-col lg:flex-row-reverse gap-8 lg:gap-16 items-center">
+             <div className="flex-1 space-y-6">
+                <div className="h-20 w-20 rounded-[1.5rem] bg-primary/10 flex items-center justify-center">
+                   <HelpCircle className="w-10 h-10 text-primary" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Insider Field Guide</h2>
+                <p className="text-xl text-muted-foreground leading-relaxed font-light">
+                  Critical terrain warnings, water resupply coordinates, and tire choice recommendations straight from the scouts who mapped it.
+                </p>
+             </div>
+             
+             <div className="flex-1 w-full">
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                  {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
+                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Entry Required</span>
+                    <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
+                  </div>}
+                  <CardContent className={`p-8 md:p-12 flex flex-col items-center justify-center h-full bg-gradient-to-br from-white/5 to-transparent w-full ${!isPremium ? 'opacity-20 filter blur-[8px] select-none pointer-events-none' : ''}`}>
+                    {isPremium ? (
+                      <div className="bg-black/80 p-6 md:p-8 rounded-3xl border border-white/10 space-y-4 w-full shadow-2xl">
+                        <div className="flex gap-4 items-center bg-white/5 p-4 rounded-xl">
+                          <span className="text-4xl">💧</span>
+                          <div className="text-left">
+                            <p className="font-bold text-white text-lg">KM 142</p>
+                            <p className="text-muted-foreground">Reliable farm tap (bring filter)</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-4 items-center bg-white/5 p-4 rounded-xl">
+                          <span className="text-4xl">🪨</span>
+                          <div className="text-left">
+                            <p className="font-bold text-white text-lg">KM 215-240</p>
+                            <p className="text-muted-foreground">Brutal washboard, drop pressure</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-6 w-full">
+                        <div className="h-24 bg-white/10 rounded-2xl w-full" />
+                        <div className="h-24 bg-white/10 rounded-2xl w-full" />
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+             </div>
+          </div>
+
         </div>
         
         {/* Final CTA Banner */}

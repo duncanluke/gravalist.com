@@ -13,7 +13,6 @@ import { useEventNavigation } from './hooks/useEventNavigation';
 import { SessionManager } from './utils/sessionManager';
 import { AppRouter } from './components/AppRouter';
 import { AuthModal } from './components/AuthModal';
-import SupportWidget from './components/SupportWidget';
 import { STEP_IDS } from './constants/app';
 import { ViewMode } from './types/app';
 
@@ -347,7 +346,6 @@ function AppContent() {
       />
 
       <Toaster position="top-center" />
-      <SupportWidget />
 
       {state.sessionSummary && (
         <SessionWelcomeModal

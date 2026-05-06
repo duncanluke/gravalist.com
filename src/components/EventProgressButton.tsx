@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
+import { Switch } from './ui/switch';
 import { useAuth } from '../hooks/useAuth';
 import { useEvents } from '../hooks/useEvents';
 import { FileDown, FileSignature, CreditCard, Loader2 } from 'lucide-react';
 import { projectId } from '../utils/supabase/info';
 import { apiClient, supabase } from '../utils/supabase/client';
+import { toast } from 'sonner';
+import { WithdrawEventModal } from './modals/WithdrawEventModal';
 
 interface EventProgressButtonProps {
   eventName: string;
@@ -16,9 +19,59 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
   const { events } = useEvents();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Attendance State
+  const [isAttending, setIsAttending] = useState<boolean | null>(null);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  
+  const event = events.find(e => e.name.trim().toLowerCase() === eventName.trim().toLowerCase());
 
   // Consider user premium if they have the subscription status
   const isPremium = profile?.is_premium_subscriber === true;
+
+  // Fetch Attendance if premium
+  useEffect(() => {
+    if (isPremium && event?.id && session?.user?.id) {
+       const fetchAttendance = async () => {
+         const { data, error } = await supabase.from('user_events')
+           .select('registration_status')
+           .eq('user_id', session.user.id)
+           .eq('event_id', event.id)
+           .maybeSingle();
+
+         if (!error && data && ['confirmed', 'started', 'finished'].includes(data.registration_status || '')) {
+           setIsAttending(true);
+         } else {
+           setIsAttending(false);
+         }
+       };
+       fetchAttendance();
+    }
+  }, [isPremium, event?.id, session?.user?.id]);
+
+  const handleToggleAttending = async (checked: boolean) => {
+    if (!event) return;
+    
+    if (checked) {
+      try {
+        setLoading(true);
+        await apiClient.softRegisterForEvent(event.id);
+        setIsAttending(true);
+        toast.success(`You are now attending ${eventName}`);
+      } catch (err: any) {
+        toast.error(err.message || 'Failed to register for event');
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setShowWithdraw(true);
+    }
+  };
+
+  const handleWithdrawSuccess = () => {
+    setIsAttending(false);
+    setShowWithdraw(false);
+  };
 
   const handleCheckout = async () => {
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -34,7 +87,6 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
     setError(null);
 
     try {
-      // Guarantee the user exists in public.users to bypass backend "User not found" race conditions
       if (session.user?.email) {
         const { data: existingUser } = await supabase
           .from('users')
@@ -43,7 +95,6 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
           .maybeSingle();
 
         if (!existingUser) {
-          console.log('User profile not found in public schema. Creating before checkout...');
           await supabase
             .from('users')
             .insert([{
@@ -93,7 +144,6 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
 
       const { downloadUrl } = await apiClient.getGpxDownloadUrl(event.id);
       
-      // Create a temporary link to force download Instead of opening in a new tab
       const a = document.createElement('a');
       a.href = downloadUrl;
       a.download = `Gravalist_${eventName.replace(/\s+/g, '_')}_Route.gpx`;
@@ -120,6 +170,17 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
         </div>
       )}
 
+      {/* Withdraw Modal Component */}
+      {event && (
+        <WithdrawEventModal 
+          open={showWithdraw} 
+          onClose={() => setShowWithdraw(false)}
+          eventName={event.name}
+          eventId={event.id}
+          onWithdrawSuccess={handleWithdrawSuccess}
+        />
+      )}
+
       {!isPremium ? (
         <div>
           <Button 
@@ -136,25 +197,52 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
           </p>
         </div>
       ) : (
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button 
-            size="lg" 
-            onClick={handleDownloadGpx}
-            disabled={loading}
-            className="px-6 py-3 bg-white text-black hover:bg-neutral-200 font-bold border"
-          >
-            {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <FileDown className="w-5 h-5 mr-2" />}
-            Download GPX Route
-          </Button>
+        <div className="flex flex-col space-y-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button 
+              size="lg" 
+              onClick={handleDownloadGpx}
+              disabled={loading}
+              className="px-6 py-3 bg-white text-black hover:bg-neutral-200 font-bold border"
+            >
+              {loading ? <Loader2 className="w-5 h-5 mr-2 animate-spin" /> : <FileDown className="w-5 h-5 mr-2" />}
+              Download GPX Route
+            </Button>
 
-          <Button 
-            size="lg" 
-            onClick={handleDownloadIndemnity}
-            className="px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
-          >
-            <FileSignature className="w-5 h-5 mr-2" />
-            Complete Indemnity Phase
-          </Button>
+            <Button 
+              size="lg" 
+              onClick={handleDownloadIndemnity}
+              className="px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground font-bold"
+            >
+              <FileSignature className="w-5 h-5 mr-2" />
+              Complete Indemnity Phase
+            </Button>
+          </div>
+
+          {isAttending === null ? (
+            <div className="flex items-center justify-center p-4 border border-white/10 rounded-2xl max-w-sm mx-auto bg-black/20">
+               <Loader2 className="w-5 h-5 animate-spin text-white/50" />
+               <span className="ml-3 text-white/50 text-sm font-medium">Checking status...</span>
+            </div>
+          ) : (
+            <div className={`flex items-center justify-between p-4 border rounded-2xl max-w-sm mx-auto shadow-2xl backdrop-blur-xl transition-all duration-300 ${isAttending ? 'bg-primary/10 border-primary/20' : 'bg-black/40 border-white/10'}`}>
+              <div className="flex flex-col text-left mr-4">
+                 <span className={`font-bold tracking-wider uppercase ${isAttending ? 'text-primary' : 'text-white'}`}>
+                   Attending
+                 </span>
+                 <span className="text-white/50 text-[11px] leading-tight mt-1">
+                   {isAttending ? 'Your spot is confirmed. See you at the start.' : 'Claim your spot if you are riding.'}
+                 </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                 {loading && <Loader2 className="w-4 h-4 animate-spin text-white/50" />}
+                 <span className={`text-xs font-bold uppercase tracking-wider ${isAttending ? 'text-primary' : 'text-white/50'}`}>
+                   {isAttending ? 'Yes' : 'No'}
+                 </span>
+                 <Switch checked={isAttending} onCheckedChange={handleToggleAttending} disabled={loading} />
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

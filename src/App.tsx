@@ -158,8 +158,14 @@ function AppContent() {
 
     const handleUserSignedIn = () => {
       setShowAuthModal(false);
-      setViewMode('welcome');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Only redirect to welcome if on the home page.
+      // If they landed on an event page slug, keep them there!
+      const path = window.location.pathname;
+      if (path === '/' || path === '/home' || path === '') {
+        setViewMode('welcome');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     };
 
     const handleNavigateToLeaderboard = () => setViewMode('leaderboard');

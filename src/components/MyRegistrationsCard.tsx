@@ -5,10 +5,11 @@ import { Calendar, MapPin, UserMinus, RefreshCw, CheckCircle2, XCircle, RotateCc
 import { useAuth } from '../hooks/useAuth';
 import { apiClient } from '../utils/supabase/client';
 import { WithdrawEventModal } from './modals/WithdrawEventModal';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 import { useEvents } from '../hooks/useEvents';
 import { SessionManager } from '../utils/sessionManager';
 import { supabase } from '../utils/supabase/client';
+import { Switch } from './ui/switch';
 
 interface Registration {
   id: string;
@@ -369,15 +370,20 @@ export function MyRegistrationsCard({ onEnterEvent }: MyRegistrationsCardProps) 
                             </div>
                           </div>
 
-                          <Button
-                            onClick={() => handleWithdrawClick(registration.event.id, registration.event.name)}
-                            variant="outline"
-                            size="sm"
-                            className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/10 w-full sm:w-auto"
-                          >
-                            <UserMinus className="h-4 w-4" />
-                            Withdraw
-                          </Button>
+                          <div className="flex items-center p-3 bg-primary/10 border border-primary/20 rounded-xl space-x-3 w-full sm:w-auto">
+                            <div className="flex flex-col text-left mr-2">
+                               <span className="text-primary font-bold text-sm uppercase">ATTENDING</span>
+                            </div>
+                            <span className="text-primary font-bold text-xs uppercase">YES</span>
+                            <Switch 
+                               checked={true}
+                               className="scale-125"
+                               disabled={loading}
+                               onCheckedChange={(checked: boolean) => {
+                                 if (!checked) handleWithdrawClick(registration.event.id, registration.event.name);
+                               }} 
+                            />
+                          </div>
                         </div>
 
                         {/* Progress Bar and Continue Button - Always show for registered rides */}
@@ -434,8 +440,41 @@ export function MyRegistrationsCard({ onEnterEvent }: MyRegistrationsCardProps) 
           {/* Withdrawn Registrations */}
           {withdrawnRegistrations.length > 0 && (
             <div className="space-y-3">
+              <h3 className="text-sm font-medium text-muted-foreground">Withdrawn ({withdrawnRegistrations.length})</h3>
               <div className="space-y-3">
-                {/* Withdrawn registrations section removed - redundant with HomePage CTAs */}
+                {withdrawnRegistrations.map((registration) => (
+                  <Card key={registration.id} className="border-white/10 opacity-60">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <XCircle className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <h4 className="font-medium text-muted-foreground">{registration.event.name}</h4>
+                        </div>
+                        <div className="flex items-center p-2 bg-black/40 border border-white/10 rounded-xl space-x-2">
+                            <span className="text-white/70 font-bold text-xs uppercase mr-2">ATTENDING</span>
+                            <span className="text-white/40 font-bold text-[10px] uppercase">NO</span>
+                            <Switch 
+                               checked={false}
+                               onCheckedChange={async (checked: boolean) => {
+                                 if (checked) {
+                                    setLoading(true);
+                                    try {
+                                      await apiClient.softRegisterForEvent(registration.event.id);
+                                      toast.success(`You are now attending ${registration.event.name}`);
+                                      fetchRegistrations();
+                                    } catch (err: any) {
+                                      toast.error(err.message || 'Failed to update attendance');
+                                    } finally {
+                                      setLoading(false);
+                                    }
+                                 }
+                               }} 
+                            />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
           )}

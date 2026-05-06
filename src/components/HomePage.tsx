@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
-import { MapPin, Clock, Award, ArrowRight, Calendar, Globe, Star, Trophy, Shield, Play, RotateCcw, Plus, Loader2, UserMinus, Info, User } from 'lucide-react';
+import { MapPin, Clock, Award, ArrowRight, Calendar, Globe, Star, Trophy, Shield, Play, RotateCcw, Plus, Loader2, UserMinus, Info, User, Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useEvents } from '../hooks/useEvents';
 import { SessionManager } from '../utils/sessionManager';
 import { MyRegistrationsCard } from './MyRegistrationsCard';
@@ -179,9 +180,21 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
           <div className="py-8 relative min-h-[500px]">
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center space-y-4 bg-background/80 p-6 rounded-xl backdrop-blur-sm border border-border mt-8">
-                  <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
-                  <p className="text-muted-foreground font-medium">Loading premium routes...</p>
+                <div className="text-center space-y-4">
+                  <motion.svg
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-12 h-12 mx-auto text-primary opacity-80"
+                  >
+                    {/* Custom Brand Loading Spinner (e.g. geometric shape) */}
+                    <circle cx="12" cy="12" r="10" strokeDasharray="15 30" strokeLinecap="round" />
+                    <circle cx="12" cy="12" r="6" strokeDasharray="10 20" strokeLinecap="round" />
+                  </motion.svg>
+                  <p className="text-muted-foreground font-medium uppercase tracking-widest text-sm">Loading routes...</p>
                 </div>
               </div>
             ) : (
@@ -191,24 +204,30 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                   const progress = getUserProgress(event.id, event.name);
 
                   return (
-                    <Card
+                    <motion.div 
                       key={event.id}
-                      className="relative bg-background/40 backdrop-blur-xl border-primary/20 hover:border-primary/50 transition-all duration-500 group cursor-pointer overflow-hidden flex-shrink-0 w-[340px] md:w-auto rounded-2xl shadow-lg hover:shadow-[0_0_30px_rgba(255,87,34,0.15)] flex flex-col h-full"
-                      onClick={() => {
-                        console.log('HomePage - Card clicked:', { eventId: event.id, eventName: event.name, eventSlug: event.slug });
-                        onEventSelect?.(event.name);
-                      }}
+                      whileHover={{ scale: 1.02, y: -5 }}
+                      transition={{ duration: 0.3 }}
+                      className="flex-shrink-0 w-[340px] md:w-auto h-full"
                     >
-                      {/* Dynamic Background Effect */}
-                      <div className="absolute top-0 inset-x-0 h-48 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+                      <Card
+                        className="relative bg-[#0d0d0d] backdrop-blur-2xl border border-white/10 hover:border-primary/40 transition-all duration-500 overflow-hidden flex flex-col h-full rounded-[24px] shadow-2xl group cursor-pointer"
+                        onClick={() => {
+                          console.log('HomePage - Card clicked:', { eventId: event.id, eventName: event.name, eventSlug: event.slug });
+                          onEventSelect?.(event.name);
+                        }}
+                      >
+                        {/* Dynamic Background Effect */}
+                        <div className="absolute inset-0 bg-cover bg-center opacity-[0.03] group-hover:opacity-[0.1] transition-opacity duration-700" style={{ backgroundImage: `url('/home-bg-2.png')` }} />
+                        <div className="absolute top-0 inset-x-0 h-full bg-gradient-to-b from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                      <CardContent className="p-8 flex flex-col flex-1">
+                        <CardContent className="p-8 flex flex-col flex-1 relative z-10">
                         {/* Event Header */}
                         <div className="flex items-start justify-between mb-8 relative z-10">
                           <div>
-                            <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{displayEvent.name}</h3>
-                            <div className="flex items-center gap-2 text-muted-foreground">
-                              <MapPin className="w-4 h-4" />
+                            <h3 className="text-3xl font-display font-bold mb-2 group-hover:text-primary transition-colors text-white">{displayEvent.name}</h3>
+                            <div className="flex items-center gap-2 text-white/50">
+                              <MapPin className="w-4 h-4 text-primary/70" />
                               <span className="text-sm font-medium">{displayEvent.location}</span>
                             </div>
                           </div>
@@ -338,8 +357,9 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
                         })()}
                       </CardContent>
                     </Card>
-                  );
-                }) : (
+                  </motion.div>
+                );
+              }) : (
                   <div className="col-span-1 md:col-span-1 lg:col-span-2 xl:col-span-3 text-center py-16">
                     <div className="space-y-4">
                       <h3 className="text-xl text-muted-foreground">No routes available</h3>
@@ -362,122 +382,93 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
 
         </section>
 
-        {/* Rider Stories Section */}
-        <section>
-          <div className="text-center mb-12">
-            <h2 className="mb-4">Riders Stories</h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Through the challenges you faced during the ultra endurance experience,
-              what was the most surprising discovery you made about yourself?
+        {/* Rider Stories Section - Editorial Layout */}
+        <section className="max-w-7xl mx-auto px-6 py-12 border-t border-white/5">
+          <div className="mb-16">
+            <h2 className="text-4xl md:text-5xl font-display font-bold uppercase tracking-tight text-white mb-6">
+              Riders Stories
+            </h2>
+            <p className="text-xl text-white/60 max-w-3xl leading-relaxed font-light">
+              Through the brutal challenges faced during these ultra-endurance experiences,
+              discover the raw truths riders uncovered about themselves out in the dirt.
             </p>
-
-            {/* Five Star Rating */}
-            <div className="flex items-center justify-center gap-3 mt-8 mb-8">
-              <div className="flex items-center gap-1">
-                {[...Array(4)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-primary text-primary" />
-                ))}
-                <Star className="w-5 h-5 text-primary" />
-              </div>
-              <span className="text-muted-foreground">Rated 4.1/5 stars by 30+ subscribers</span>
-            </div>
           </div>
 
-          <div className="flex gap-6 overflow-x-auto scrollbar-hide pb-4">
-            <Card className="bg-card/30 border-border flex-shrink-0 w-80">
-              <CardContent className="p-8">
-                <p className="text-muted-foreground mb-4 italic">
-                  "I discovered that my mind would quit long before my body. Learning to push through that mental
-                  barrier at 300km changed everything about how I approach challenges."
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary font-medium">SJ</span>
-                    </div>
-                    <div>
-                      <p className="font-medium">Sarah Jensen</p>
-                      <p className="text-sm text-muted-foreground">Utrecht 500</p>
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Story 1 - Large Feature */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="lg:col-span-2 bg-[#121212] border border-white/5 rounded-2xl p-10 flex flex-col justify-between group overflow-hidden relative"
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[80px] rounded-full group-hover:bg-primary/10 transition-colors duration-700" />
+              
+              <Quote className="w-12 h-12 text-primary/30 mb-8" />
+              <p className="text-2xl md:text-3xl font-display text-white mb-8 leading-tight">
+                <span className="text-primary mr-1 hover-effect leading-[0]">"</span>
+                I discovered that my mind would quit long before my body. Learning to push through that mental
+                barrier at 300km changed everything about how I approach challenges.
+              </p>
+              
+              <div className="flex items-center justify-between border-t border-white/10 pt-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#222] rounded-full flex items-center justify-center">
+                    <span className="text-primary font-bold">SJ</span>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Trophy className="w-3 h-3 text-primary" />
-                      <span className="text-xs text-muted-foreground">1,250 pts</span>
-                    </div>
+                  <div>
+                    <p className="font-bold text-white tracking-wide">Sarah Jensen</p>
+                    <p className="text-sm text-primary uppercase tracking-wider">Utrecht 500</p>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </motion.div>
 
-            <Card className="bg-card/30 border-border flex-shrink-0 w-80">
-              <CardContent className="p-8">
-                <p className="text-muted-foreground mb-4 italic">
-                  "The silence and solitude revealed parts of myself I never knew existed.
-                  By kilometer 400, I wasn't racing anyone but having a conversation with my soul."
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary font-medium">MR</span>
-                    </div>
-                    <div>
-                      <p className="font-medium">Marcus Rodriguez</p>
-                      <p className="text-sm text-muted-foreground">Sedgefield 500</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <div className="flex items-center gap-1">
-                      {[...Array(4)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
-                      ))}
-                      <Star className="w-3 h-3 text-primary" />
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Trophy className="w-3 h-3 text-primary" />
-                      <span className="text-xs text-muted-foreground">2,100 pts</span>
-                    </div>
-                  </div>
+            {/* Story 2 - Standard Feature */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="bg-[#121212] border border-white/5 rounded-2xl p-8 flex flex-col justify-between group relative overflow-hidden"
+            >
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-secondary/5 blur-[50px] rounded-full" />
+              
+              <Quote className="w-8 h-8 text-white/20 mb-6" />
+              <p className="text-lg text-white/80 mb-8 italic leading-relaxed font-light flex-1">
+                "The silence and solitude revealed parts of myself I never knew existed.
+                By kilometer 400, I wasn't racing anyone but having a conversation with my soul."
+              </p>
+              
+              <div className="flex items-center gap-4 pt-6 mt-auto">
+                <div className="w-10 h-10 bg-[#222] rounded-full flex items-center justify-center">
+                  <span className="text-white/80 font-bold">MR</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <p className="font-bold text-white/90">Marcus Rodriguez</p>
+                  <p className="text-xs text-white/50 uppercase tracking-widest">Sedgefield 500</p>
+                </div>
+              </div>
+            </motion.div>
 
-            <Card className="bg-card/30 border-border flex-shrink-0 w-80">
-              <CardContent className="p-8">
-                <p className="text-muted-foreground mb-4 italic">
-                  "I thought I was testing my physical limits, but I actually learned that kindness to myself
-                  was the key to finishing. Self-compassion became my most powerful tool."
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center">
-                      <span className="text-primary font-medium">AL</span>
-                    </div>
-                    <div>
-                      <p className="font-medium">Ana Lopez</p>
-                      <p className="text-sm text-muted-foreground">Franschhoek 500</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <div className="flex items-center gap-1">
-                      {[...Array(4)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-primary text-primary" />
-                      ))}
-                      <Star className="w-3 h-3 text-primary" />
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Trophy className="w-3 h-3 text-primary" />
-                      <span className="text-xs text-muted-foreground">950 pts</span>
-                    </div>
-                  </div>
+            {/* Story 3 - Standard Feature */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="bg-[#121212] border border-white/5 rounded-2xl p-8 flex flex-col justify-between group relative overflow-hidden"
+            >
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-primary/5 blur-[60px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              
+              <Quote className="w-8 h-8 text-white/20 mb-6" />
+              <p className="text-lg text-white/80 mb-8 italic leading-relaxed font-light flex-1">
+                "I thought I was testing my physical limits, but I actually learned that kindness to myself
+                was the key to finishing. Self-compassion became my most powerful tool."
+              </p>
+              
+              <div className="flex items-center gap-4 pt-6 mt-auto">
+                <div className="w-10 h-10 bg-[#222] rounded-full flex items-center justify-center">
+                  <span className="text-white/80 font-bold">AL</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <p className="font-bold text-white/90">Ana Lopez</p>
+                  <p className="text-xs text-white/50 uppercase tracking-widest">Franschhoek 500</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 

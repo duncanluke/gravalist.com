@@ -34,15 +34,15 @@ export async function sendIncompleteRegistrationReminder(
       earnPoints: '100 points for completing registration'
     },
     start_line: {
-      title: 'Start Line Phase',
-      description: 'Check in on ride day to confirm you\'re starting',
+      title: 'Start Phase',
+      description: 'Log your departure via the platform to let the community know you are out there.',
       steps: [
-        { title: 'Arrive at Start', description: 'Get to the start location on ride day' },
-        { title: 'Take Starting Photo', description: 'Document your start with a photo' },
-        { title: 'Confirm Start Time', description: 'Check in when you begin riding' }
+        { title: 'Arrive at Start', description: 'Get to your chosen start location' },
+        { title: 'Take Departure Photo', description: 'Document your departure with a photo' },
+        { title: 'Confirm Start Time', description: 'Log in when you begin riding' }
       ],
-      nextAction: 'Check In at Start Line',
-      earnPoints: '200 points for starting your ride'
+      nextAction: 'Log Your Departure',
+      earnPoints: '200 points for beginning your excursion'
     },
     end: {
       title: 'End Phase',
@@ -164,15 +164,15 @@ export async function sendIncompleteRegistrationReminder(
                   </p>
                 </div>
 
-                <!-- Phase 2: Start Line -->
+                <!-- Phase 2: Start Phase -->
                 <div style="background-color: ${currentPhase === 'start_line' ? 'rgba(255, 106, 0, 0.1)' : '#0f0f0f'}; border: 1px solid ${currentPhase === 'start_line' ? '#FF6A00' : '#1a1a1a'}; border-radius: 6px; padding: 16px; margin-bottom: 12px;">
                   <div style="margin-bottom: 8px;">
                     <span style="display: inline-block; width: 32px; height: 32px; background-color: ${currentPhase === 'start_line' ? '#FF6A00' : 'rgba(255, 106, 0, 0.2)'}; color: ${currentPhase === 'start_line' ? '#000000' : '#FF6A00'}; border-radius: 50%; text-align: center; line-height: 32px; font-weight: 700; margin-right: 12px;">2</span>
-                    <span style="font-size: 16px; color: #ffffff; font-weight: 600;">Start Line</span>
+                    <span style="font-size: 16px; color: #ffffff; font-weight: 600;">Start Phase</span>
                     ${currentPhase === 'start_line' ? '<span style="margin-left: 8px; font-size: 13px; color: #FF6A00;">← You are here</span>' : ''}
                   </div>
                   <p style="margin: 0; font-size: 14px; color: #999999; padding-left: 44px;">
-                    Check in on ride day to confirm you're starting
+                    Log your departure to let the community know you are out there.
                   </p>
                 </div>
 
@@ -252,8 +252,8 @@ THE COMPLETE JOURNEY:
 1. Register Phase ${currentPhase === 'register' ? '← You are here' : ''}
    Complete your registration and prepare for the ride
 
-2. Start Line ${currentPhase === 'start_line' ? '← You are here' : ''}
-   Check in on ride day to confirm you're starting
+2. Start Phase ${currentPhase === 'start_line' ? '← You are here' : ''}
+   Log your departure to let the community know you are out there.
 
 3. End ${currentPhase === 'end' ? '← You are here' : ''}
    Submit your completion data and claim your achievement

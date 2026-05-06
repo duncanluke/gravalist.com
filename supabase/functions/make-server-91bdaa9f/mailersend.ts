@@ -151,14 +151,14 @@ export async function sendInvitationEmail(
 
               <!-- Introduction -->
               <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #cccccc;">
-                <strong style="color: #ffffff;">${inviterName}</strong> thinks you'd be a great fit for the Gravalist community—a self-managed ultra event platform where riders organize everything themselves with no official support.
+                <strong style="color: #ffffff;">${inviterName}</strong> thinks you'd be a great fit for the Gravalist community—a self-supported platform for private excursions where riders organize everything themselves with no official support.
               </p>
 
               <!-- What is Gravalist -->
               <div style="background-color: rgba(255, 106, 0, 0.05); border-left: 3px solid #FF6A00; padding: 20px; margin: 0 0 32px 0; border-radius: 4px;">
                 <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #FF6A00;">What is Gravalist?</h3>
                 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cccccc;">
-                  A platform for self-managed ultracycling events. Choose your ride, register yourself, track your progress, and take full ownership of your experience. <strong style="color: #ffffff;">My tracking, my responsibility.</strong>
+                  A platform for self-managed private excursions. Choose your route, register yourself, track your progress, and take full ownership of your experience. <strong style="color: #ffffff;">My tracking, my responsibility.</strong>
                 </p>
               </div>
 
@@ -175,7 +175,7 @@ export async function sendInvitationEmail(
                 <tr>
                   <td style="padding: 12px 0; vertical-align: top;">
                     <span style="color: #FF6A00; font-size: 18px; margin-right: 12px;">2️⃣</span>
-                    <span style="font-size: 15px; color: #cccccc;"><strong style="color: #ffffff;">Start Line:</strong> Check in on ride day to confirm you showed up</span>
+                    <span style="font-size: 15px; color: #cccccc;"><strong style="color: #ffffff;">Start Phase:</strong> Log your departure via the platform to let the community know you are out there</span>
                   </td>
                 </tr>
                 <tr>
@@ -237,11 +237,11 @@ ${inviterName} invited you to join Gravalist!
 ${inviterName} thinks you'd be a great fit for the Gravalist community—a self-managed ultra event platform where riders organize everything themselves with no official support.
 
 WHAT IS GRAVALIST?
-A platform for self-managed ultracycling events. Choose your ride, register yourself, track your progress, and take full ownership of your experience. My tracking, my responsibility.
+A platform for self-managed private excursions. Choose your route, register yourself, track your progress, and take full ownership of your experience. My tracking, my responsibility.
 
 HOW IT WORKS
-1️⃣ Register: Choose a ride and complete the 3-phase onboarding
-2️⃣ Start Line: Check in on ride day to confirm you showed up
+1️⃣ Register: Choose a route and complete the 3-phase onboarding
+2️⃣ Start Phase: Log your departure via the platform to let the community know you are out there
 3️⃣ End: Submit your time and tracking data when finished
 🏆 Compete: Earn points and climb the global leaderboard
 
@@ -321,7 +321,7 @@ export async function sendWelcomeEmail(
               <div style="background-color: rgba(255, 106, 0, 0.05); border-left: 3px solid #FF6A00; padding: 20px; margin: 0 0 32px 0; border-radius: 4px;">
                 <h3 style="margin: 0 0 12px 0; font-size: 16px; color: #FF6A00;">What is Gravalist?</h3>
                 <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #cccccc;">
-                  Gravalist is a <strong style="color: #ffffff;">self-managed ultra event platform</strong> where riders organize everything themselves. Think of it as a framework for your own adventure—you choose your ride, register yourself, track your progress, and take full ownership of your experience.
+                  Gravalist is a <strong style="color: #ffffff;">self-supported private excursion platform</strong> where riders organize everything themselves. Think of it as a framework for your own adventure—you choose your route, make an access contribution, track your progress, and take full ownership of your experience.
                 </p>
               </div>
 
@@ -349,10 +349,10 @@ export async function sendWelcomeEmail(
                 <div style="background-color: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 16px;">
                   <div style="display: flex; align-items: center; margin-bottom: 8px;">
                     <span style="display: inline-block; width: 32px; height: 32px; background-color: #FF6A00; color: #000000; border-radius: 50%; text-align: center; line-height: 32px; font-weight: 700; margin-right: 12px;">2</span>
-                    <h4 style="margin: 0; font-size: 16px; color: #ffffff;">Start Line</h4>
+                    <h4 style="margin: 0; font-size: 16px; color: #ffffff;">Start Phase</h4>
                   </div>
                   <p style="margin: 0 0 8px 0; font-size: 14px; color: #999999; padding-left: 44px;">
-                    On ride day, check in at the start line to confirm you showed up.
+                    Log your departure via the platform to let the community know you are out there.
                   </p>
                   <p style="margin: 0; font-size: 13px; color: #666666; padding-left: 44px;">
                     ✓ You earn <strong style="color: #FF6A00;">200 points</strong> for starting your ride
@@ -376,14 +376,14 @@ export async function sendWelcomeEmail(
                 </div>
               </div>
 
-              <!-- Subscription Promotion -->
+              <!-- Access Contribution Promotion -->
               <div style="background-color: rgba(255, 106, 0, 0.1); border: 2px solid #FF6A00; border-radius: 8px; padding: 24px; margin: 0 0 32px 0; text-align: center;">
-                <h3 style="margin: 0 0 12px 0; font-size: 20px; color: #FF6A00;">🗺️ Upgrade to Access Route Files</h3>
+                <h3 style="margin: 0 0 12px 0; font-size: 20px; color: #FF6A00;">🗺️ Unlock Route Access</h3>
                 <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #cccccc;">
-                  Get a <strong style="color: #ffffff;">Gravalist subscription</strong> to download GPX route files for all rides. Navigate with confidence using professionally mapped routes on your GPS device.
+                  Make a one-time <strong style="color: #ffffff;">Access Contribution (R 499)</strong> per route. This secures your lifetime access to the GPX files and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
                 </p>
                 <p style="margin: 0; font-size: 14px; color: #999999;">
-                  ✓ Unlimited GPX downloads &nbsp;•&nbsp; ✓ All current & future routes &nbsp;•&nbsp; ✓ Premium support
+                  ✓ Lifetime route GPX access &nbsp;•&nbsp; ✓ Digital Leaderboard &nbsp;•&nbsp; ✓ Community Platform
                 </p>
               </div>
 
@@ -481,20 +481,20 @@ Gravalist is a self-managed ultra event platform where riders organize everythin
 HOW IT WORKS: 3 SIMPLE PHASES
 
 1. REGISTER PHASE
-   Choose a ride and register yourself. Set your username and confirm your email.
+   Choose a route and complete registration. Set your username and confirm your email.
    ✓ You earn 100 points just for registering
 
-2. START LINE
-   On ride day, check in at the start line to confirm you showed up.
+2. START PHASE
+   Log your departure via the platform to let the community know you are out there.
    ✓ You earn 200 points for starting your ride
 
 3. END
    When you finish, submit your completion time and upload your tracking data.
    ✓ Completion earns you even more points and leaderboard status
 
-🗺️ UPGRADE TO ACCESS ROUTE FILES
-Get a Gravalist subscription to download GPX route files for all rides. Navigate with confidence using professionally mapped routes on your GPS device.
-✓ Unlimited GPX downloads • ✓ All current & future routes • ✓ Premium support
+🗺️ UNLOCK ROUTE ACCESS
+Make a one-time Access Contribution (R 499) per route. This secures your lifetime access to the GPX files and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
+✓ Lifetime route GPX access • ✓ Digital Leaderboard • ✓ Community Platform
 
 WHAT YOU CAN DO
 🚴 Browse Rides: Explore upcoming ultra events and choose your adventure
@@ -613,7 +613,9 @@ export async function sendEventFollowupEmail(
     '✓ No corporate fuss—just pure unsupported gravel',
     '✓ The ultimate physical and mental test',
     '',
-    'Enter Now: https://gravalist.com/ride/' + encodeURIComponent(eventName),
+    'We map the routes and curate the digital community, but after that... you are entirely responsible for yourself. This is a private excursion. No rescue, no tracking, no infrastructure.',
+    '',
+    'Unlock Route Access: https://gravalist.com/ride/' + encodeURIComponent(eventName),
     '',
     'My tracking, my responsibility.'
   ].join('\n');
@@ -694,7 +696,7 @@ export async function sendRideRegistrationEmail(
               </p>
 
               <p style="margin: 0 0 32px 0; font-size: 15px; line-height: 1.6; color: #cccccc;">
-                You've begun your registration for <strong style="color: #ffffff;">${rideName}</strong>. This is a self-managed ultra ride—no official support, no organizers, just you taking full ownership of your adventure.
+                You've begun your registration for <strong style="color: #ffffff;">${rideName}</strong>. This is a private excursion. You are undertaking a self-supported ride with no event infrastructure, no organizers, and taking full ownership of your adventure.
               </p>
 
               <!-- What Happens Next -->
@@ -739,7 +741,7 @@ export async function sendRideRegistrationEmail(
                       </tr>
                       <tr>
                         <td style="padding: 6px 0; vertical-align: top;">
-                          <span style="font-size: 13px; color: #cccccc;"><strong style="color: #ffffff;">Step 3:</strong> Download Route ${!isSubscriber ? '(⚠️ Requires Subscription)' : '(✓ Available)'}</span>
+                          <span style="font-size: 13px; color: #cccccc;"><strong style="color: #ffffff;">Step 3:</strong> Download Route ${!isSubscriber ? '(⚠️ Requires Access Contribution)' : '(✓ Available)'}</span>
                         </td>
                       </tr>
                       <tr>
@@ -788,7 +790,7 @@ export async function sendRideRegistrationEmail(
                 <div style="background-color: #0f0f0f; border: 1px solid #333333; border-radius: 8px; padding: 20px; opacity: 0.7;">
                   <div style="display: flex; align-items: center; margin-bottom: 12px;">
                     <span style="display: inline-block; width: 40px; height: 40px; background-color: #333333; color: #666666; border-radius: 50%; text-align: center; line-height: 40px; font-weight: 700; font-size: 18px; margin-right: 16px;">2</span>
-                    <h4 style="margin: 0; font-size: 18px; color: #666666;">Start Line Phase (Steps 10-14 - Unlocks on ${rideDate})</h4>
+                    <h4 style="margin: 0; font-size: 18px; color: #666666;">Start Phase (Steps 10-14 - Unlocks on ${rideDate})</h4>
                   </div>
                   
                   <p style="margin: 0 0 16px 0; font-size: 15px; color: #999999; padding-left: 56px; font-weight: 600;">

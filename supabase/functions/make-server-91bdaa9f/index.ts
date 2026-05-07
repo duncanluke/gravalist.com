@@ -135,16 +135,16 @@ app.post('/make-server-91bdaa9f/auth/signup', async (c) => {
     // Send welcome email
     if (authData.user.email) {
       console.log('SIGNUP - Sending welcome email to:', authData.user.email)
-      // Run in background (don't await) to not block response
-      sendWelcomeEmail(authData.user.email, displayName).then(result => {
+      try {
+        const result = await sendWelcomeEmail(authData.user.email, displayName)
         if (result.success) {
           console.log('✅ SIGNUP - Welcome email sent successfully')
         } else {
           console.log('❌ SIGNUP - Welcome email FAILED:', result.error)
         }
-      }).catch(err => {
+      } catch (err) {
         console.log('❌ SIGNUP - Exception sending welcome email:', err)
-      })
+      }
     }
 
     return c.json({
@@ -156,6 +156,39 @@ app.post('/make-server-91bdaa9f/auth/signup', async (c) => {
 
   } catch (error) {
     console.log('SIGNUP - Error:', error)
+    return c.json({ error: 'Internal server error' }, 500)
+  }
+})
+
+// Welcome email trigger for magic link logins
+app.post('/make-server-91bdaa9f/auth/welcome', async (c) => {
+  try {
+    const user = await requireAuth(c)
+    if (user instanceof Response) return user
+
+    const body = await c.req.json().catch(() => ({}))
+    const displayName = body.displayName
+
+    if (!user.email) {
+      return c.json({ error: 'User does not have an email' }, 400)
+    }
+
+    console.log('WELCOME ENDPOINT - Sending welcome email to:', user.email)
+    try {
+      const result = await sendWelcomeEmail(user.email, displayName || user.email.split('@')[0])
+      if (result.success) {
+        console.log('✅ WELCOME ENDPOINT - Welcome email sent successfully')
+        return c.json({ success: true })
+      } else {
+        console.log('❌ WELCOME ENDPOINT - Welcome email FAILED:', result.error)
+        return c.json({ error: result.error }, 500)
+      }
+    } catch (err) {
+      console.log('❌ WELCOME ENDPOINT - Exception sending welcome email:', err)
+      return c.json({ error: 'Internal error sending email' }, 500)
+    }
+  } catch (error) {
+    console.log('WELCOME ENDPOINT - Error:', error)
     return c.json({ error: 'Internal server error' }, 500)
   }
 })
@@ -1057,6 +1090,44 @@ app.post('/make-server-91bdaa9f/events/:eventId/register', async (c) => {
 
     console.log('REGISTER - Success:', registration)
 
+    // Send registration email for full registrations as well
+    if (user.email) {
+      console.log('REGISTER - Sending registration email to:', user.email)
+      
+      const { data: eventInfo } = await supabase
+        .from('events')
+        .select('name, event_date')
+        .eq('id', eventId)
+        .single()
+        
+      if (eventInfo) {
+        const formattedDate = new Date(eventInfo.event_date).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+
+        try {
+          const result = await sendRideRegistrationEmail(
+            user.email,
+            dbUser.display_name,
+            eventInfo.name,
+            formattedDate,
+            eventId,
+            dbUser.is_premium_subscriber || false
+          )
+          if (result.success) {
+            console.log('✅ REGISTER - Registration email sent successfully')
+          } else {
+            console.log('❌ REGISTER - Registration email FAILED:', result.error)
+          }
+        } catch (err) {
+          console.log('❌ REGISTER - Exception sending registration email:', err)
+        }
+      }
+    }
+
     return c.json({
       success: true,
       registration: registration,
@@ -1111,31 +1182,54 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
       .eq('event_id', eventId)
       .single()
 
+    let registration = existingReg;
+
     if (existingReg) {
-      console.log('SOFT REGISTER - Already registered')
-      return c.json({
-        success: true,
-        registration: existingReg,
-        eventName: event.name,
-        message: 'Already registered'
-      })
-    }
+      if (existingReg.registration_status !== 'withdrawn') {
+        console.log('SOFT REGISTER - Already registered')
+        return c.json({
+          success: true,
+          registration: existingReg,
+          eventName: event.name,
+          message: 'Already registered'
+        })
+      }
 
-    // Create user_events record with in_progress status
-    const { data: registration, error: regError } = await supabase
-      .from('user_events')
-      .insert({
-        user_id: dbUser.id,
-        event_id: eventId,
-        registration_status: 'in_progress',
-        registered_at: new Date().toISOString()
-      })
-      .select()
-      .single()
+      // Re-activate withdrawn registration
+      console.log('SOFT REGISTER - Re-activating withdrawn registration')
+      const { data: updatedReg, error: updateError } = await supabase
+        .from('user_events')
+        .update({
+          registration_status: 'in_progress',
+          registered_at: new Date().toISOString()
+        })
+        .eq('id', existingReg.id)
+        .select()
+        .single()
 
-    if (regError) {
-      console.log('SOFT REGISTER - Failed to create registration:', regError)
-      return c.json({ error: 'Failed to register', details: regError.message }, 500)
+      if (updateError) {
+        console.log('SOFT REGISTER - Failed to restore registration:', updateError)
+        return c.json({ error: 'Failed to restore registration', details: updateError.message }, 500)
+      }
+      registration = updatedReg;
+    } else {
+      // Create user_events record with in_progress status
+      const { data: newReg, error: regError } = await supabase
+        .from('user_events')
+        .insert({
+          user_id: dbUser.id,
+          event_id: eventId,
+          registration_status: 'in_progress',
+          registered_at: new Date().toISOString()
+        })
+        .select()
+        .single()
+
+      if (regError) {
+        console.log('SOFT REGISTER - Failed to create registration:', regError)
+        return c.json({ error: 'Failed to register', details: regError.message }, 500)
+      }
+      registration = newReg;
     }
 
     console.log('SOFT REGISTER - Success:', registration)
@@ -1151,23 +1245,23 @@ app.post('/make-server-91bdaa9f/events/:eventId/soft-register', async (c) => {
         day: 'numeric'
       })
 
-      // Run in background
-      sendRideRegistrationEmail(
-        user.email,
-        dbUser.display_name,
-        event.name,
-        formattedDate,
-        eventId,
-        dbUser.is_premium_subscriber || false
-      ).then(result => {
+      try {
+        const result = await sendRideRegistrationEmail(
+          user.email,
+          dbUser.display_name,
+          event.name,
+          formattedDate,
+          eventId,
+          dbUser.is_premium_subscriber || false
+        )
         if (result.success) {
           console.log('✅ SOFT REGISTER - Registration email sent successfully')
         } else {
           console.log('❌ SOFT REGISTER - Registration email FAILED:', result.error)
         }
-      }).catch(err => {
+      } catch (err) {
         console.log('❌ SOFT REGISTER - Exception sending registration email:', err)
-      })
+      }
     }
 
     return c.json({

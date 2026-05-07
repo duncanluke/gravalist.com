@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from './ui/dialog';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from './ui/drawer';
-import { useIsMobile } from './ui/use-mobile';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
@@ -90,8 +88,6 @@ export function AuthModal({
     onClose();
   };
 
-  const isMobile = useIsMobile();
-
   const modalContent = (
     <div className="mt-6 space-y-4">
       {(error || formError) && (
@@ -171,31 +167,19 @@ export function AuthModal({
           </div>
         </form>
       )}
+
+      <div className="text-center mt-6 text-xs text-muted-foreground">
+        By signing in, you agree to our <a href="/stories/terms-and-conditions" className="underline hover:text-foreground">Terms and Conditions</a> and <a href="/stories/privacy-policy" className="underline hover:text-foreground">Privacy Policy</a>.
+      </div>
     </div>
   );
 
   const title = "Welcome Access";
   const desc = step === 'email' ? "Enter your email to gain instant access without passwords." : "Check your inbox for the one-time access PIN.";
 
-  if (isMobile) {
-    return (
-      <Drawer open={open} onOpenChange={(isOpen: boolean) => { if (!isOpen) handleClose() }}>
-        <DrawerContent className="bg-background border-border px-4 pb-8 max-h-[85vh]">
-          <DrawerHeader>
-            <DrawerTitle className="text-xl font-semibold text-center">{title}</DrawerTitle>
-            <DrawerDescription className="text-center text-muted-foreground">{desc}</DrawerDescription>
-          </DrawerHeader>
-          <div className="w-full mx-auto px-2 pb-8">
-            {modalContent}
-          </div>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
-
   return (
     <Dialog open={open} onOpenChange={(isOpen: boolean) => { if (!isOpen) handleClose() }}>
-      <DialogContent className="w-full max-w-md mx-auto bg-background border border-border">
+      <DialogContent className="w-[95vw] max-w-md mx-auto bg-background border border-border p-6 rounded-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-center">{title}</DialogTitle>
           <DialogDescription className="text-center text-muted-foreground">{desc}</DialogDescription>

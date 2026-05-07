@@ -208,16 +208,6 @@ export function Header({
 
   const navigationItems = [
     {
-      id: 'home',
-      label: 'Home',
-      icon: Home,
-      active: viewMode === 'home',
-      onClick: () => {
-        onNavigateToHome();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    },
-    {
       id: 'rides',
       label: 'Events',
       icon: Calendar,
@@ -373,7 +363,7 @@ export function Header({
                 <Input
                   name="headerEmail"
                   type="email"
-                  placeholder="Enter email to sign in"
+                  placeholder="email"
                   className="pl-9 pr-12 h-10 w-full rounded-full bg-muted/40 border-muted placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
                   autoComplete="email"
                 />

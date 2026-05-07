@@ -380,10 +380,10 @@ export async function sendWelcomeEmail(
               <div style="background-color: rgba(255, 106, 0, 0.1); border: 2px solid #FF6A00; border-radius: 8px; padding: 24px; margin: 0 0 32px 0; text-align: center;">
                 <h3 style="margin: 0 0 12px 0; font-size: 20px; color: #FF6A00;">🗺️ Unlock Route Access</h3>
                 <p style="margin: 0 0 16px 0; font-size: 15px; line-height: 1.6; color: #cccccc;">
-                  Make a one-time <strong style="color: #ffffff;">Access Contribution (R 499)</strong> per route. This secures your lifetime access to the GPX files and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
+                  Make a one-time <strong style="color: #ffffff;">Access Contribution (R 499)</strong>. This secures your route access for the 2026 calendar year and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
                 </p>
                 <p style="margin: 0; font-size: 14px; color: #999999;">
-                  ✓ Lifetime route GPX access &nbsp;•&nbsp; ✓ Digital Leaderboard &nbsp;•&nbsp; ✓ Community Platform
+                  ✓ 2026 Route GPX Access &nbsp;•&nbsp; ✓ Digital Leaderboard &nbsp;•&nbsp; ✓ Community Platform
                 </p>
               </div>
 
@@ -493,8 +493,8 @@ HOW IT WORKS: 3 SIMPLE PHASES
    ✓ Completion earns you even more points and leaderboard status
 
 🗺️ UNLOCK ROUTE ACCESS
-Make a one-time Access Contribution (R 499) per route. This secures your lifetime access to the GPX files and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
-✓ Lifetime route GPX access • ✓ Digital Leaderboard • ✓ Community Platform
+Make a one-time Access Contribution (R 499). This secures your route access for the 2026 calendar year and supports the platform's digital stewardship. Navigate with confidence using professionally mapped routes.
+✓ 2026 Route GPX Access • ✓ Digital Leaderboard • ✓ Community Platform
 
 WHAT YOU CAN DO
 🚴 Browse Rides: Explore upcoming ultra events and choose your adventure

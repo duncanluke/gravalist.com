@@ -421,21 +421,73 @@ export function useAuth() {
               // Notify the app that user signed in successfully to trigger welcome flow
               window.dispatchEvent(new CustomEvent('userSignedIn'))
             } catch (error) {
-              console.log('SIGN_IN EVENT - Profile fetch failed:', error)
+              console.log('SIGN_IN EVENT - Profile fetch failed (User likely new):', error)
               console.log('SIGN_IN EVENT - Error details:', {
                 message: error instanceof Error ? error.message : 'Unknown error',
                 hasSession: !!session,
                 hasAccessToken: !!session?.access_token
               })
+
+              let profile = null;
+
+              // Check if user doesn't exist in public.users yet (Profile fetch failed, maybe 404)
+              try {
+                if (session?.user && session?.user?.email) {
+                  const { data: existingUser } = await supabase
+                    .from('users')
+                    .select('id')
+                    .eq('email', session.user.email)
+                    .maybeSingle();
+
+                  if (!existingUser) {
+                    console.log('SIGN_IN EVENT - Inserting new user into public.users:', session.user.email)
+                    const displayName = session.user.email.split('@')[0] || 'Rider'
+                    
+                    const { data: newUserRecord, error: insertError } = await supabase
+                      .from('users')
+                      .insert([{
+                        id: session.user.id,
+                        email: session.user.email,
+                        display_name: displayName,
+                        total_points: 0,
+                        is_premium_subscriber: false,
+                        subscription_status: 'none'
+                      }])
+                      .select()
+                      .single();
+
+                    if (insertError) {
+                      console.log('SIGN_IN EVENT - Error inserting user:', insertError)
+                    } else if (newUserRecord) {
+                      profile = newUserRecord
+                      CacheManager.setUserProfile(profile)
+                      
+                      // Trigger Welcome Email
+                      console.log('SIGN_IN EVENT - Triggering Welcome Email')
+                      apiClient.triggerWelcomeEmail(displayName).catch(e => {
+                         console.log('SIGN_IN EVENT - Failed to send Welcome Email:', e)
+                      })
+                    }
+                  }
+                }
+              } catch (fallbackError) {
+                console.log('SIGN_IN EVENT - Error during fallback user creation:', fallbackError)
+              }
+
               CacheManager.setAuthHint(true)
               setAuthState({
                 user: session.user,
-                profile: null,
+                profile,
                 session,
                 loading: false,
                 error: null,
                 isOfflineMode: false
               })
+              
+              // Notify the app that user signed in successfully to trigger welcome flow
+              if (profile) {
+                 window.dispatchEvent(new CustomEvent('userSignedIn'))
+              }
             }
             return // ✅ CRITICAL: Return here to prevent falling through to other handlers
           } else if (event === 'SIGNED_UP') {

@@ -193,7 +193,8 @@ export class ApiClient {
       '/user/achievements',
       '/user/points-activity',
       '/user/registrations',
-      '/invitations/send'
+      '/invitations/send',
+      '/auth/welcome'
     ]
 
     // Event registration and progress endpoints also require auth
@@ -451,6 +452,13 @@ export class ApiClient {
     return this.request('/signup', {
       method: 'POST',
       body: JSON.stringify(data),
+    })
+  }
+
+  async triggerWelcomeEmail(displayName?: string): Promise<{ success: boolean; error?: string }> {
+    return this.request('/auth/welcome', {
+      method: 'POST',
+      body: JSON.stringify({ displayName }),
     })
   }
 

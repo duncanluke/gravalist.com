@@ -207,7 +207,7 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
             Access Contribution — R 499
           </Button>
           <p className="text-sm font-medium text-muted-foreground w-full">
-            Your contribution unlocks lifetime access to the route, the digital leaderboard, and the rider's community platform.
+            Your contribution unlocks access to the route for the 2026 calendar year, the digital leaderboard, and the rider's community platform.
           </p>
         </div>
       ) : (

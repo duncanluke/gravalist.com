@@ -24,6 +24,9 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
   const [isAttending, setIsAttending] = useState<boolean | null>(null);
   const [showWithdraw, setShowWithdraw] = useState(false);
   
+  // Lead Magnet State
+  const [email, setEmail] = useState('');
+  
   const event = events.find(e => e.name.trim().toLowerCase() === eventName.trim().toLowerCase());
 
   // Consider user premium if they have the subscription status
@@ -195,19 +198,51 @@ export function EventProgressButton({ eventName }: EventProgressButtonProps) {
         />
       )}
 
-      {!isPremium ? (
-        <div>
+      {!isAuthenticated ? (
+        <form onSubmit={(e) => {
+           e.preventDefault();
+           if (email) {
+             window.dispatchEvent(new CustomEvent('requestEmailInput', { detail: { email } }));
+           }
+        }}>
+           <div className="flex flex-col space-y-4 bg-[#121212] border border-white/10 p-6 sm:p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full" />
+              <h3 className="text-2xl font-bold font-display text-white text-left">Unlock Event Details</h3>
+              <p className="text-left text-sm text-white/60 mb-2 font-medium">
+                 To carry on accessing this page, add your email here to sign in.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 relative z-10">
+                 <input 
+                    type="email" 
+                    required 
+                    placeholder="name@email.com" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="flex-1 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                 />
+                 <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold px-6 py-3 rounded-xl whitespace-nowrap shadow-lg">
+                    Sign In
+                 </Button>
+              </div>
+              <p className="text-left text-[11px] text-white/40 mt-2">
+                 By gaining access you acknowledge the self-supported nature of these routes and agree to our <a href="/terms" target="_blank" className="underline hover:text-white/60 transition-colors cursor-pointer">Terms</a> and <a href="/privacy-policy" target="_blank" className="underline hover:text-white/60 transition-colors cursor-pointer">Privacy Policy</a>.
+              </p>
+           </div>
+        </form>
+      ) : !isPremium ? (
+        <div className="bg-[#121212] border border-white/10 p-6 sm:p-8 rounded-[2rem] shadow-2xl relative overflow-hidden group">
+          <div className="absolute bottom-0 left-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full" />
           <Button 
             size="lg" 
             onClick={handleCheckout}
             disabled={loading}
-            className="w-full px-8 py-6 mb-4 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-xl shadow-xl shadow-primary/20 hover:scale-105 transition-all duration-300"
+            className="w-full px-8 py-6 mb-4 relative z-10 bg-primary hover:bg-primary/90 text-primary-foreground font-black text-lg sm:text-xl shadow-xl shadow-primary/20 hover:scale-[1.02] transition-all duration-300 rounded-xl"
           >
             {loading ? <Loader2 className="w-6 h-6 mr-3 animate-spin" /> : <CreditCard className="w-6 h-6 mr-3" />}
-            Access Contribution — R 499
+            Unlock Route & GPX — R 499
           </Button>
-          <p className="text-sm font-medium text-muted-foreground w-full">
-            Your contribution unlocks access to the route for the 2026 calendar year, the digital leaderboard, and the rider's community platform.
+          <p className="text-sm font-medium text-white/60 w-full relative z-10 leading-relaxed">
+            Your route access guarantees verified coordinates, the Rider's Manual, and eliminates logistics friction.
           </p>
         </div>
       ) : (

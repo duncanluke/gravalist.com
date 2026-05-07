@@ -144,13 +144,13 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full group-hover:bg-primary/20 transition-all duration-700" />
                         <div className="flex-1">
                             <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                                <Calendar className="w-6 h-6 text-white" />
+                                <Trophy className="w-6 h-6 text-white" />
                             </div>
                             <h3 className="text-3xl font-display font-black text-white mb-3 uppercase tracking-wider">
-                                <span className="text-primary mr-2">24</span>Hour Push
+                                The <span className="text-primary mx-2">Starter</span> Ultra
                             </h3>
                             <p className="text-white/70 leading-relaxed font-medium">
-                                Push yourself by attempting the entire route in a single continuous 24-hour effort. Brutal, unforgiving, and absolutely not for the faint of heart.
+                                Intimidated by massive entry fees and fierce professional racing pressure? We are your perfect low-stakes entry into ultra-endurance. Test your gear, hone your grit, and ride entirely on your own terms.
                             </p>
                         </div>
                     </motion.div>
@@ -170,10 +170,10 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                             </div>
                             <div>
                                 <h3 className="text-3xl font-display font-black text-white mb-2 uppercase tracking-wide">
-                                    The Sunday <span className="text-primary italic">6PM Cut-off</span>
+                                    Plug &amp; Play <span className="text-primary italic">Adventure</span>
                                 </h3>
                                 <p className="text-white/70 font-medium max-w-2xl text-lg">
-                                    Ride it as a bikepacking adventure but strictly against the clock. Make it back before sunset on Sunday to officially log your completion. Miss the cut-off, and your ride doesn't count.
+                                    For the time-poor explorer who wants guaranteed quality. Don't waste your limited leave-time planning logistics or gambling on bad routes. We provide the canvas; you just ride.
                                 </p>
                             </div>
                         </div>

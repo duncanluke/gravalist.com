@@ -190,7 +190,7 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true, margin: "-200px" }}
                 transition={{ duration: 1.5 }}
-                className="py-24 px-6 bg-[#080808] flex justify-center items-center border-t border-white/5 overflow-hidden"
+                className="hidden md:flex py-24 px-6 bg-[#080808] justify-center items-center border-t border-white/5 overflow-hidden"
             >
                 <div className="relative w-full max-w-5xl mx-auto flex justify-center">
                     <img 

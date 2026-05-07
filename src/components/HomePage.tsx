@@ -177,7 +177,14 @@ export function HomePage({ onViewRides, onEventSelect, onEnterEvent, onNavigateT
 
           {/* Events Grid */}
           {/* Events Grid Wrapper */}
-          <div className="py-8 relative min-h-[500px]">
+          {/* Scroll Indicator for Mobile */}
+          <div className="flex md:hidden justify-center items-center gap-1.5 mb-2 mt-4 opacity-70">
+            <div className="w-2 h-2 rounded-full bg-primary ring-2 ring-primary/30" />
+            <div className="w-2 h-2 rounded-full bg-primary/40" />
+            <div className="w-2 h-2 rounded-full bg-primary/20" />
+            <span className="text-xs text-primary/60 ml-2 font-medium uppercase tracking-wider">Swipe</span>
+          </div>
+          <div className="py-8 pt-2 md:pt-8 relative min-h-[500px]">
             {loading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center space-y-4">

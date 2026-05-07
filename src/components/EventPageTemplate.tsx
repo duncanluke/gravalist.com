@@ -224,9 +224,9 @@ export function EventPageTemplate({
              </div>
              
              <div className="flex-1 w-full">
-                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md border-primary/30 shadow-[0_0_20px_rgba(255,106,0,0.1)]' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
-                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <Lock className="w-16 h-16 text-primary/60 mb-6 drop-shadow-[0_0_15px_rgba(255,106,0,0.3)]" />
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
@@ -265,9 +265,9 @@ export function EventPageTemplate({
              </div>
              
              <div className="flex-1 w-full">
-                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md border-primary/30 shadow-[0_0_20px_rgba(255,106,0,0.1)]' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
-                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <Lock className="w-16 h-16 text-primary/60 mb-6 drop-shadow-[0_0_15px_rgba(255,106,0,0.3)]" />
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
@@ -306,9 +306,9 @@ export function EventPageTemplate({
              </div>
              
              <div className="flex-1 w-full">
-                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md border-primary/30 shadow-[0_0_20px_rgba(255,106,0,0.1)]' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
-                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <Lock className="w-16 h-16 text-primary/60 mb-6 drop-shadow-[0_0_15px_rgba(255,106,0,0.3)]" />
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}
@@ -342,9 +342,9 @@ export function EventPageTemplate({
              </div>
              
              <div className="flex-1 w-full">
-                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border-white/5 shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
+                <Card className={`relative overflow-hidden transition-all duration-700 h-full min-h-[300px] flex flex-col justify-center border shadow-2xl ${!isPremium ? 'bg-black/40 backdrop-blur-md border-primary/30 shadow-[0_0_20px_rgba(255,106,0,0.1)]' : 'bg-card/40 backdrop-blur-2xl border-primary/20 shadow-[0_0_50px_rgba(255,87,34,0.1)]'}`}>
                   {!isPremium && <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/80 backdrop-blur-[6px] transition-all hover:bg-black/70">
-                    <Lock className="w-16 h-16 text-white/50 mb-6 drop-shadow-2xl" />
+                    <Lock className="w-16 h-16 text-primary/60 mb-6 drop-shadow-[0_0_15px_rgba(255,106,0,0.3)]" />
                     <span className="text-base font-bold tracking-[0.2em] uppercase text-white/90">Access Required</span>
                     <span className="text-sm text-white/50 mt-2 font-medium">Unlock to view details</span>
                   </div>}

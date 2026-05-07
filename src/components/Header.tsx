@@ -358,20 +358,20 @@ export function Header({
               }}
               className="flex items-center group"
             >
-              <div className="relative flex items-center transition-all duration-300 w-[200px] sm:w-[260px]">
-                <User className="absolute left-3 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <div className="relative flex items-center transition-all duration-300 w-[140px] sm:w-[260px]">
+                <User className="absolute left-2 sm:left-3 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                 <Input
                   name="headerEmail"
                   type="email"
                   placeholder="email"
-                  className="pl-9 pr-12 h-10 w-full rounded-full bg-muted/40 border-muted placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
+                  className="pl-8 sm:pl-9 pr-10 sm:pr-12 h-10 w-full rounded-full bg-muted/40 border-muted placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all text-sm"
                   autoComplete="email"
                 />
                 <Button 
                   type="submit" 
                   size="sm" 
                   variant="ghost"
-                  className="absolute right-1 text-primary hover:bg-primary hover:text-primary-foreground h-8 rounded-full px-3 py-0 font-medium transition-colors"
+                  className="absolute right-1 text-primary hover:bg-primary hover:text-primary-foreground h-8 rounded-full px-2 sm:px-3 py-0 font-medium transition-colors"
                 >
                   Go
                 </Button>

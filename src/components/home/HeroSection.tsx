@@ -146,9 +146,11 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                             <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
                                 <Calendar className="w-6 h-6 text-white" />
                             </div>
-                            <h3 className="text-2xl font-display font-bold text-white mb-3">24 Hour Push</h3>
-                            <p className="text-white/60 leading-relaxed font-light">
-                                Push yourself by attempting the entire route in a single continuous 24-hour effort. Not for the faint of heart.
+                            <h3 className="text-3xl font-display font-black text-white mb-3 uppercase tracking-wider">
+                                <span className="text-primary mr-2">24</span>Hour Push
+                            </h3>
+                            <p className="text-white/70 leading-relaxed font-medium">
+                                Push yourself by attempting the entire route in a single continuous 24-hour effort. Brutal, unforgiving, and absolutely not for the faint of heart.
                             </p>
                         </div>
                     </motion.div>
@@ -167,9 +169,11 @@ export function HeroSection({ userEmail, onViewRides, onRequestEmailInput }: Her
                                 <Globe className="w-8 h-8 text-primary" />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-display font-bold text-white mb-2">The Sunday 6pm Cut-off</h3>
-                                <p className="text-white/60 font-light max-w-2xl">
-                                    Ride it as a bikepacking adventure but against the clock. Make it back before sunset on Sunday to officially log your completion.
+                                <h3 className="text-3xl font-display font-black text-white mb-2 uppercase tracking-wide">
+                                    The Sunday <span className="text-primary italic">6PM Cut-off</span>
+                                </h3>
+                                <p className="text-white/70 font-medium max-w-2xl text-lg">
+                                    Ride it as a bikepacking adventure but strictly against the clock. Make it back before sunset on Sunday to officially log your completion. Miss the cut-off, and your ride doesn't count.
                                 </p>
                             </div>
                         </div>

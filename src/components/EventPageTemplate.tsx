@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, Route, Mountain, TreePine, Award, ChevronDown, Lock, Download, FileSignature, HelpCircle, Map, ShieldX, AlertTriangle, Satellite } from 'lucide-react';
+import { Calendar, Clock, MapPin, Route, Mountain, TreePine, Award, ChevronDown, Lock, Download, FileSignature, HelpCircle, Map, ShieldX, AlertTriangle, Satellite, Trophy, Info } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Badge } from './ui/badge';
 import { Card, CardContent } from './ui/card';
 import { useWindowScroll } from 'react-use';
@@ -216,9 +217,9 @@ export function EventPageTemplate({
                 <div className="h-20 w-20 rounded-[1.5rem] bg-primary/10 flex items-center justify-center">
                    <Download className="w-10 h-10 text-primary" />
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black tracking-tight">Official GPX File</h2>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tight">The Golden GPX</h2>
                 <p className="text-xl text-muted-foreground leading-relaxed font-light">
-                  The exact, meticulously mapped route. Having the official GPX file is your only way to navigate this unsupported challenge. Accurate and carefully checked for anomalies.
+                  Your entry guarantees access to our meticulously curated and verified Golden GPX. Because we are Custodians of the Route, we regularly update this with critical intelligence on washed-out roads and verified water sources. We do the scouting so you can do the riding.
                 </p>
              </div>
              
@@ -378,6 +379,73 @@ export function EventPageTemplate({
 
         </div>
         
+        {/* The Gravalist Value / Why Ride with Us (Bento Box) */}
+        <div className="max-w-6xl mx-auto px-6 pt-32 pb-12 relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-full bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
+          
+          <div className="mb-16 text-center max-w-3xl mx-auto relative z-10 space-y-6">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 tracking-widest uppercase font-bold py-1 px-4 mb-4">
+              Information & Logistics Risk
+            </Badge>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold uppercase tracking-tight text-white mb-6">
+              Adventure Over Racing
+            </h2>
+            <p className="text-xl text-white/60 leading-relaxed font-light">
+              We spent <span className="text-primary font-medium">100 hours</span> doing the boring prep-work, so you can have <span className="text-primary font-medium">48 hours</span> of pure adventure.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+            {/* The Golden GPX */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="bg-[#121212] border border-white/10 hover:border-primary/40 transition-colors duration-500 rounded-[2rem] p-8 md:p-10 flex flex-col group overflow-hidden relative"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 blur-[60px] rounded-full group-hover:bg-primary/20 transition-colors duration-700" />
+              <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-8">
+                <MapPin className="w-7 h-7 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2 tracking-wide uppercase font-display">The Golden GPX</h3>
+              <p className="text-primary/80 font-medium tracking-wide uppercase text-xs mb-6">End the "Garbage GPX" Problem</p>
+              <p className="text-white/60 leading-relaxed font-light flex-1">
+                The internet is full of unvetted tracks leading into dead-ends or private farms. We provide a curated, meticulously verified route with reliable POIs for water, bail-outs, and supply shops.
+              </p>
+            </motion.div>
+
+            {/* The Rider's Manual */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="bg-[#121212] border border-white/10 hover:border-primary/40 transition-colors duration-500 rounded-[2rem] p-8 md:p-10 flex flex-col group overflow-hidden relative"
+            >
+              <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-500/10 blur-[60px] rounded-full group-hover:bg-blue-500/20 transition-colors duration-700" />
+              <div className="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-8">
+                <Info className="w-7 h-7 text-blue-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2 tracking-wide uppercase font-display">Rider's Manual</h3>
+              <p className="text-blue-400/80 font-medium tracking-wide uppercase text-xs mb-6">Cure Your Decision Fatigue</p>
+              <p className="text-white/60 leading-relaxed font-light flex-1">
+                You don't need to spend 40+ hours researching resupply points, elevation profiles, or safety protocols. As your Route Architects, we provide the ultimate plug-and-play adventure manual.
+              </p>
+            </motion.div>
+
+            {/* The Community Leaderboard */}
+            <motion.div 
+              whileHover={{ y: -5 }} 
+              className="bg-[#121212] border border-white/10 hover:border-primary/40 transition-colors duration-500 rounded-[2rem] p-8 md:p-10 flex flex-col group overflow-hidden relative"
+            >
+              <div className="absolute top-0 left-0 w-48 h-48 bg-green-500/10 blur-[60px] rounded-full group-hover:bg-green-500/20 transition-colors duration-700" />
+              <div className="w-14 h-14 bg-green-500/10 rounded-2xl flex items-center justify-center mb-8">
+                <Trophy className="w-7 h-7 text-green-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2 tracking-wide uppercase font-display">Big Ride Vibes</h3>
+              <p className="text-green-400/80 font-medium tracking-wide uppercase text-xs mb-6">Solve The Solitary Sufferfest</p>
+              <p className="text-white/60 leading-relaxed font-light flex-1">
+                Even unsupported riders want to feel connected. Solve the psychological barrier of riding in the void with our digital validation framework, active leaderboard, and shared global start dates.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+        
         {/* Mandatory Legal & Safety Protocols */}
         <div className="max-w-4xl mx-auto space-y-8 mt-32">
           <div className="text-center mb-12">
@@ -428,7 +496,7 @@ export function EventPageTemplate({
               <span className="text-muted-foreground text-xl sm:text-3xl font-medium tracking-normal">Unsupported Adventure</span>
             </div>
             <p className="text-muted-foreground max-w-2xl mx-auto mt-6 mb-10 text-lg">
-              No aid stations, no route markings—just you and your bike. Follow the GPX route or make it your own. Choose your challenge: break the record or enjoy a multi-day tour.
+              We did the 100 hours of boring prep-work so you can have 48 hours of pure adventure. Unlock the Rider's Manual, download the Golden GPX, and secure your place on the starting line.
             </p>
             {actionComponent}
           </CardContent>

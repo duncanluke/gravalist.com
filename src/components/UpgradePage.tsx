@@ -95,10 +95,10 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
   }, [isAuthenticated, refreshProfile]);
 
   const whatYouGet = [
-    { title: 'Curation', desc: 'Expertly mapped ultra-distance gravel routes designed to navigate around private lands.' },
-    { title: 'Stewardship', desc: 'We act as digital custodians, maintaining the route integrity and the community platform.' },
-    { title: 'The Challenge', desc: 'Access to the digital leaderboard to compare times against other riders.' },
-    { title: 'Validation', desc: 'Digital verification of your ride for community ranking.' }
+    { title: 'The Golden GPX', desc: 'Curated and meticulously verified route to end the "Garbage GPX" problem of dead ends and private properties.' },
+    { title: 'The Rider\'s Manual', desc: 'Complete logistics intelligence on water, safety, and resupply points to cure decision fatigue.' },
+    { title: 'Digital Leaderboard', desc: 'Validation and connection to the community—your digital podium for those big ride vibes.' },
+    { title: 'Living Route Updates', desc: 'Active custodian alerts so you never get trapped by washed-out roads or new fences.' }
   ];
 
   const whatIsExcluded = [
@@ -282,7 +282,7 @@ export function UpgradePage({ onUpgrade, onNavigateToHome, onNavigateToRides }: 
           <div className="relative z-10 flex flex-col items-center pt-10">
             <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">Secure Route Access</h1>
             <p className="text-xl text-muted-foreground max-w-lg text-center">
-              Join the independent gravel community as a self-supported rider.
+              We did the 100 hours of boring prep-work so you can have 48 hours of pure adventure.
             </p>
           </div>
         )}
